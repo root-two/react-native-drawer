@@ -130,8 +130,7 @@ Props are a work in progress. relativeDrag:false and panStartCompensation:true m
 ```
 
 ### Credits
-Component was adapted from and inspired by
+Component was adapted from and inspired by  
 [@khanghoang](https://github.com/khanghoang)'s [RNSideMenu](https://github.com/khanghoang/RNSideMenu)  
 *AND*  
-[@kureevalexey](https://twitter.com/kureevalexey)'s
-[react-native-side-menu](https://github.com/Kureev/react-native-side-menu)
+[@kureevalexey](https://twitter.com/kureevalexey)'s [react-native-side-menu](https://github.com/Kureev/react-native-side-menu)
