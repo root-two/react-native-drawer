@@ -14,7 +14,9 @@
     "react-native",
     "react-component",
     "ios",
-    "drawer"
+    "drawer",
+    "side-menu",
+    "menu"
   ],
   "author": "rt2zz <zack@root-two.com>",
   "license": "MIT",
