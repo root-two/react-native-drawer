@@ -1,6 +1,4 @@
 ## React Native Side Drawer
-
-### Content
 - [Installation](#installation)
 - [Usage](#usage)
 - [Props](#props)
