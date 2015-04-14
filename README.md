@@ -1,4 +1,8 @@
 ## React Native Side Drawer
+<p align="center">
+  <img src ="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
+</p>
+
 - [Installation](#installation)
 - [Usage](#usage)
 - [Props](#props)
