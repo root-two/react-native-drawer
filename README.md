@@ -5,6 +5,7 @@
 - [Usage](#usage)
 - [Props](#props)
 - [Examples](#examples)
+- [Demo](#demo)
 - [Credits](#credits)
 
 ### Installation
@@ -16,7 +17,7 @@ npm install rn-drawer
 ```javascript
 var Drawer = require('rn-drawer')
 
-var DrawerContents = React.createClass({
+var DrawerContent = React.createClass({
   render: function() {
     return (
       <View style={styles.container}>
@@ -43,7 +44,7 @@ var MainView = React.createClass({
 var Application = React.createClass({
   render: function() {
     return (
-      <Drawer content={<DrawerContents />}>
+      <Drawer content={<DrawerContent />}>
         <MainView/>
       </Drawer>
     )
@@ -51,25 +52,7 @@ var Application = React.createClass({
 })
 ```
 
-If you want to close the drawer programmatically, e.g. on navigation, you can use the drawerActions prop
-
-```javascript
-var DrawerContents = React.createClass({
-  about: function() {
-    this.props.drawerActions.close();
-    this.props.navigator.push({...});
-  },
-
-  render: function() {
-    return (
-      <View>
-        <Text>Drawer</Text>
-        <Text onPress={this.about}>About</Text>
-      </View>
-    );
-  }
-});
-```
+If you want to close the drawer programmatically, use the closeDrawer & openDrawer methods. There is also a drawerActions prop provided to the drawer component, but this may be removed in future versions.
 
 ### Props
 - `content` (React.Component) `null` - Menu component
@@ -78,12 +61,14 @@ var DrawerContents = React.createClass({
 - `openDrawerOffset` (Number) `0` - Drawer view left margin if menu is opened
 - `closedDrawerOffset` (Number) `0` - Content view left margin if drawer is closed
 - `openDrawerThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
-- `panMaskThreshold` (Number) `.25` - Ratio of screen width that is valid for the start of a pan action
+- `panOpenMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan open action. Make this number small if you need pans to propagate to children.
+- `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action. Make this number small if you need pans to propagate to children.
 - `relativeDrag` (Boolean) `true` - true -> open/close calculation based on pan dx : false -> calculation based on absolute pan position (i.e. touch location)
 - `panStartCompensation` (Boolean) `false` - true -> drawer will catch up to pan position
 - `initializeOpen` (Boolean) `false` - true -> drawer will start open
 
-Props are a work in progress. relativeDrag:false and panStartCompensation:true may be buggy. @TODO support right hand drawer and multiple drawers.
+Props are a work in progress, suggestions welcome.  
+@TODO support right hand drawer and multiple drawers.
 
 ### Examples
 ```js
@@ -128,6 +113,11 @@ Props are a work in progress. relativeDrag:false and panStartCompensation:true m
     <Main />
 </Drawer>
 ```
+
+### Demo
+`git clone https://github.com/rt2zz/rn-drawer.git`  
+Open ``./examples/iosDemo/rndrawereg.xcodeproject` in xcode  
+`command+r`
 
 ### Credits
 Component was adapted from and inspired by

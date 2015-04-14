@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>441E2A13-36BC-4677-B385-40139E17F29B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>rndrawereg</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>77E312DD1394075B8E5CC2FCEE77209390B94952</key>
+		<string>github.com:rt2zz/rn-drawer.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>examples/iosDemo/rndrawereg.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>77E312DD1394075B8E5CC2FCEE77209390B94952</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:rt2zz/rn-drawer.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>77E312DD1394075B8E5CC2FCEE77209390B94952</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>77E312DD1394075B8E5CC2FCEE77209390B94952</string>
+			<key>IDESourceControlWCCName</key>
+			<string>rn-drawer</string>
+		</dict>
+	</array>
+</dict>
+</plist>
