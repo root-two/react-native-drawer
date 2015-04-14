@@ -1,6 +1,4 @@
 ## React Native Side Drawer
-
-### Content
 - [Installation](#installation)
 - [Usage](#usage)
 - [Props](#props)
@@ -120,8 +118,7 @@ Open ``./examples/iosDemo/rndrawereg.xcodeproject` in xcode
 `command+r`
 
 ### Credits
-Component was adapted from and inspired by
-[@khanghoang](https://github.com/khanghoang)'s [RNSideMenu](https://github.com/khanghoang/RNSideMenu)
-*AND*
-[@kureevalexey](https://twitter.com/kureevalexey)'s
-[react-native-side-menu](https://github.com/Kureev/react-native-side-menu)
+Component was adapted from and inspired by  
+[@khanghoang](https://github.com/khanghoang)'s [RNSideMenu](https://github.com/khanghoang/RNSideMenu)  
+*AND*  
+[@kureevalexey](https://twitter.com/kureevalexey)'s [react-native-side-menu](https://github.com/Kureev/react-native-side-menu)
