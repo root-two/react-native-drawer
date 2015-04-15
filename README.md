@@ -46,9 +46,18 @@ var MainView = React.createClass({
 })
 
 var Application = React.createClass({
+  closeDrawer: function(){
+    this.refs.drawer.closeDrawer()
+  },
+  openDrawer: function(){
+    this.refs.drawer.openDrawer()
+  },
   render: function() {
     return (
-      <Drawer content={<DrawerContent />}>
+      <Drawer
+        ref="drawer"
+        content={<DrawerContent />}
+        >
         <MainView/>
       </Drawer>
     )

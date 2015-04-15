@@ -76,7 +76,13 @@ var drawer = React.createClass({
     this._offsetClosed = props.closedDrawerOffset%1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset*fullWidth
     this._offsetOpen = props.openDrawerOffset%1 === 0 ? props.openDrawerOffset : props.openDrawerOffset*fullWidth
 
-    var styles = {}
+    var styles = {
+      container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+    }
     styles.main = Object.assign({
         flex: 1,
         position: 'absolute',
@@ -364,7 +370,7 @@ var drawer = React.createClass({
         break
     }
     return (
-      <View key="drawerContainer">
+      <View style={this.stylesheet.container} key="drawerContainer">
         {first}
         {second}
       </View>
