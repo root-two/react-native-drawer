@@ -10,15 +10,23 @@ var {
 } = React;
 
 var styles = require('./styles')
+var drawerStyles = {
+  drawer: {
+    shadowColor: "#000000",
+    shadowOpacity: 0.8,
+    shadowRadius: 0,
+  }
+}
 
 var Drawer = require('rn-drawer')
 var MyMainView = require('./MyMainView')
 var MyControlPanel = require('./ControlPanel')
 
+var deviceScreen = require('Dimensions').get('window')
+
 var counter = 0
 var rndrawereg = React.createClass({
   getInitialState(){
-    console.log('initial state')
     return {
       drawerType: 'overlay',
       openDrawerOffset:0,
@@ -29,6 +37,8 @@ var rndrawereg = React.createClass({
       relativeDrag: false,
       panStartCompensation: true,
       openDrawerThreshold: .25,
+      tweenHandlerOn: false,
+      disabled: false,
     }
   },
 
@@ -47,6 +57,19 @@ var rndrawereg = React.createClass({
     })
   },
 
+  tweenHandler(ratio){
+    var drawerShadow = ratio < .2 ? ratio*5*5 : 5
+    return {
+      drawer: {
+        shadowRadius: drawerShadow,
+      },
+      main: {
+        opacity:(2-ratio)/2,
+        scaleX: (2-ratio)/2,
+      },
+    }
+  },
+
   render() {
     var controlPanel = <MyControlPanel closeDrawer={() => {this.refs.drawer.closeDrawer()}} />
     return (
@@ -63,6 +86,9 @@ var rndrawereg = React.createClass({
         panStartCompensation={this.state.panStartCompensation}
         openDrawerThreshold={this.state.openDrawerThreshold}
         content={controlPanel}
+        styles={drawerStyles}
+        disabled={this.state.disabled}
+        tweenHandler={this.state.tweenHandlerOn ? this.tweenHandler : null}
         >
         <MyMainView
           drawerType={this.state.drawerType}
@@ -74,6 +100,8 @@ var rndrawereg = React.createClass({
           panCloseMask={this.state.panCloseMask}
           relativeDrag= {this.state.relativeDrag}
           panStartCompensation= {this.state.panStartCompensation}
+          tweenHandlerOn={this.state.tweenHandlerOn}
+          disabled={this.state.disabled}
           openDrawerThreshold={this.state.openDrawerThreshold}
           animation={this.state.animation}
           />

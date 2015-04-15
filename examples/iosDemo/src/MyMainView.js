@@ -79,6 +79,20 @@ module.exports = React.createClass({
               value={this.props.panStartCompensation} />
           </View>
           <View style={styles.row}>
+            <Text style={styles.rowLabel}>disabled</Text>
+            <SwitchIOS
+              onValueChange={ (value) => { this.props.setParentState({'disabled': value})} }
+              style={styles.rowInput}
+              value={this.props.disabled} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Material Design Tween</Text>
+            <SwitchIOS
+              onValueChange={ (value) => { this.props.setParentState({'tweenHandlerOn': value})} }
+              style={styles.rowInput}
+              value={this.props.tweenHandlerOn} />
+          </View>
+          <View style={styles.row}>
             <Text style={styles.rowLabel}>openDrawerThreshold</Text>
             <SliderIOS
               style={styles.slider}
