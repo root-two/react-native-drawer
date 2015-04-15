@@ -57,13 +57,22 @@ var Application = React.createClass({
 If you want to close the drawer programmatically, use the closeDrawer & openDrawer methods. There is also a drawerActions prop provided to the drawer component, but this may be removed in future versions.
 
 ### Props
+This module supports a wide range of drawer styles, and hence has *a lot* of props. It may help to package up presets as separate modules.
+#### Important
 - `content` (React.Component) `null` - Menu component
-- `type` (String: displace:overlay:static) - Type of drawer.
+- `type` (String: displace:overlay:static) `displace`- Type of drawer.
+- `openDrawerOffset` (Number) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open.
+- `closedDrawerOffset` (Number) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
+- `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
+
+#### Animation / Tween
 - `animation` (String: spring|linear|easeInOut) `linear` - Type of slide animation.
-- `openDrawerOffset` (Number) `0` - Drawer view left margin if menu is opened
-- `closedDrawerOffset` (Number) `0` - Content view left margin if drawer is closed
+- `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns and object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/} }
+
+
+### Additional Configurations
 - `openDrawerThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
-- `panOpenMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan open action. Make this number small if you need pans to propagate to children.
+- `panOpenMask` (Number) `.05` - Ratio of screen width that is valid for the start of a pan open action. Make this number small if you need pans to propagate to children.
 - `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action. Make this number small if you need pans to propagate to children.
 - `relativeDrag` (Boolean) `true` - true -> open/close calculation based on pan dx : false -> calculation based on absolute pan position (i.e. touch location)
 - `panStartCompensation` (Boolean) `false` - true -> drawer will catch up to pan position
@@ -77,14 +86,23 @@ Props are a work in progress, suggestions welcome.
 //Material Design Style Overlay Drawer
 <Drawer
   type="overlay"
-  closedDrawerOffset={0}
   openDrawerOffset={50} //50px gap on the right side of drawer
-  initializeOpen={false}
-  openDrawerThreshold={.3} //pan must travel 30% to trigger open/close action on release
-  panOpenMask={.1} //open pan must originate in far left (10%) of screen
   panCloseMask={1} //can close with right to left swipe anywhere on screen
   panStartCompensation={false}
   relativeDrag={true}
+  styles={{
+    drawer: {
+      shadowColor: "#000000",
+      shadowOpacity: 0.8,
+      shadowRadius: 0,
+      }
+  }}
+  tweenHandler={(ratio) => {
+    return {
+      drawer: { shadowRadius: Math.min(ratio*5*5, 5) },
+      main: { opacity:(2-ratio)/2 },
+    }
+  }}
   content={<Menu />}
   >
     <Main />
