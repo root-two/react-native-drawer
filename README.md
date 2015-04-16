@@ -1,5 +1,5 @@
 ## React Native Drawer
-Configurable react native pull out drawer. Supports displacement, overlay (material design) static (slack style) transitions modes.
+Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.
 
 <p align="center">
   <img width="220px" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
@@ -7,8 +7,8 @@ Configurable react native pull out drawer. Supports displacement, overlay (mater
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Props](#props)
 - [Examples](#examples)
+- [Props](#props)
 - [Demo](#demo)
 - [Credits](#credits)
 
@@ -21,44 +21,20 @@ npm install rn-drawer
 ```javascript
 var Drawer = require('rn-drawer')
 
-var DrawerContent = React.createClass({
-  render: function() {
-    return (
-      <View style={styles.container}>
-        <Text>
-          Control Panel
-        </Text>
-      </View>
-    )
-  }
-})
-
-var MainView = React.createClass({
-  render: function() {
-    return (
-      <View style={styles.container}>
-        <Text>
-          Main View
-        </Text>
-      </View>
-    )
-  }
-})
-
 var Application = React.createClass({
-  closeDrawer: function(){
-    this.refs.drawer.closeDrawer()
+  closeControlPanel: function(){
+    this.refs.controlPanel.closeDrawer()
   },
-  openDrawer: function(){
-    this.refs.drawer.openDrawer()
+  openControlPanel: function(){
+    this.refs.controlPanel.openDrawer()
   },
   render: function() {
     return (
       <Drawer
-        ref="drawer"
-        content={<DrawerContent />}
+        ref="controlPanel"
+        content={<ControlPanel />}
         >
-        <MainView/>
+        <MainView />
       </Drawer>
     )
   }
@@ -66,31 +42,6 @@ var Application = React.createClass({
 ```
 
 If you want to close the drawer programmatically, use the closeDrawer & openDrawer methods. There is also a drawerActions prop provided to the drawer component, but this may be removed in future versions.
-
-### Props
-This module supports a wide range of drawer styles, and hence has *a lot* of props. It may help to package up presets as separate modules.
-#### Important
-- `content` (React.Component) `null` - Menu component
-- `type` (String: displace:overlay:static) `displace`- Type of drawer.
-- `openDrawerOffset` (Number) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open.
-- `closedDrawerOffset` (Number) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
-- `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
-
-#### Animation / Tween
-- `animation` (String: spring|linear|easeInOut) `linear` - Type of slide animation.
-- `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns and object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/} }
-
-
-#### Additional Configurations
-- `openDrawerThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
-- `panOpenMask` (Number) `.05` - Ratio of screen width that is valid for the start of a pan open action. Make this number small if you need pans to propagate to children.
-- `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action. Make this number small if you need pans to propagate to children.
-- `relativeDrag` (Boolean) `true` - true -> open/close calculation based on pan dx : false -> calculation based on absolute pan position (i.e. touch location)
-- `panStartCompensation` (Boolean) `false` - true -> drawer will catch up to pan position
-- `initializeOpen` (Boolean) `false` - true -> drawer will start open
-
-Props are a work in progress, suggestions welcome.  
-@TODO support right hand drawer and multiple drawers.
 
 ### Examples
 ```js
@@ -144,6 +95,32 @@ Props are a work in progress, suggestions welcome.
     <Main />
 </Drawer>
 ```
+
+### Props
+This module supports a wide range of drawer styles, and hence has *a lot* of props. It may help to package up presets as separate modules.
+#### Important
+- `content` (React.Component) `null` - Menu component
+- `type` (String: displace:overlay:static) `displace`- Type of drawer.
+- `openDrawerOffset` (Number) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open.
+- `closedDrawerOffset` (Number) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
+- `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
+
+#### Animation / Tween
+- `animation` (String: spring|linear|easeInOut) `linear` - Type of slide animation.
+- `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns and object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/} }
+
+
+#### Additional Configurations
+- `openDrawerThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
+- `panOpenMask` (Number) `.05` - Ratio of screen width that is valid for the start of a pan open action. Make this number small if you need pans to propagate to children.
+- `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action. Make this number small if you need pans to propagate to children.
+- `relativeDrag` (Boolean) `true` - true -> open/close calculation based on pan dx : false -> calculation based on absolute pan position (i.e. touch location)
+- `panStartCompensation` (Boolean) `false` - true -> drawer will catch up to pan position
+- `initializeOpen` (Boolean) `false` - true -> drawer will start open
+
+Props are a work in progress, suggestions welcome.  
+@TODO support right hand drawer and multiple drawers.
+
 
 ### Demo
 `git clone https://github.com/rt2zz/rn-drawer.git`  
