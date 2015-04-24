@@ -264,19 +264,21 @@ var drawer = React.createClass({
    * @return {Void}
    */
   openDrawer: function() {
-    if(this.props.disabled){ return null }
-    this._animating = true
-    queueAnimation(this.props.animation, ()=>{
-      this._animating = false
-      if(this._initializeAfterAnimation){
-        this.initialize(this.props)
-        this._initializeAfterAnimation = false
-      }
-    })
-    this.left = deviceScreen.width - this._offsetOpen
-    this.open = true
-    this.updatePosition()
-    this.prevLeft = this.left
+    setTimeout(() => {
+      if(this.props.disabled){ return null }
+      this._animating = true
+      queueAnimation(this.props.animation, ()=>{
+        this._animating = false
+        if(this._initializeAfterAnimation){
+          this.initialize(this.props)
+          this._initializeAfterAnimation = false
+        }
+      })
+      this.left = deviceScreen.width - this._offsetOpen
+      this.open = true
+      this.updatePosition()
+      this.prevLeft = this.left
+    }, 0)
   },
 
   /**
@@ -284,11 +286,14 @@ var drawer = React.createClass({
    * @return {Void}
    */
   closeDrawer: function() {
-    queueAnimation(this.props.animation)
-    this.left = this._offsetClosed
-    this.open = false
-    this.updatePosition()
-    this.prevLeft = this.left
+    setTimeout(() => {
+
+      queueAnimation(this.props.animation)
+      this.left = this._offsetClosed
+      this.open = false
+      this.updatePosition()
+      this.prevLeft = this.left
+    },0)
   },
 
   /**
