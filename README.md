@@ -115,8 +115,9 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `panOpenMask` (Number) `.05` - Ratio of screen width that is valid for the start of a pan open action. Make this number small if you need pans to propagate to children.
 - `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action. Make this number small if you need pans to propagate to children.
 - `relativeDrag` (Boolean) `true` - true -> open/close calculation based on pan dx : false -> calculation based on absolute pan position (i.e. touch location)
-- `panStartCompensation` (Boolean) `false` - true -> drawer will catch up to pan position
-- `initializeOpen` (Boolean) `false` - true -> drawer will start open
+- `panStartCompensation` (Boolean) `false` - Should the drawer catch up to the finger drag position?
+- `initializeOpen` (Boolean) `false` - Initialize with drawer open?
+- `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
 
 Props are a work in progress, suggestions welcome.  
 @TODO support right hand drawer and multiple drawers.

@@ -23,6 +23,7 @@ var drawer = React.createClass({
   open: false,
   panning: false,
   _tweenPending: false,
+  _lastPress: 0,
 
   /*
   @TODO REMOVE
@@ -47,6 +48,7 @@ var drawer = React.createClass({
     styles: React.PropTypes.object,
     tweenHandler: React.PropTypes.func,
     disabled: React.PropTypes.bool,
+    acceptDoubleTap: React.PropTypes.bool,
   },
 
   getDefaultProps () {
@@ -64,6 +66,7 @@ var drawer = React.createClass({
       styles: {},
       tweenHandler: null,
       disabled: false,
+      acceptDoubleTap: false,
     }
   },
 
@@ -231,6 +234,14 @@ var drawer = React.createClass({
       return false
     }
 
+    if(this.props.acceptDoubleTap){
+      var now = new Date().getTime()
+      if(now - this._lastPress < 500){
+        this.open ? this.closeDrawer() : this.openDrawer()
+      }
+      this._lastPress = now
+    }
+
     return true
   },
 
@@ -287,7 +298,6 @@ var drawer = React.createClass({
    */
   closeDrawer: function() {
     setTimeout(() => {
-
       queueAnimation(this.props.animation)
       this.left = this._offsetClosed
       this.open = false
