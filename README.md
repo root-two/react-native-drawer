@@ -1,5 +1,7 @@
 ## React Native Drawer
-Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.
+Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.  
+
+**beta note**: rn-drawer just switched from layoutAnimation to requestAnimationFrame. I am unsure how this will affect performance, but it will be more robust and support a greater range of animations. Let me know if you run into any complications or performance issues.
 
 <p align="center">
   <img width="220px" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
