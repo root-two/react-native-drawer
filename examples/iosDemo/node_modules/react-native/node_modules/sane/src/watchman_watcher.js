@@ -130,7 +130,7 @@ WatchmanWatcher.prototype.handleFileChange = function(changeDescriptor) {
   if (!changeDescriptor.exists) {
     self.emitEvent(DELETE_EVENT, changeDescriptor.name, self.root);
   } else {
-    fs.stat(absPath, function(error, stat) {
+    fs.lstat(absPath, function(error, stat) {
       if (handleError(self, error)) {
         return;
       }
