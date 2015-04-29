@@ -202,15 +202,11 @@ var drawer = React.createClass({
         drawerProps.left = -deviceScreen.width+this.left+this._offsetOpen
         break
     }
-    //@TODO not all props are animatable with configureNext. Need to figure out altnernative animation method
+
     if(this.props.tweenHandler){
-      if(!this._tweenPending){
-        this._tweenPending = true
-        setTimeout(() => {this._tweenPending = false}, 16)
-        var propsFrag = this.props.tweenHandler(ratio)
-        mainProps = Object.assign(mainProps, propsFrag.main)
-        drawerProps = Object.assign(drawerProps, propsFrag.drawer)
-      }
+      var propsFrag = this.props.tweenHandler(ratio)
+      mainProps = Object.assign(mainProps, propsFrag.main)
+      drawerProps = Object.assign(drawerProps, propsFrag.drawer)
     }
     this.refs.drawer.setNativeProps(drawerProps)
     this.refs.main.setNativeProps(mainProps)
