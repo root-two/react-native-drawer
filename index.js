@@ -1,6 +1,6 @@
 var React = require('react-native')
 var deviceScreen = require('Dimensions').get('window')
-var queueAnimation = require('./animations')
+var tween = require('./Tweener')
 
 var {
   PanResponder,
@@ -47,6 +47,9 @@ var drawer = React.createClass({
     initializeOpen: React.PropTypes.bool,
     styles: React.PropTypes.object,
     tweenHandler: React.PropTypes.func,
+    tweenDuration: React.PropTypes.integer,
+    //@TODO enum options
+    tweenEasing: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     acceptDoubleTap: React.PropTypes.bool,
   },
@@ -65,6 +68,8 @@ var drawer = React.createClass({
       initializeOpen: false,
       styles: {},
       tweenHandler: null,
+      tweenDuration: 250,
+      tweenEasing: 'linear',
       disabled: false,
       acceptDoubleTap: false,
     }
@@ -180,8 +185,8 @@ var drawer = React.createClass({
     var mainProps = {}
     var drawerProps = {}
 
-    var maxLeft = deviceScreen.width - this._offsetOpen
-    var ratio = (this.left-this._offsetClosed)/(maxLeft-this._offsetClosed)
+    var maxLeft = this.getMaxLeft()
+    var ratio = (this.left-this._offsetClosed)/(this.getMaxLeft()-this._offsetClosed)
 
     switch(this.props.type){
       case 'overlay':
@@ -275,21 +280,24 @@ var drawer = React.createClass({
    * @return {Void}
    */
   openDrawer: function() {
-    setTimeout(() => {
-      if(this.props.disabled){ return null }
-      this._animating = true
-      queueAnimation(this.props.animation, ()=>{
+    if(this.props.disabled){ return null }
+    this._animating = true
+    tween({
+      start: this.left,
+      end: this.getMaxLeft(),
+      duration: this.props.tweenDuration,
+      easingType: this.props.tweenEasing,
+      onFrame: (tweenValue) => {
+        this.left = tweenValue
+        this.updatePosition()
+      },
+      onEnd: () => {
         this._animating = false
-        if(this._initializeAfterAnimation){
-          this.initialize(this.props)
-          this._initializeAfterAnimation = false
-        }
-      })
-      this.left = deviceScreen.width - this._offsetOpen
-      this.open = true
-      this.updatePosition()
-      this.prevLeft = this.left
-    }, 0)
+        this.open = true
+        this.prevLeft = this.left
+        // @TODO _initializeAfterAnimation ????
+      }
+    })
   },
 
   /**
@@ -297,13 +305,24 @@ var drawer = React.createClass({
    * @return {Void}
    */
   closeDrawer: function() {
-    setTimeout(() => {
-      queueAnimation(this.props.animation)
-      this.left = this._offsetClosed
-      this.open = false
-      this.updatePosition()
-      this.prevLeft = this.left
-    },0)
+    if(this.props.disabled){ return null }
+    this._animating = true
+    tween({
+      start: this.left,
+      end: this.getMinLeft(),
+      easingType: this.props.tweenEasing,
+      duration: this.props.tweenDuration,
+      onFrame: (tweenValue) => {
+        this.left = tweenValue
+        this.updatePosition()
+      },
+      onEnd: () => {
+        this._animating = false
+        this.open = false
+        this.prevLeft = this.left
+        // @TODO _initializeAfterAnimation ????
+      }
+    })
   },
 
   /**
@@ -390,7 +409,16 @@ var drawer = React.createClass({
         {second}
       </View>
     )
-  }
+  },
+
+  getMaxLeft: function(){
+    return deviceScreen.width - this._offsetOpen
+  },
+
+  getMinLeft() {
+    return this._offsetClosed
+  },
+
 })
 
 module.exports = drawer

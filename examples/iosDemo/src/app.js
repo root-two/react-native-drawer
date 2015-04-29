@@ -19,6 +19,7 @@ var drawerStyles = {
 }
 
 var Drawer = require('rn-drawer')
+console.log('TEST', Drawer.test)
 var MyMainView = require('./MyMainView')
 var MyControlPanel = require('./ControlPanel')
 
@@ -38,6 +39,8 @@ var rndrawereg = React.createClass({
       panStartCompensation: true,
       openDrawerThreshold: .25,
       tweenHandlerOn: false,
+      tweenDuration: 200,
+      tweenEasing: 'linear',
       disabled: false,
     }
   },
@@ -89,6 +92,9 @@ var rndrawereg = React.createClass({
         styles={drawerStyles}
         disabled={this.state.disabled}
         tweenHandler={this.state.tweenHandlerOn ? this.tweenHandler : null}
+        tweenDuration={this.state.tweenDuration}
+        tweenEasing={this.state.tweenEasing}
+        acceptDoubleTap={true}
         >
         <MyMainView
           drawerType={this.state.drawerType}

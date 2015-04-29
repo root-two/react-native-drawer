@@ -1,6 +1,6 @@
 {
   "name": "rn-drawer",
-  "version": "0.0.6",
+  "version": "1.0.0-beta",
   "description": "React Native Drawer",
   "main": "index.js",
   "scripts": {
@@ -9,6 +9,12 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:rt2zz/rn-drawer.git"
+  },
+  "dependencies": {
+    "tween-functions": "^1.0.1"
+  },
+  "peerDependencies": {
+    "react-native": "^0.4.0"
   },
   "keywords": [
     "react-native",

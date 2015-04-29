@@ -6,6 +6,8 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "react-native": "^0.3.11"
+    "react-native": "^0.4.1",
+    "rn-drawer": "^0.0.6",
+    "tween-functions": "^1.0.1"
   }
 }

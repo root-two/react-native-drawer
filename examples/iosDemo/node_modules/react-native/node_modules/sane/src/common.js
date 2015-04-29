@@ -50,7 +50,12 @@ exports.isFileIncluded = function(globs, dot, relativePath) {
       }
     }
   } else {
-    matched = true;
+    // Make sure we honor the dot option if even we're not using globs.
+    if (!dot) {
+      matched = minimatch(relativePath, '**/*', {dot: false});
+    } else {
+      matched = true;
+    }
   }
   return matched;
 };
