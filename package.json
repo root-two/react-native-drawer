@@ -1,6 +1,6 @@
 {
   "name": "rn-drawer",
-  "version": "1.0.0-beta",
+  "version": "1.0.1",
   "description": "React Native Drawer",
   "main": "index.js",
   "scripts": {
