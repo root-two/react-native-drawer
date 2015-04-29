@@ -47,6 +47,15 @@ If you want to close the drawer programmatically, use the closeDrawer & openDraw
 
 ### Examples
 ```js
+//Simple Navigation Style Displacement, Starting Open
+<Drawer
+  type="static"
+  initializeOpen={true}
+  content={<Menu />}
+  >
+    <Main />
+</Drawer>
+
 //Material Design Style Overlay Drawer
 <Drawer
   type="overlay"
@@ -87,15 +96,6 @@ If you want to close the drawer programmatically, use the closeDrawer & openDraw
   >
     <Main />
 </Drawer>
-
-//Simple Navigation Style Displacement, Starting Open
-<Drawer
-  type="static"
-  initializeOpen={true}
-  content={<Menu />}
-  >
-    <Main />
-</Drawer>
 ```
 
 ### Props
@@ -126,6 +126,31 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 Props are a work in progress, suggestions welcome.  
 @TODO support right hand drawer and multiple drawers.
 
+### Tween Handler
+You can achieve pretty much any animation you want using the tween handler with the transformMatrix property. E.G.
+```js
+tweenHandler={(ratio) => {
+  var r0 = -ratio/6
+  var r1 = 1-ratio/6
+  var t = [
+             r1,  r0,  0,  0,
+             -r0, r1,  0,  0,
+             0,   0,   1,  0,
+             0,   0,   0,  1,
+          ]
+  return {
+    main: {
+      style: {
+        transformMatrix: t,
+        opacity: 1 - ratio/2,
+      },
+    }
+  }
+}}
+```
+Will result in a skewed fade out animation.
+
+**warning:** Frame rate, and perceived smoothness will vary based on the complexity and speed of the animation. It will likely require some tweaking and compromise to get the animation just right.
 
 ### Demo
 `git clone https://github.com/rt2zz/rn-drawer.git`  
