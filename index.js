@@ -46,8 +46,7 @@ var drawer = React.createClass({
     initializeOpen: React.PropTypes.bool,
     styles: React.PropTypes.object,
     tweenHandler: React.PropTypes.func,
-    tweenDuration: React.PropTypes.integer,
-    //@TODO enum options
+    tweenDuration: React.PropTypes.number,
     tweenEasing: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     acceptDoubleTap: React.PropTypes.bool,
