@@ -26,13 +26,12 @@ var MyControlPanel = require('./ControlPanel')
 var deviceScreen = require('Dimensions').get('window')
 
 var counter = 0
-var rndrawereg = React.createClass({
+var RNDrawerDemo = React.createClass({
   getInitialState(){
     return {
       drawerType: 'overlay',
       openDrawerOffset:0,
       closedDrawerOffset:0,
-      animation: 'linear',
       panOpenMask: .1,
       panCloseMask: .9,
       relativeDrag: false,
@@ -109,6 +108,7 @@ var rndrawereg = React.createClass({
           tweenHandlerOn={this.state.tweenHandlerOn}
           disabled={this.state.disabled}
           openDrawerThreshold={this.state.openDrawerThreshold}
+          tweenEasing={this.state.tweenEasing}
           animation={this.state.animation}
           />
       </Drawer>
@@ -116,4 +116,4 @@ var rndrawereg = React.createClass({
   }
 });
 
-AppRegistry.registerComponent('rndrawereg', () => rndrawereg);
+AppRegistry.registerComponent('RNDrawerDemo', () => RNDrawerDemo);

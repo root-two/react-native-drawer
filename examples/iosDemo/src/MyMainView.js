@@ -21,9 +21,8 @@ module.exports = React.createClass({
       <ScrollView
         pointerEvents="box-none"
         style={styles.scrollView}
-        onScroll={() => { console.log('onScroll!'); }}
         scrollEventThrottle={200}
-        contentInset={{top: 50}}
+        contentInset={{top: 0}}
         >
         <View style={styles.container}>
           <Text style={styles.welcome}>
@@ -106,30 +105,30 @@ module.exports = React.createClass({
           </View>
 
           {/*animation*/}
-          <Text style={styles.categoryLabel}>Animation</Text>
+          <Text style={styles.categoryLabel}>tweenEasing</Text>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>linear</Text>
             <SwitchIOS
-              onValueChange={this.props.setParentState.bind(this, {animation:'linear'})}
+              onValueChange={this.props.setParentState.bind(this, {tweenEasing:'linear'})}
               style={styles.rowInput}
-              disabled={this.props.animation === 'linear'}
-              value={this.props.animation === 'linear'} />
+              disabled={this.props.tweenEasing === 'linear'}
+              value={this.props.tweenEasing === 'linear'} />
           </View>
           <View style={styles.row}>
-            <Text style={styles.rowLabel}>spring</Text>
+            <Text style={styles.rowLabel}>easeOutQuad</Text>
             <SwitchIOS
-              onValueChange={this.props.setParentState.bind(this, {animation:'spring'})}
+              onValueChange={this.props.setParentState.bind(this, {tweenEasing:'easeOutQuad'})}
               style={styles.rowInput}
-              disabled={this.props.animation === 'spring'}
-              value={this.props.animation === 'spring'} />
+              disabled={this.props.tweenEasing === 'easeOutQuad'}
+              value={this.props.tweenEasing === 'easeOutQuad'} />
           </View>
           <View style={styles.lastRow}>
-            <Text style={styles.rowLabel}>easeInEaseOut</Text>
+            <Text style={styles.rowLabel}>easeOutElastic</Text>
             <SwitchIOS
-              onValueChange={this.props.setParentState.bind(this, {animation:'easeInEaseOut'})}
+              onValueChange={this.props.setParentState.bind(this, {tweenEasing:'easeOutElastic'})}
               style={styles.rowInput}
-              disabled={this.props.animation === 'easeInEaseOut'}
-              value={this.props.animation === 'easeInEaseOut'} />
+              disabled={this.props.tweenEasing === 'easeOutElastic'}
+              value={this.props.tweenEasing === 'easeOutElastic'} />
           </View>
 
           {/*offsets*/}

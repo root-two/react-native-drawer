@@ -36,7 +36,6 @@ var drawer = React.createClass({
 
   propTypes: {
     type: React.PropTypes.string,
-    animation: React.PropTypes.string,
     closedDrawerOffset: React.PropTypes.number,
     openDrawerOffset: React.PropTypes.number,
     openDrawerThreshold: React.PropTypes.number,
@@ -57,7 +56,6 @@ var drawer = React.createClass({
   getDefaultProps () {
     return {
       type: 'displace',
-      animation: 'linear',
       closedDrawerOffset: 0,
       openDrawerOffset: 0,
       openDrawerThreshold: .25,
