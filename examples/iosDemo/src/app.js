@@ -19,7 +19,6 @@ var drawerStyles = {
 }
 
 var Drawer = require('rn-drawer')
-console.log('TEST', Drawer.test)
 var MyMainView = require('./MyMainView')
 var MyControlPanel = require('./ControlPanel')
 
