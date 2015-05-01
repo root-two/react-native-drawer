@@ -327,8 +327,9 @@ var drawer = React.createClass({
   handlePanResponderEnd: function(e: Object, gestureState: Object) {
     //Do nothing if we are not in an active pan state
     if(!this.panning){ return }
-    //Do nothing if we are panning the wrong way
-    if(this.open ^ gestureState.dx < 0){ return }
+    //@TODO:Reevaluate - If we are panning the wrong way when the pan ends,
+    // which animation should trigger?
+    // if(this.open ^ gestureState.dx < 0){ return }
 
     var absRelMoveX = this.open ? deviceScreen.width - gestureState.moveX : gestureState.moveX
     var calcPos = this.props.relativeDrag ? Math.abs(gestureState.dx) : absRelMoveX
