@@ -1,5 +1,5 @@
 ## React Native Drawer
-Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.  
+Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.
 
 **beta note**: rn-drawer just switched from layoutAnimation to requestAnimationFrame. I am unsure how this will affect performance, but it will be more robust and support a greater range of animations. Let me know if you run into any complications or performance issues.
 
@@ -123,7 +123,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
 - `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
 
-Props are a work in progress, suggestions welcome.  
+Props are a work in progress, suggestions welcome.
 @TODO support right hand drawer and multiple drawers.
 
 ### Tween Handler
@@ -153,12 +153,35 @@ Will result in a skewed fade out animation.
 **warning:** Frame rate, and perceived smoothness will vary based on the complexity and speed of the animation. It will likely require some tweaking and compromise to get the animation just right.
 
 ### Demo
-`git clone https://github.com/rt2zz/rn-drawer.git`  
-Open ``./examples/iosDemo/rndrawereg.xcodeproject` in xcode  
-`command+r`
+
+Running the included example is simple. You can either use the demo component in an existing project:
+```javascript
+var RNDrawerDemo = require('./node_modules/rn-drawer/examples/demo');
+class ExistingApp extends React.Component {
+  render() {
+    return (
+      <RNDrawerDemo/>
+    );
+  }
+}
+```
+
+Or initialize a new project:
+```bash
+react-native init rnDrawerDemo
+```
+```bash
+npm install rn-drawer
+```
+```javascript
+// index.ios.js
+var React = require('react-native');
+var Demo = require('./node_modules/rn-drawer/examples/demo');
+React.AppRegistry.registerComponent('rnDrawerDemo', () => Demo);
+```
 
 ### Credits
-Component was adapted from and inspired by  
-[@khanghoang](https://github.com/khanghoang)'s [RNSideMenu](https://github.com/khanghoang/RNSideMenu)  
-*AND*  
+Component was adapted from and inspired by
+[@khanghoang](https://github.com/khanghoang)'s [RNSideMenu](https://github.com/khanghoang/RNSideMenu)
+*AND*
 [@kureevalexey](https://twitter.com/kureevalexey)'s [react-native-side-menu](https://github.com/Kureev/react-native-side-menu)
