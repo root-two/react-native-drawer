@@ -152,32 +152,10 @@ Will result in a skewed fade out animation.
 **warning:** Frame rate, and perceived smoothness will vary based on the complexity and speed of the animation. It will likely require some tweaking and compromise to get the animation just right.
 
 ### Demo
-
-Running the included example is simple. You can either use the demo component in an existing project:
-```javascript
-var RNDrawerDemo = require('./node_modules/rn-drawer/examples/demo');
-class ExistingApp extends React.Component {
-  render() {
-    return (
-      <RNDrawerDemo/>
-    );
-  }
-}
-```
-
-Or initialize a new project:
-```bash
-react-native init rnDrawerDemo
-```
-```bash
-npm install rn-drawer
-```
-```javascript
-// index.ios.js
-var React = require('react-native');
-var Demo = require('./node_modules/rn-drawer/examples/demo');
-React.AppRegistry.registerComponent('rnDrawerDemo', () => Demo);
-```
+* `git clone https://github.com/rt2zz/rn-drawer.git`
+* `cd rn-drawer && npm install`
+* Open ``./examples/iosDemo/rndrawereg.xcodeproject` in xcode
+`command+r`
 
 ### Credits
 Component was adapted from and inspired by
