@@ -25,15 +25,15 @@ var Drawer = require('rn-drawer')
 
 var Application = React.createClass({
   closeControlPanel: function(){
-    this.refs.controlPanel.closeDrawer()
+    this.refs.drawer.closeDrawer()
   },
   openControlPanel: function(){
-    this.refs.controlPanel.openDrawer()
+    this.refs.drawer.openDrawer()
   },
   render: function() {
     return (
       <Drawer
-        ref="controlPanel"
+        ref="drawer"
         content={<ControlPanel />}
         >
         <MainView />
@@ -43,7 +43,7 @@ var Application = React.createClass({
 })
 ```
 
-If you want to close the drawer programmatically, use the closeDrawer & openDrawer methods. There is also a drawerActions prop provided to the drawer component, but this may be removed in future versions.
+If you want to close the drawer programmatically, use the closeDrawer & openDrawer methods of the Drawer component.
 
 ### Examples
 ```js
@@ -99,7 +99,7 @@ If you want to close the drawer programmatically, use the closeDrawer & openDraw
 ```
 
 ### Props
-This module supports a wide range of drawer styles, and hence has *a lot* of props. It may help to package up presets as separate modules.
+This module supports a wide range of drawer styles, and hence has *a lot* of props.
 #### Important
 - `content` (React.Component) `null` - Menu component
 - `type` (String: displace:overlay:static) `displace`- Type of drawer.

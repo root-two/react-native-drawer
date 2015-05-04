@@ -16,23 +16,14 @@ var {
  */
 var drawer = React.createClass({
 
-  left: 0,
-  prevLeft: 0,
+  _left: 0,
+  _prevLeft: 0,
   _offsetOpen: 0,
   _offsetClosed: 0,
-  open: false,
-  panning: false,
+  _open: false,
+  _panning: false,
   _tweenPending: false,
   _lastPress: 0,
-
-  /*
-  @TODO REMOVE
-  these props are used to allow changes to the configuration mid animation.
-  This is probably not advised, also would be better handled by killing the animation.
-  But currently now sure how to accomplish that.
-  */
-  _animating: false,
-  _initializeAfterAnimation: false,
 
   propTypes: {
     type: React.PropTypes.string,
@@ -44,12 +35,13 @@ var drawer = React.createClass({
     panOpenMask: React.PropTypes.number,
     panCloseMask: React.PropTypes.number,
     initializeOpen: React.PropTypes.bool,
-    styles: React.PropTypes.object,
     tweenHandler: React.PropTypes.func,
     tweenDuration: React.PropTypes.number,
     tweenEasing: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     acceptDoubleTap: React.PropTypes.bool,
+    onOpen: React.PropTypes.func,
+    onClose: React.PropTypes.func,
   },
 
   getDefaultProps () {
@@ -63,17 +55,33 @@ var drawer = React.createClass({
       panOpenMask: .25,
       panCloseMask: .25,
       initializeOpen: false,
-      styles: {},
       tweenHandler: null,
       tweenDuration: 250,
       tweenEasing: 'linear',
       disabled: false,
       acceptDoubleTap: false,
+      onOpen: () => {},
+      onClose: () => {},
     }
   },
 
+  propsWhomRequireUpdate: [
+    'closedDrawerOffset',
+    'openDrawerOffset',
+    'type'
+  ],
+
+  shouldComponentUpdate(nextProps, nextState) {
+    this.propsWhomRequireUpdate.forEach((key) => {
+      if(this.props[key] !== nextProps[key]) return true
+    })
+    return false
+  },
+
   componentWillReceiveProps(nextProps){
-    this.initialize(nextProps)
+    if(this.shouldComponentUpdate(nextProps)){
+      this.initialize(nextProps)
+    }
   },
 
   initialize(props){
@@ -88,24 +96,24 @@ var drawer = React.createClass({
         alignItems: 'center',
       },
     }
-    styles.main = Object.assign({
-        flex: 1,
-        position: 'absolute',
-        top: 0,
-        height: deviceScreen.height,
-      }, this.props.styles.main)
-    styles.drawer = Object.assign({
-        flex: 1,
-        position: 'absolute',
-        top: 0,
-        height: deviceScreen.height,
-      }, this.props.styles.drawer)
+    styles.main = {
+      flex: 1,
+      position: 'absolute',
+      top: 0,
+      height: deviceScreen.height,
+    }
+    styles.drawer = {
+      flex: 1,
+      position: 'absolute',
+      top: 0,
+      height: deviceScreen.height,
+    }
 
     //open
     if(props.initializeOpen === true){
-      this.open = true
-      this.left = fullWidth - this._offsetOpen
-      this.prevLeft = this.left
+      this._open = true
+      this._left = fullWidth - this._offsetOpen
+      this._prevLeft = this._left
       if(props.type === 'static'){
         styles.main.left = fullWidth - this._offsetOpen
         styles.drawer.left = 0
@@ -127,9 +135,9 @@ var drawer = React.createClass({
     }
     //closed
     else{
-      this.open = false
-      this.left = this._offsetClosed
-      this.prevLeft = this.left
+      this._open = false
+      this._left = this._offsetClosed
+      this._prevLeft = this._left
       if(props.type === 'static'){
         styles.main.left = this._offsetClosed
         styles.drawer.left = 0
@@ -150,11 +158,7 @@ var drawer = React.createClass({
       }
     }
 
-    //If first time, setup responder and stylesheet, otherwise reset the left position.
-    if(this._animating){
-      this._initializeAfterAnimation = true
-    }
-    else if(this.refs.main){
+    if(this.refs.main){
       this.refs.drawer.setNativeProps({ left: styles.drawer.left})
       this.refs.main.setNativeProps({ left: styles.main.left})
     }
@@ -183,20 +187,20 @@ var drawer = React.createClass({
     var drawerProps = {}
 
     var maxLeft = this.getMaxLeft()
-    var ratio = (this.left-this._offsetClosed)/(this.getMaxLeft()-this._offsetClosed)
+    var ratio = (this._left-this._offsetClosed)/(this.getMaxLeft()-this._offsetClosed)
 
     switch(this.props.type){
       case 'overlay':
-        drawerProps.left = -deviceScreen.width+this._offsetOpen+this.left
+        drawerProps.left = -deviceScreen.width+this._offsetOpen+this._left
         mainProps.left = this._offsetClosed
         break
       case 'static':
-        mainProps.left = this.left
+        mainProps.left = this._left
         drawerProps.left = 0
         break
       case 'displace':
-        mainProps.left = this.left
-        drawerProps.left = -deviceScreen.width+this.left+this._offsetOpen
+        mainProps.left = this._left
+        drawerProps.left = -deviceScreen.width+this._left+this._offsetOpen
         break
     }
 
@@ -210,7 +214,7 @@ var drawer = React.createClass({
   },
 
   shouldOpenDrawer(dx: Number) {
-    if(this.open){
+    if(this._open){
       return dx < deviceScreen.width*this.props.openDrawerThreshold
     }
     else{
@@ -226,8 +230,8 @@ var drawer = React.createClass({
     if(this.props.disabled){ return false }
     var x0 = e.nativeEvent.pageX
     //@TODO lol formatting?
-    if(  (this.open && deviceScreen.width - x0 > deviceScreen.width*this.props.panCloseMask)
-      || (!this.open && x0 > deviceScreen.width*this.props.panOpenMask)
+    if(  (this._open && deviceScreen.width - x0 > deviceScreen.width*this.props.panCloseMask)
+      || (!this._open && x0 > deviceScreen.width*this.props.panOpenMask)
     ){
       return false
     }
@@ -235,7 +239,7 @@ var drawer = React.createClass({
     if(this.props.acceptDoubleTap){
       var now = new Date().getTime()
       if(now - this._lastPress < 500){
-        this.open ? this.closeDrawer() : this.openDrawer()
+        this._open ? this.close() : this.open()
       }
       this._lastPress = now
     }
@@ -255,39 +259,38 @@ var drawer = React.createClass({
     //@TODO store adjustedDx max so that it does not uncompensate when panning back
     var dx = gestureState.dx
     //Do nothing if we are panning the wrong way
-    if(this.open ^ dx < 0){ return false}
+    if(this._open ^ dx < 0){ return false}
 
     var absDx = Math.abs(dx)
     var moveX = gestureState.moveX
-    var relMoveX = this.open ? -deviceScreen.width + moveX : moveX
+    var relMoveX = this._open ? -deviceScreen.width + moveX : moveX
     var delta = relMoveX - dx
     var factor = absDx/Math.abs(relMoveX)
     var adjustedDx = dx + delta*factor
-    this.left = this.props.panStartCompensation ? this.prevLeft + adjustedDx : this.prevLeft + dx
+    this._left = this.props.panStartCompensation ? this._prevLeft + adjustedDx : this._prevLeft + dx
     this.updatePosition()
-    this.panning = true
+    this._panning = true
   },
 
   /**
    * Open menu
    * @return {Void}
    */
-  openDrawer: function() {
+  open: function() {
     if(this.props.disabled){ return null }
-    this._animating = true
     tween({
-      start: this.left,
+      start: this._left,
       end: this.getMaxLeft(),
       duration: this.props.tweenDuration,
       easingType: this.props.tweenEasing,
       onFrame: (tweenValue) => {
-        this.left = tweenValue
+        this._left = tweenValue
         this.updatePosition()
       },
       onEnd: () => {
-        this._animating = false
-        this.open = true
-        this.prevLeft = this.left
+        this._open = true
+        this._prevLeft = this._left
+        this.props.onOpen()
         // @TODO _initializeAfterAnimation ????
       }
     })
@@ -297,25 +300,34 @@ var drawer = React.createClass({
    * Close menu
    * @return {Void}
    */
-  closeDrawer: function() {
+  close: function() {
     if(this.props.disabled){ return null }
-    this._animating = true
     tween({
-      start: this.left,
+      start: this._left,
       end: this.getMinLeft(),
       easingType: this.props.tweenEasing,
       duration: this.props.tweenDuration,
       onFrame: (tweenValue) => {
-        this.left = tweenValue
+        this._left = tweenValue
         this.updatePosition()
       },
       onEnd: () => {
-        this._animating = false
-        this.open = false
-        this.prevLeft = this.left
+        this._open = false
+        this._prevLeft = this._left
+        this.props.onClose()
         // @TODO _initializeAfterAnimation ????
       }
     })
+  },
+
+  openDrawer: function(){
+    console.warn('rn-drawer: `openDrawer` is deprecated, use `open` instead.')
+    this.open()
+  },
+
+  closeDrawer: function(){
+    console.warn('rn-drawer: `closeDrawer` is deprecated, use `close` instead.')
+    this.close()
   },
 
   /**
@@ -326,22 +338,22 @@ var drawer = React.createClass({
    */
   handlePanResponderEnd: function(e: Object, gestureState: Object) {
     //Do nothing if we are not in an active pan state
-    if(!this.panning){ return }
+    if(!this._panning){ return }
     //@TODO:Reevaluate - If we are panning the wrong way when the pan ends,
     // which animation should trigger?
-    // if(this.open ^ gestureState.dx < 0){ return }
+    // if(this._open ^ gestureState.dx < 0){ return }
 
-    var absRelMoveX = this.open ? deviceScreen.width - gestureState.moveX : gestureState.moveX
+    var absRelMoveX = this._open ? deviceScreen.width - gestureState.moveX : gestureState.moveX
     var calcPos = this.props.relativeDrag ? Math.abs(gestureState.dx) : absRelMoveX
     if (this.shouldOpenDrawer(calcPos)) {
-      this.openDrawer()
+      this.open()
     } else {
-      this.closeDrawer()
+      this.close()
     }
 
     this.updatePosition()
-    this.prevLeft = this.left
-    this.panning = false
+    this._prevLeft = this._left
+    this._panning = false
   },
 
   /**
@@ -377,7 +389,7 @@ var drawer = React.createClass({
         style={this.stylesheet.drawer}
         ref="drawer"
         {...this.responder.panHandlers}>
-        {React.addons.cloneWithProps(this.props.content, { drawerActions })}
+        {this.props.content}
       </View>
     )
   },
