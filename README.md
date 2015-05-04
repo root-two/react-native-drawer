@@ -1,8 +1,6 @@
 ## React Native Drawer
 Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.  
 
-**beta note**: rn-drawer just switched from layoutAnimation to requestAnimationFrame. I am unsure how this will affect performance, but it will be more robust and support a greater range of animations. Let me know if you run into any complications or performance issues.
-
 <p align="center">
   <img width="220px" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
 </p>
@@ -24,11 +22,11 @@ npm install rn-drawer
 var Drawer = require('rn-drawer')
 
 var Application = React.createClass({
-  closeControlPanel: function(){
-    this.refs.drawer.closeDrawer()
+  closeDrawer: function(){
+    this.refs.drawer.close()
   },
-  openControlPanel: function(){
-    this.refs.drawer.openDrawer()
+  openDrawer: function(){
+    this.refs.drawer.open()
   },
   render: function() {
     return (
@@ -42,8 +40,6 @@ var Application = React.createClass({
   }
 })
 ```
-
-If you want to close the drawer programmatically, use the closeDrawer & openDrawer methods of the Drawer component.
 
 ### Examples
 ```js
@@ -100,21 +96,24 @@ If you want to close the drawer programmatically, use the closeDrawer & openDraw
 
 ### Props
 This module supports a wide range of drawer styles, and hence has *a lot* of props.
-#### Important
+##### Important
 - `content` (React.Component) `null` - Menu component
 - `type` (String: displace:overlay:static) `displace`- Type of drawer.
 - `openDrawerOffset` (Number) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open.
 - `closedDrawerOffset` (Number) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
 - `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
 
-#### Animation / Tween
+##### Animation / Tween
 - `animation` (String: spring|linear|easeInOut) `linear` - Type of slide animation.
 - `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns and object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/} }
 - `tweenDuration` (Integer) `250` - The duration of the open/close animation.
 - `tweenEasing` (String) `linear` - A easing type supported by [tween-functions](https://www.npmjs.com/package/tween-functions)
 
+##### Event Handlers
+- `onOpen` (Function) - Will be called immediately after the drawer has entered the open state.
+- `onClose` (Function) - Will be called immediately after the drawer has entered the closed state.
 
-#### Additional Configurations
+##### Additional Configurations
 - `openDrawerThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
 - `panOpenMask` (Number) `.05` - Ratio of screen width that is valid for the start of a pan open action. Make this number small if you need pans to propagate to children.
 - `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action. Make this number small if you need pans to propagate to children.
