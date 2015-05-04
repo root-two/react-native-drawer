@@ -115,4 +115,4 @@ var RNDrawerDemo = React.createClass({
   }
 });
 
-module.exports = RNDrawerDemo;
+AppRegistry.registerComponent('RNDrawerDemo', () => RNDrawerDemo);
