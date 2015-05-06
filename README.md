@@ -2,9 +2,9 @@
 Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.
 
 <p align="center">
-  <img width="220px" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
+  <div width="20px" height="20px" align="right"></div>
+  <img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
 </p>
-
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
@@ -42,29 +42,24 @@ var Application = React.createClass({
 ```
 
 ### Examples
+Simple
 ```js
-//Simple Navigation Style Displacement, Starting Open
-<Drawer
-  type="static"
-  initializeOpen={true}
-  content={<Menu />}
-  >
-    <Main />
+//Slack Style (static)
+<Drawer type="static" content={<MyMenu />} >
+  <Main />
 </Drawer>
 
-//Material Design Style Overlay Drawer
+//Material Design Style Drawer
 <Drawer
   type="overlay"
   openDrawerOffset={50} //50px gap on the right side of drawer
   panCloseMask={1} //can close with right to left swipe anywhere on screen
-  panStartCompensation={false}
-  relativeDrag={true}
   styles={{
     drawer: {
       shadowColor: "#000000",
       shadowOpacity: 0.8,
       shadowRadius: 0,
-      }
+    }
   }}
   tweenHandler={(ratio) => {
     return {
@@ -72,23 +67,7 @@ var Application = React.createClass({
       main: { opacity:(2-ratio)/2 },
     }
   }}
-  content={<Menu />}
-  >
-    <Main />
-</Drawer>
-
-//Slack Style Static Drawer
-<Drawer
-  type="static"
-  closedDrawerOffset={0}
-  openDrawerOffset={100} //100px gap on the right side of drawer
-  initializeOpen={false}
-  openDrawerThreshold={.3} //pan must travel 30% to trigger open/close action on release
-  panOpenMask={.05} //open pan must originate in far left (5%) of screen
-  panCloseMask={.3} //can close with right to left swipe in right hand third of screen
-  panStartCompensation={false}
-  relativeDrag={true}
-  content={<Menu />}
+  content={<ControlPanel />}
   >
     <Main />
 </Drawer>
