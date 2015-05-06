@@ -85,13 +85,6 @@ module.exports = React.createClass({
               value={this.props.disabled} />
           </View>
           <View style={styles.row}>
-            <Text style={styles.rowLabel}>Material Design Tween</Text>
-            <SwitchIOS
-              onValueChange={ (value) => { this.props.setParentState({'tweenHandlerOn': value})} }
-              style={styles.rowInput}
-              value={this.props.tweenHandlerOn} />
-          </View>
-          <View style={styles.row}>
             <Text style={styles.rowLabel}>openDrawerThreshold</Text>
             <SliderIOS
               style={styles.slider}
@@ -102,6 +95,41 @@ module.exports = React.createClass({
                 }}
                 />
               <Text style={styles.sliderMetric}>{Math.round(this.props.openDrawerThreshold*100)}%</Text>
+          </View>
+
+          {/*tween presets*/}
+          <Text style={styles.categoryLabel}>Example Tweens</Text>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>None</Text>
+            <SwitchIOS
+              onValueChange={this.props.setParentState.bind(this, {tweenHandlerPreset:null})}
+              style={styles.rowInput}
+              disabled={this.props.tweenHandlerPreset === null}
+              value={this.props.tweenHandlerPreset === null} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Material Design</Text>
+            <SwitchIOS
+              onValueChange={this.props.setParentState.bind(this, {tweenHandlerPreset:'material'})}
+              style={styles.rowInput}
+              disabled={this.props.tweenHandlerPreset === 'material'}
+              value={this.props.tweenHandlerPreset === 'material'} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Rotate</Text>
+            <SwitchIOS
+              onValueChange={this.props.setParentState.bind(this, {tweenHandlerPreset:'rotate'})}
+              style={styles.rowInput}
+              disabled={this.props.tweenHandlerPreset === 'rotate'}
+              value={this.props.tweenHandlerPreset === 'rotate'} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Parallax</Text>
+            <SwitchIOS
+              onValueChange={this.props.setParentState.bind(this, {tweenHandlerPreset:'parallax'})}
+              style={styles.rowInput}
+              disabled={this.props.tweenHandlerPreset === 'parallax'}
+              value={this.props.tweenHandlerPreset === 'parallax'} />
           </View>
 
           {/*animation*/}

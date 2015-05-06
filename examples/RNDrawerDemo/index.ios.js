@@ -23,6 +23,7 @@ var MyMainView = require('./MyMainView')
 var MyControlPanel = require('./ControlPanel')
 
 var deviceScreen = require('Dimensions').get('window')
+var tweens = require('./tweens')
 
 var counter = 0
 var RNDrawerDemo = React.createClass({
@@ -37,9 +38,10 @@ var RNDrawerDemo = React.createClass({
       panStartCompensation: true,
       openDrawerThreshold: .25,
       tweenHandlerOn: false,
-      tweenDuration: 200,
+      tweenDuration: 350,
       tweenEasing: 'linear',
       disabled: false,
+      tweenHandlerPreset: null,
     }
   },
 
@@ -59,16 +61,8 @@ var RNDrawerDemo = React.createClass({
   },
 
   tweenHandler(ratio){
-    var drawerShadow = ratio < .2 ? ratio*5*5 : 5
-    return {
-      drawer: {
-        shadowRadius: drawerShadow,
-      },
-      main: {
-        opacity:(2-ratio)/2,
-        scaleX: (2-ratio)/2,
-      },
-    }
+    if(!this.state.tweenHandlerPreset){ return {} }
+    return tweens[this.state.tweenHandlerPreset](ratio)
   },
 
   render() {
@@ -76,7 +70,6 @@ var RNDrawerDemo = React.createClass({
     return (
       <Drawer
         ref="drawer"
-        key={"drawer"+counter}
         type={this.state.drawerType}
         animation={this.state.animation}
         openDrawerOffset={this.state.openDrawerOffset}
@@ -89,7 +82,7 @@ var RNDrawerDemo = React.createClass({
         content={controlPanel}
         styles={drawerStyles}
         disabled={this.state.disabled}
-        tweenHandler={this.state.tweenHandlerOn ? this.tweenHandler : null}
+        tweenHandler={this.tweenHandler}
         tweenDuration={this.state.tweenDuration}
         tweenEasing={this.state.tweenEasing}
         acceptDoubleTap={true}
@@ -108,6 +101,7 @@ var RNDrawerDemo = React.createClass({
           disabled={this.state.disabled}
           openDrawerThreshold={this.state.openDrawerThreshold}
           tweenEasing={this.state.tweenEasing}
+          tweenHandlerPreset={this.state.tweenHandlerPreset}
           animation={this.state.animation}
           />
       </Drawer>

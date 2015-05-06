@@ -3,15 +3,15 @@ var deviceScreen = require('Dimensions').get('window')
 
 module.exports = StyleSheet.create({
   scrollView: {
-    backgroundColor: '#6A85B1',
+    backgroundColor: '#B99BC4',
   },
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#C5B9C9',
   },
   controlPanel: {
     flex: 1,
-    backgroundColor:'#333333',
+    backgroundColor:'#326945',
   },
   controlPanelText: {
     color:'white',
