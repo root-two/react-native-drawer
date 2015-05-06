@@ -40,6 +40,7 @@ var drawer = React.createClass({
     tweenEasing: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     acceptDoubleTap: React.PropTypes.bool,
+    styles: React.PropTypes.object,
     onOpen: React.PropTypes.func,
     onClose: React.PropTypes.func,
   },
@@ -96,18 +97,18 @@ var drawer = React.createClass({
         alignItems: 'center',
       },
     }
-    styles.main = {
-      flex: 1,
-      position: 'absolute',
-      top: 0,
-      height: deviceScreen.height,
-    }
-    styles.drawer = {
-      flex: 1,
-      position: 'absolute',
-      top: 0,
-      height: deviceScreen.height,
-    }
+    styles.main = Object.assign({
+        flex: 1,
+        position: 'absolute',
+        top: 0,
+        height: deviceScreen.height,
+      }, this.props.styles.main)
+    styles.drawer = Object.assign({
+        flex: 1,
+        position: 'absolute',
+        top: 0,
+        height: deviceScreen.height,
+      }, this.props.styles.drawer)
 
     //open
     if(props.initializeOpen === true){
