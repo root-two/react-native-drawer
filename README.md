@@ -2,9 +2,8 @@
 Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.
 
 <p align="center">
-  <img width="220px" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
+  <img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
 </p>
-
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
