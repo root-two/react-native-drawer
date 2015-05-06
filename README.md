@@ -1,10 +1,13 @@
 ## React Native Drawer
-Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.
+<img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
 
-<p align="center">
-  <div width="20px" height="20px" align="right"></div>
-  <img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
-</p>
+<div width="80%">
+Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.  
+
+**NOTE** there was a bug in the 1.1.* alphas that preventing the drawer from updating correctly under some circumstances. Please update to beta.
+
+</div>
+  
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
@@ -13,9 +16,7 @@ Configurable react native pull out drawer. Supports displace, overlay (material 
 - [Credits](#credits)
 
 ### Installation
-```bash
-npm install rn-drawer
-```
+`npm install rn-drawer`
 
 ### Usage
 ```javascript
