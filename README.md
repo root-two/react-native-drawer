@@ -154,7 +154,7 @@ Will result in a skewed fade out animation.
 ### Demo
 * `git clone https://github.com/rt2zz/rn-drawer.git`
 * `cd rn-drawer && npm install`
-* Open ``./examples/iosDemo/rndrawereg.xcodeproject` in xcode
+* Open ``./examples/RNDrawerDemo/RNDrawerDemo.xcodeproject` in xcode
 * `command+r` (in xcode)
 
 ### Credits
