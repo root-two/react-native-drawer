@@ -37,7 +37,6 @@ var RNDrawerDemo = React.createClass({
       relativeDrag: false,
       panStartCompensation: true,
       openDrawerThreshold: .25,
-      tweenHandlerOn: false,
       tweenDuration: 350,
       tweenEasing: 'linear',
       disabled: false,
@@ -97,7 +96,6 @@ var RNDrawerDemo = React.createClass({
           panCloseMask={this.state.panCloseMask}
           relativeDrag= {this.state.relativeDrag}
           panStartCompensation= {this.state.panStartCompensation}
-          tweenHandlerOn={this.state.tweenHandlerOn}
           disabled={this.state.disabled}
           openDrawerThreshold={this.state.openDrawerThreshold}
           tweenEasing={this.state.tweenEasing}

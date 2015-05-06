@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "react-native": "^0.4.1",
-    "rn-drawer": "^1.0.7"
+    "rn-drawer": "latest"
   }
 }
