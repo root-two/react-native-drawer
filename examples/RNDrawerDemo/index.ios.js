@@ -37,20 +37,12 @@ var RNDrawerDemo = React.createClass({
       relativeDrag: false,
       panStartCompensation: true,
       openDrawerThreshold: .25,
+      tweenHandlerOn: false,
       tweenDuration: 350,
       tweenEasing: 'linear',
       disabled: false,
       tweenHandlerPreset: null,
     }
-  },
-
-  shouldComponentUpdate(nextProps, nextState){
-    if(  this.state.openDrawerOffset !== nextState.openDrawerOffset
-      || this.state.closedDrawerOffset !== nextState.closedDrawerOffset
-    ){
-      counter++
-    }
-    return true
   },
 
   setDrawerType(type){
@@ -64,8 +56,22 @@ var RNDrawerDemo = React.createClass({
     return tweens[this.state.tweenHandlerPreset](ratio)
   },
 
+  noopChange(){
+    this.setState({
+      changeVal: Math.random()
+    })
+  },
+
+  openDrawer(){
+    this.refs.drawer.open()
+  },
+
+  setStateFrag(frag){
+    this.setState(frag)
+  },
+
   render() {
-    var controlPanel = <MyControlPanel closeDrawer={() => {this.refs.drawer.closeDrawer()}} />
+    var controlPanel = <MyControlPanel closeDrawer={() => {this.refs.drawer.close()}} />
     return (
       <Drawer
         ref="drawer"
@@ -85,22 +91,25 @@ var RNDrawerDemo = React.createClass({
         tweenDuration={this.state.tweenDuration}
         tweenEasing={this.state.tweenEasing}
         acceptDoubleTap={true}
+        changeVal={this.state.changeVal}
         >
         <MyMainView
           drawerType={this.state.drawerType}
-          setParentState={ (frag) => {this.setState(frag) }}
-          openDrawer={() => {this.refs.drawer.openDrawer()} }
+          setParentState={this.setStateFrag}
+          openDrawer={this.openDrawer}
           openDrawerOffset={this.state.openDrawerOffset}
           closedDrawerOffset={this.state.closedDrawerOffset}
           panOpenMask={this.state.panOpenMask}
           panCloseMask={this.state.panCloseMask}
           relativeDrag= {this.state.relativeDrag}
           panStartCompensation= {this.state.panStartCompensation}
+          tweenHandlerOn={this.state.tweenHandlerOn}
           disabled={this.state.disabled}
           openDrawerThreshold={this.state.openDrawerThreshold}
           tweenEasing={this.state.tweenEasing}
           tweenHandlerPreset={this.state.tweenHandlerPreset}
           animation={this.state.animation}
+          noopChange={this.noopChange}
           />
       </Drawer>
     );

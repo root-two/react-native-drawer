@@ -1,6 +1,7 @@
 var React = require('react-native')
 var deviceScreen = require('Dimensions').get('window')
 var tween = require('./Tweener')
+var shallowEquals = require('shallow-equals')
 
 var {
   PanResponder,
@@ -72,10 +73,12 @@ var drawer = React.createClass({
     'type'
   ],
 
+  //@TODO is this a good idea? could be leaky
   shouldComponentUpdate(nextProps, nextState) {
     this.propsWhomRequireUpdate.forEach((key) => {
-      if(this.props[key] !== nextProps[key]) return true
+      if(this.props[key] !== nextProps[key]){ return true }
     })
+    if(!shallowEquals(this.props.children.props, nextProps.children.props)){ return true }
     return false
   },
 
