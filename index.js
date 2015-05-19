@@ -62,6 +62,7 @@ var drawer = React.createClass({
       tweenEasing: 'linear',
       disabled: false,
       acceptDoubleTap: false,
+      styles: {},
       onOpen: () => {},
       onClose: () => {},
     }
