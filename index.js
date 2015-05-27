@@ -324,6 +324,10 @@ var drawer = React.createClass({
       }
     })
   },
+  
+  toggle: function() {
+    this._open ? this.close() : this.open()
+  },
 
   openDrawer: function(){
     console.warn('rn-drawer: `openDrawer` is deprecated, use `open` instead.')
