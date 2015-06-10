@@ -1,10 +1,10 @@
+**This module has been renamed to react-native-drawer for consistency reasons. Please update your dependencies accordingly**  
+
 ## React Native Drawer
-<img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
+<img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/react-native-drawer/master/examples/rn-drawer.gif" />
 
 Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.  
 
-**NOTE** there was a bug in the 1.1.* alphas that preventing the drawer from updating correctly under some circumstances. Please update to beta.
-  
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
@@ -13,11 +13,11 @@ Configurable react native pull out drawer. Supports displace, overlay (material 
 - [Credits](#credits)
 
 ### Installation
-`npm install rn-drawer`
+`npm install react-native-drawer`
 
 ### Usage
 ```javascript
-var Drawer = require('rn-drawer')
+var Drawer = require('react-native-drawer')
 
 var Application = React.createClass({
   closeDrawer: function(){
@@ -129,7 +129,7 @@ Will result in a skewed fade out animation.
 **warning:** Frame rate, and perceived smoothness will vary based on the complexity and speed of the animation. It will likely require some tweaking and compromise to get the animation just right.
 
 ### Demo
-* `git clone https://github.com/rt2zz/rn-drawer.git`
+* `git clone https://github.com/rt2zz/react-native-drawer.git`
 * `cd rn-drawer && npm install`
 * Open ``./examples/RNDrawerDemo/RNDrawerDemo.xcodeproject` in xcode
 * `command+r` (in xcode)

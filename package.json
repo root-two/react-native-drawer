@@ -1,6 +1,6 @@
 {
-  "name": "rn-drawer",
-  "version": "1.1.0",
+  "name": "react-native-drawer",
+  "version": "1.1.1",
   "description": "React Native Drawer",
   "main": "index.js",
   "scripts": {
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:rt2zz/rn-drawer.git"
+    "url": "git@github.com:rt2zz/react-native-drawer.git"
   },
   "dependencies": {
     "shallow-equals": "0.0.0",
     "tween-functions": "^1.0.1"
   },
   "peerDependencies": {
-    "react-native": "^0.4.0"
+    "react-native": ">0.4.2"
   },
   "keywords": [
     "react-native",
@@ -28,7 +28,7 @@
   "author": "rt2zz <zack@root-two.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/rt2zz/rn-drawer/issues"
+    "url": "https://github.com/rt2zz/react-native-drawer/issues"
   },
-  "homepage": "https://github.com/rt2zz/rn-drawer"
+  "homepage": "https://github.com/rt2zz/react-native-drawer"
 }
