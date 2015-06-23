@@ -14,9 +14,6 @@
     "shallow-equals": "0.0.0",
     "tween-functions": "^1.0.1"
   },
-  "peerDependencies": {
-    "react-native": ">0.4.2"
-  },
   "keywords": [
     "react-native",
     "react-component",
