@@ -1,5 +1,3 @@
-**This module has been renamed to react-native-drawer for consistency reasons. Please update your dependencies accordingly**  
-
 ## React Native Drawer
 <img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/react-native-drawer/master/examples/rn-drawer.gif" />
 
