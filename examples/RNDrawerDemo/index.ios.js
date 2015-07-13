@@ -45,7 +45,7 @@ var RNDrawerDemo = React.createClass({
       acceptDoubleTap: true,
       acceptTap: false,
       acceptPan: true,
-      rightSide: true,
+      rightSide: false,
     }
   },
 

@@ -245,10 +245,11 @@ module.exports = React.createClass({
               value={this.props.acceptPan} />
           </View>
           <View style={styles.row}>
-            <Text style={styles.rowLabel}>Right Side</Text>
+            <Text style={styles.rowLabel}>Right Side (not hot changeable)</Text>
             <SwitchIOS
               onValueChange={ (value) => { this.setParentState({'rightSide': value})} }
               style={styles.rowInput}
+              disabled={true}
               value={this.props.rightSide} />
           </View>
         </View>
