@@ -1,5 +1,6 @@
 var React = require('react-native')
-var deviceScreen = require('Dimensions').get('window')
+var {NativeModules} = React
+var deviceScreen = NativeModules.UIManager.Dimensions.window
 var tween = require('./Tweener')
 var shallowEquals = require('shallow-equals')
 
