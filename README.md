@@ -1,6 +1,8 @@
 ## React Native Drawer
 Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.
 
+**Version Notes** 1.2.x introduced a new prop `side` which allows for right hand drawers. This is working in my test cases but needs more testing to be sure it works with the variety of configuration options. If you encounter any issues please file a bug.
+
 <p align="center">
   <div width="20px" height="20px" align="right"></div>
   <img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/rn-drawer/master/examples/rn-drawer.gif" />
