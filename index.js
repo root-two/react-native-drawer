@@ -46,6 +46,7 @@ var drawer = React.createClass({
     styles: React.PropTypes.object,
     onOpen: React.PropTypes.func,
     onClose: React.PropTypes.func,
+    side: React.PropTypes.oneOf(['left', 'right']),
   },
 
   getDefaultProps () {
@@ -69,6 +70,7 @@ var drawer = React.createClass({
       styles: {},
       onOpen: () => {},
       onClose: () => {},
+      side: 'left',
     }
   },
 
@@ -144,20 +146,20 @@ var drawer = React.createClass({
       this._left = fullWidth - this._offsetOpen
       this._prevLeft = this._left
       if(props.type === 'static'){
-        styles.main.left = fullWidth - this._offsetOpen
-        styles.drawer.left = 0
+        styles.main[this.props.side] = fullWidth - this._offsetOpen
+        styles.drawer[this.props.side] = 0
         styles.main.width = fullWidth - this._offsetClosed
         styles.drawer.width = fullWidth
       }
       if(props.type === 'overlay'){
-        styles.main.left = 0
-        styles.drawer.left = 0
+        styles.main[this.props.side] = 0
+        styles.drawer[this.props.side] = 0
         styles.main.width = fullWidth
         styles.drawer.width = fullWidth - this._offsetOpen
       }
       if(props.type === 'displace'){
-        styles.main.left = fullWidth - this._offsetOpen
-        styles.drawer.left = 0
+        styles.main[this.props.side] = fullWidth - this._offsetOpen
+        styles.drawer[this.props.side] = 0
         styles.main.width = fullWidth - this._offsetClosed
         styles.drawer.width = fullWidth - this._offsetOpen
       }
@@ -168,20 +170,20 @@ var drawer = React.createClass({
       this._left = this._offsetClosed
       this._prevLeft = this._left
       if(props.type === 'static'){
-        styles.main.left = this._offsetClosed
-        styles.drawer.left = 0
+        styles.main[this.props.side] = this._offsetClosed
+        styles.drawer[this.props.side] = 0
         styles.main.width = fullWidth - this._offsetClosed
         styles.drawer.width = fullWidth
       }
       if(props.type === 'overlay'){
-        styles.main.left = this._offsetClosed
-        styles.drawer.left = this._offsetClosed + this._offsetOpen - fullWidth
+        styles.main[this.props.side] = this._offsetClosed
+        styles.drawer[this.props.side] = this._offsetClosed + this._offsetOpen - fullWidth
         styles.main.width = fullWidth
         styles.drawer.width = fullWidth - this._offsetOpen
       }
       if(props.type === 'displace'){
-        styles.main.left = this._offsetClosed
-        styles.drawer.left = - fullWidth + this._offsetClosed + this._offsetOpen
+        styles.main[this.props.side] = this._offsetClosed
+        styles.drawer[this.props.side] = - fullWidth + this._offsetClosed + this._offsetOpen
         styles.main.width = fullWidth - this._offsetClosed
         styles.drawer.width = fullWidth - this._offsetOpen
       }
@@ -215,21 +217,20 @@ var drawer = React.createClass({
     var mainProps = {}
     var drawerProps = {}
 
-    var maxLeft = this.getMaxLeft()
-    var ratio = (this._left-this._offsetClosed)/(this.getMaxLeft()-this._offsetClosed)
+    var ratio = (this._left-this._offsetClosed)/(this.getOpenLeft()-this._offsetClosed)
 
     switch(this.props.type){
       case 'overlay':
-        drawerProps.left = -deviceScreen.width+this._offsetOpen+this._left
-        mainProps.left = this._offsetClosed
+        drawerProps[this.props.side] = -deviceScreen.width+this._offsetOpen+this._left
+        mainProps[this.props.side] = this._offsetClosed
         break
       case 'static':
-        mainProps.left = this._left
-        drawerProps.left = 0
+        mainProps[this.props.side] = this._left
+        drawerProps[this.props.side] = 0
         break
       case 'displace':
-        mainProps.left = this._left
-        drawerProps.left = -deviceScreen.width+this._left+this._offsetOpen
+        mainProps[this.props.side] = this._left
+        drawerProps[this.props.side] = -deviceScreen.width+this._left+this._offsetOpen
         break
     }
 
@@ -258,12 +259,16 @@ var drawer = React.createClass({
   handleStartShouldSetPanResponder: function(e: Object, gestureState: Object) {
     if(this.props.disabled){ return false }
     var x0 = e.nativeEvent.pageX
+
+    var deltaOpen = this.props.side === 'left' ? deviceScreen.width - x0 : x0
+    var deltaClose = this.props.side === 'left' ? x0 : deviceScreen.width - x0
+
     //@TODO lol formatting?
-    if(  (this._open && deviceScreen.width - x0 > deviceScreen.width*this.props.panCloseMask)
-      || (!this._open && x0 > deviceScreen.width*this.props.panOpenMask)
-    ){
-      return false
-    }
+    if( this._open && deltaOpen > deviceScreen.width*this.props.panCloseMask
+        || !this._open && deltaClose > deviceScreen.width*this.props.panOpenMask
+      ){
+        return false
+      }
 
     if(this.props.acceptTap){
       this._open ? this.close() : this.open()
@@ -294,11 +299,13 @@ var drawer = React.createClass({
     //@TODO store adjustedDx max so that it does not uncompensate when panning back
     var dx = gestureState.dx
     //Do nothing if we are panning the wrong way
-    if(this._open ^ dx < 0){ return false}
+    if(this._open ^ dx < 0 ^ this.props.side === 'right'){ return false }
 
     var absDx = Math.abs(dx)
     var moveX = gestureState.moveX
-    var relMoveX = this._open ? -deviceScreen.width + moveX : moveX
+    var relMoveX = this.props.side === 'left'
+      ? this._open ? -deviceScreen.width + moveX : moveX
+      : this._open ? -moveX : deviceScreen.width - moveX
     var delta = relMoveX - dx
     var factor = absDx/Math.abs(relMoveX)
     var adjustedDx = dx + delta*factor
@@ -315,7 +322,7 @@ var drawer = React.createClass({
     if(this.props.disabled){ return null }
     tween({
       start: this._left,
-      end: this.getMaxLeft(),
+      end: this.getOpenLeft(),
       duration: this.props.tweenDuration,
       easingType: this.props.tweenEasing,
       onFrame: (tweenValue) => {
@@ -339,7 +346,7 @@ var drawer = React.createClass({
     if(this.props.disabled){ return null }
     tween({
       start: this._left,
-      end: this.getMinLeft(),
+      end: this.getClosedLeft(),
       easingType: this.props.tweenEasing,
       duration: this.props.tweenDuration,
       onFrame: (tweenValue) => {
@@ -382,7 +389,9 @@ var drawer = React.createClass({
     // which animation should trigger?
     // if(this._open ^ gestureState.dx < 0){ return }
 
-    var absRelMoveX = this._open ? deviceScreen.width - gestureState.moveX : gestureState.moveX
+    var absRelMoveX = this.props.side === 'left'
+      ? this._open ? deviceScreen.width - gestureState.moveX : gestureState.moveX
+      : this._open ? gestureState.moveX : deviceScreen.width - gestureState.moveX
     var calcPos = this.props.relativeDrag ? Math.abs(gestureState.dx) : absRelMoveX
     if (this.shouldOpenDrawer(calcPos)) {
       this.open()
@@ -456,11 +465,11 @@ var drawer = React.createClass({
     )
   },
 
-  getMaxLeft: function(){
+  getOpenLeft: function(){
     return deviceScreen.width - this._offsetOpen
   },
 
-  getMinLeft() {
+  getClosedLeft() {
     return this._offsetClosed
   },
 

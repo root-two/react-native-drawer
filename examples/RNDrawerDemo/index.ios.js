@@ -45,6 +45,7 @@ var RNDrawerDemo = React.createClass({
       acceptDoubleTap: true,
       acceptTap: false,
       acceptPan: true,
+      rightSide: true,
     }
   },
 
@@ -97,6 +98,7 @@ var RNDrawerDemo = React.createClass({
         acceptTap={this.state.acceptTap}
         acceptPan={this.state.acceptPan}
         changeVal={this.state.changeVal}
+        side={this.state.rightSide ? 'right' : 'left'}
         >
         <MyMainView
           drawerType={this.state.drawerType}
@@ -118,6 +120,7 @@ var RNDrawerDemo = React.createClass({
           acceptTap={this.state.acceptTap}
           acceptDoubleTap={this.state.acceptDoubleTap}
           acceptPan={this.state.acceptPan}
+          rightSide={this.state.rightSide}
           />
       </Drawer>
     );

@@ -98,7 +98,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
 - `acceptTap` (Boolean) `false` - Toggle drawer when any tap occurs within pan mask?
 - `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag).
-
+- `side` (String left|right) `left` - which side the drawer should be on.
 
 Props are a work in progress, suggestions welcome.
 @TODO support right hand drawer and multiple drawers.

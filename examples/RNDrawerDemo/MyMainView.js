@@ -221,8 +221,8 @@ module.exports = React.createClass({
               <Text style={styles.sliderMetric}>{Math.round(this.props.panCloseMask*100)}%</Text>
           </View>
 
-          {/*accept gestures*/}
-          <Text style={styles.categoryLabel}>Trigger Gestures</Text>
+          {/*others*/}
+          <Text style={styles.categoryLabel}>Others</Text>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Accept Tap</Text>
             <SwitchIOS
@@ -243,6 +243,13 @@ module.exports = React.createClass({
               onValueChange={ (value) => { this.setParentState({'acceptPan': value})} }
               style={styles.rowInput}
               value={this.props.acceptPan} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Right Side</Text>
+            <SwitchIOS
+              onValueChange={ (value) => { this.setParentState({'rightSide': value})} }
+              style={styles.rowInput}
+              value={this.props.rightSide} />
           </View>
         </View>
       </ScrollView>
