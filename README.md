@@ -79,7 +79,6 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
 
 ##### Animation / Tween
-- `animation` (String: spring|linear|easeInOut) `linear` - Type of slide animation.
 - `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns and object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/} }
 - `tweenDuration` (Integer) `250` - The duration of the open/close animation.
 - `tweenEasing` (String) `linear` - A easing type supported by [tween-functions](https://www.npmjs.com/package/tween-functions)
