@@ -15,6 +15,8 @@ var ModuleTransport = require('../lib/ModuleTransport');
 
 module.exports = Package;
 
+var SOURCEMAPPING_URL = '\n\/\/@ sourceMappingURL=';
+
 function Package(sourceMapUrl) {
   this._finalized = false;
   this._modules = [];
@@ -96,12 +98,11 @@ Package.prototype.getSource = function(options) {
   }
 
   var source = this._getSource();
-  source += '\n\/\/@ sourceMappingURL=';
 
   if (options.inlineSourceMap) {
-    source += this._getInlineSourceMap();
-  } else {
-    source += this._sourceMapUrl;
+    source += SOURCEMAPPING_URL + this._getInlineSourceMap();
+  } else if (this._sourceMapUrl) {
+    source += SOURCEMAPPING_URL + this._sourceMapUrl;
   }
 
   return source;
@@ -249,6 +250,15 @@ Package.prototype._getMappings = function() {
   return mappings;
 };
 
+Package.prototype.getJSModulePaths = function() {
+  return this._modules.filter(function(module) {
+    // Filter out non-js files. Like images etc.
+    return !module.virtual;
+  }).map(function(module) {
+    return module.sourcePath;
+  });
+};
+
 Package.prototype.getDebugInfo = function() {
   return [
     '<div><h3>Main Module:</h3> ' + this._mainModuleId + '</div>',
@@ -285,6 +295,6 @@ function generateSourceMapForVirtualModule(module) {
     names: [],
     mappings: mappings,
     file: module.sourcePath,
-    sourcesContent: [ module.code ],
+    sourcesContent: [ module.sourceCode ],
   };
 }

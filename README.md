@@ -96,6 +96,9 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `panStartCompensation` (Boolean) `false` - Should the drawer catch up to the finger drag position?
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
 - `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
+- `acceptTap` (Boolean) `false` - Toggle drawer when any tap occurs within pan mask?
+- `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag).
+
 
 Props are a work in progress, suggestions welcome.
 @TODO support right hand drawer and multiple drawers.

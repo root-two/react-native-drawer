@@ -41,6 +41,8 @@ var drawer = React.createClass({
     tweenEasing: React.PropTypes.string,
     disabled: React.PropTypes.bool,
     acceptDoubleTap: React.PropTypes.bool,
+    acceptTap: React.PropTypes.bool,
+    acceptPan: React.PropTypes.bool,
     styles: React.PropTypes.object,
     onOpen: React.PropTypes.func,
     onClose: React.PropTypes.func,
@@ -62,9 +64,31 @@ var drawer = React.createClass({
       tweenEasing: 'linear',
       disabled: false,
       acceptDoubleTap: false,
+      acceptTap: false,
+      acceptPan: true,
       styles: {},
       onOpen: () => {},
       onClose: () => {},
+    }
+  },
+
+  statics: {
+    tweenPresets: {
+      parallax: (ratio) => {
+        var r1 = 1
+        var t = [
+                   r1,  0,  0,  0,
+                   0, r1,  0,  0,
+                   0,   0,   1,  0,
+                   0,   0,   0,  1,
+                ]
+        return {
+          drawer: {
+            left:-fullWidth/8 + fullWidth*ratio/8,
+            transformMatrix: t,
+          },
+        }
+      }
     }
   },
 
@@ -241,7 +265,10 @@ var drawer = React.createClass({
       return false
     }
 
-    if(this.props.acceptDoubleTap){
+    if(this.props.acceptTap){
+      this._open ? this.close() : this.open()
+    }
+    else if(this.props.acceptDoubleTap){
       var now = new Date().getTime()
       if(now - this._lastPress < 500){
         this._open ? this.close() : this.open()
@@ -249,6 +276,9 @@ var drawer = React.createClass({
       this._lastPress = now
     }
 
+    if(!this.props.acceptPan){
+      return false
+    }
     return true
   },
 
@@ -324,7 +354,7 @@ var drawer = React.createClass({
       }
     })
   },
-  
+
   toggle: function() {
     this._open ? this.close() : this.open()
   },

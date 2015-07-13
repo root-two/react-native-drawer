@@ -6,6 +6,6 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "rn-drawer": "latest"
+    "react-native-drawer": "latest"
   }
 }

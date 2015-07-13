@@ -220,6 +220,30 @@ module.exports = React.createClass({
                 />
               <Text style={styles.sliderMetric}>{Math.round(this.props.panCloseMask*100)}%</Text>
           </View>
+
+          {/*accept gestures*/}
+          <Text style={styles.categoryLabel}>Trigger Gestures</Text>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Accept Tap</Text>
+            <SwitchIOS
+              onValueChange={ (value) => { this.setParentState({'acceptTap': value})} }
+              style={styles.rowInput}
+              value={this.props.acceptTap} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Accept Double Tap</Text>
+            <SwitchIOS
+              onValueChange={ (value) => { this.setParentState({'acceptDoubleTap': value})} }
+              style={styles.rowInput}
+              value={this.props.acceptDoubleTap} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Accept Pan</Text>
+            <SwitchIOS
+              onValueChange={ (value) => { this.setParentState({'acceptPan': value})} }
+              style={styles.rowInput}
+              value={this.props.acceptPan} />
+          </View>
         </View>
       </ScrollView>
     )

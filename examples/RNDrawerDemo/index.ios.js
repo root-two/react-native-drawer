@@ -18,7 +18,7 @@ var drawerStyles = {
   }
 }
 
-var Drawer = require('rn-drawer')
+var Drawer = require('react-native-drawer')
 var MyMainView = require('./MyMainView')
 var MyControlPanel = require('./ControlPanel')
 
@@ -42,6 +42,9 @@ var RNDrawerDemo = React.createClass({
       tweenEasing: 'linear',
       disabled: false,
       tweenHandlerPreset: null,
+      acceptDoubleTap: true,
+      acceptTap: false,
+      acceptPan: true,
     }
   },
 
@@ -90,7 +93,9 @@ var RNDrawerDemo = React.createClass({
         tweenHandler={this.tweenHandler}
         tweenDuration={this.state.tweenDuration}
         tweenEasing={this.state.tweenEasing}
-        acceptDoubleTap={true}
+        acceptDoubleTap={this.state.acceptDoubleTap}
+        acceptTap={this.state.acceptTap}
+        acceptPan={this.state.acceptPan}
         changeVal={this.state.changeVal}
         >
         <MyMainView
@@ -110,6 +115,9 @@ var RNDrawerDemo = React.createClass({
           tweenHandlerPreset={this.state.tweenHandlerPreset}
           animation={this.state.animation}
           noopChange={this.noopChange}
+          acceptTap={this.state.acceptTap}
+          acceptDoubleTap={this.state.acceptDoubleTap}
+          acceptPan={this.state.acceptPan}
           />
       </Drawer>
     );
