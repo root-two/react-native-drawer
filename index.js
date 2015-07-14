@@ -101,17 +101,23 @@ var drawer = React.createClass({
     'type'
   ],
 
-  //@TODO is this a good idea? could be leaky
+  //@TODO can this be optimization?
   shouldComponentUpdate(nextProps, nextState) {
+    // this.propsWhomRequireUpdate.forEach((key) => {
+    //   if(this.props[key] !== nextProps[key]){ return true }
+    // })
+    // if(!shallowEquals(this.props.children.props, nextProps.children.props)){ return true }
+    return true
+  },
+
+  requiresIntialize(nextProps){
     this.propsWhomRequireUpdate.forEach((key) => {
       if(this.props[key] !== nextProps[key]){ return true }
     })
-    if(!shallowEquals(this.props.children.props, nextProps.children.props)){ return true }
-    return false
   },
 
   componentWillReceiveProps(nextProps){
-    if(this.shouldComponentUpdate(nextProps)){
+    if(this.requiresIntialize(nextProps)){
       this.initialize(nextProps)
     }
   },
