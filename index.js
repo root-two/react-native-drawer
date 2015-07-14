@@ -87,7 +87,7 @@ var drawer = React.createClass({
                 ]
         return {
           drawer: {
-            left:-fullWidth/8 + fullWidth*ratio/8,
+            left:-deviceScreen.width/8 + deviceScreen.width*ratio/8,
             transformMatrix: t,
           },
         }
