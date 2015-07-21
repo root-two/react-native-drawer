@@ -40,9 +40,16 @@ var Application = React.createClass({
 ### Examples
 Simple
 ```js
-//Slack Style (static)
-<Drawer type="static" content={<MyMenu />} >
-  <Main />
+//Parallax Effect (slack style)
+<Drawer
+  ref="drawer"
+  type="static"
+  content={<ControlPanel />}
+  openDrawerOffset={100}
+  styles={{main: {shadowColor: "#000000", shadowOpacity: 0.4, shadowRadius: 3}}}
+  tweenHandler={Drawer.tweenPresets.parallax}
+  >
+    <Main />
 </Drawer>
 
 //Material Design Style Drawer
