@@ -94,6 +94,12 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `onOpen` (Function) - Will be called immediately after the drawer has entered the open state.
 - `onClose` (Function) - Will be called immediately after the drawer has entered the closed state.
 
+##### Gestures
+- `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
+- `acceptTap` (Boolean) `false` - Toggle drawer when any tap occurs within pan mask?
+- `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag).
+Set `accetPan` to false to effectively disable the drawer while still allowing programmatic control.
+
 ##### Additional Configurations
 - `openDrawerThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
 - `panOpenMask` (Number) `.05` - Ratio of screen width that is valid for the start of a pan open action. Make this number small if you need pans to propagate to children.
@@ -101,9 +107,6 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `relativeDrag` (Boolean) `true` - true -> open/close calculation based on pan dx : false -> calculation based on absolute pan position (i.e. touch location)
 - `panStartCompensation` (Boolean) `false` - Should the drawer catch up to the finger drag position?
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
-- `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
-- `acceptTap` (Boolean) `false` - Toggle drawer when any tap occurs within pan mask?
-- `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag).
 - `side` (String left|right) `left` - which side the drawer should be on.
 
 ### Tween Handler
