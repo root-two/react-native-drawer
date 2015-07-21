@@ -97,7 +97,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 ##### Gestures
 - `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
 - `acceptTap` (Boolean) `false` - Toggle drawer when any tap occurs within pan mask?
-- `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag).
+- `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag).  
 Set `accetPan` to false to effectively disable the drawer while still allowing programmatic control.
 
 ##### Additional Configurations
