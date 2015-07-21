@@ -56,7 +56,7 @@ var drawer = React.createClass({
       closedDrawerOffset: 0,
       openDrawerOffset: 0,
       openDrawerThreshold: .25,
-      relativeDrag: false,
+      relativeDrag: true,
       panStartCompensation: true,
       panOpenMask: .25,
       panCloseMask: .25,
@@ -87,7 +87,7 @@ var drawer = React.createClass({
                 ]
         return {
           drawer: {
-            left:-fullWidth/8 + fullWidth*ratio/8,
+            left:-150*(1-ratio),
             transformMatrix: t,
           },
         }
