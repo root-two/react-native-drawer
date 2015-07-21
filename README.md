@@ -99,9 +99,6 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag).
 - `side` (String left|right) `left` - which side the drawer should be on.
 
-Props are a work in progress, suggestions welcome.
-@TODO support right hand drawer and multiple drawers.
-
 ### Tween Handler
 You can achieve pretty much any animation you want using the tween handler with the transformMatrix property. E.G.
 ```js
