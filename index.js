@@ -1,14 +1,8 @@
 var React = require('react-native')
-var {NativeModules} = React
-var deviceScreen = NativeModules.UIManager.Dimensions.window
+var deviceScreen = React.NativeModules.UIManager.Dimensions.window
 var tween = require('./Tweener')
-var shallowEquals = require('shallow-equals')
 
-var {
-  PanResponder,
-  View,
-  StyleSheet
-} = React
+var { PanResponder, View, StyleSheet } = React
 
 /**
  * Check if the current gesture offset bigger than allowed one
@@ -36,6 +30,7 @@ var drawer = React.createClass({
     panStartCompensation: React.PropTypes.bool,
     panOpenMask: React.PropTypes.number,
     panCloseMask: React.PropTypes.number,
+    captureGestures: React.PropTypes.bool,
     initializeOpen: React.PropTypes.bool,
     tweenHandler: React.PropTypes.func,
     tweenDuration: React.PropTypes.number,
@@ -60,6 +55,7 @@ var drawer = React.createClass({
       panStartCompensation: true,
       panOpenMask: .25,
       panCloseMask: .25,
+      captureGestures: false,
       initializeOpen: false,
       tweenHandler: null,
       tweenDuration: 250,
@@ -78,19 +74,9 @@ var drawer = React.createClass({
   statics: {
     tweenPresets: {
       parallax: (ratio) => {
-        var r1 = 1
-        var t = [
-                   r1,  0,  0,  0,
-                   0, r1,  0,  0,
-                   0,   0,   1,  0,
-                   0,   0,   0,  1,
-                ]
-        return {
-          drawer: {
-            left:-150*(1-ratio),
-            transformMatrix: t,
-          },
-        }
+        var drawer = {}
+        drawer.left = -150*(1-ratio)
+        return { drawer: drawer }
       }
     }
   },
@@ -205,6 +191,7 @@ var drawer = React.createClass({
 
       this.responder = PanResponder.create({
         onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder,
+        onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture,
         onPanResponderMove: this.handlePanResponderMove,
         onPanResponderRelease: this.handlePanResponderEnd,
       })
@@ -256,6 +243,12 @@ var drawer = React.createClass({
     }
     else{
       return dx > deviceScreen.width*this.props.openDrawerThreshold
+    }
+  },
+
+  handleStartShouldSetPanResponderCapture: function(e, gestureState){
+    if(this.props.captureGestures){
+      return this.handleStartShouldSetPanResponder(e, gestureState)
     }
   },
 
@@ -316,13 +309,16 @@ var drawer = React.createClass({
     var delta = relMoveX - dx
     var factor = absDx/Math.abs(relMoveX)
     var adjustedDx = dx + delta*factor
-    this._left = this.props.panStartCompensation ? this._prevLeft + adjustedDx : this._prevLeft + dx
+    var left = this.props.panStartCompensation ? this._prevLeft + adjustedDx : this._prevLeft + dx
+    left = Math.min(left, this.getOpenLeft())
+    left = Math.max(left, this.getClosedLeft())
+    this._left = left
     this.updatePosition()
     this._panning = true
   },
 
   /**
-   * Open menu
+   * Open drawer
    * @return {Void}
    */
   open: function() {
@@ -346,7 +342,7 @@ var drawer = React.createClass({
   },
 
   /**
-   * Close menu
+   * Close drawer
    * @return {Void}
    */
   close: function() {
@@ -371,16 +367,6 @@ var drawer = React.createClass({
 
   toggle: function() {
     this._open ? this.close() : this.open()
-  },
-
-  openDrawer: function(){
-    console.warn('rn-drawer: `openDrawer` is deprecated, use `open` instead.')
-    this.open()
-  },
-
-  closeDrawer: function(){
-    console.warn('rn-drawer: `closeDrawer` is deprecated, use `close` instead.')
-    this.close()
   },
 
   /**

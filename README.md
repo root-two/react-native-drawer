@@ -18,10 +18,10 @@ Configurable react native pull out drawer. Supports displace, overlay (material 
 var Drawer = require('react-native-drawer')
 
 var Application = React.createClass({
-  closeDrawer: function(){
+  closeControlPanel: function(){
     this.refs.drawer.close()
   },
-  openDrawer: function(){
+  openControlPanel: function(){
     this.refs.drawer.open()
   },
   render: function() {
@@ -42,7 +42,6 @@ Simple
 ```js
 //Parallax Effect (slack style)
 <Drawer
-  ref="drawer"
   type="static"
   content={<ControlPanel />}
   openDrawerOffset={100}
@@ -95,6 +94,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `onClose` (Function) - Will be called immediately after the drawer has entered the closed state.
 
 ##### Gestures
+- `captureGestures` (Boolean) `false` - If true, will capture all gestures inside of the pan mask. Meaning child buttons and scroll views will not trigger.
 - `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
 - `acceptTap` (Boolean) `false` - Toggle drawer when any tap occurs within pan mask?
 - `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag). Set to false to effectively disable the drawer while still allowing programmatic control.
