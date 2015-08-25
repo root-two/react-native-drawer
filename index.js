@@ -397,18 +397,27 @@ var drawer = React.createClass({
     this._panning = false
   },
 
+  getMenuActions() {
+    return {
+      close: this.close.bind(this),
+      toggle: this.toggle.bind(this),
+      open: this.open.bind(this),
+    };
+  },
   /**
    * Get content view. This view will be rendered over menu
    * @return {React.Component}
    */
   getMainView: function() {
+    const menuActions = this.getMenuActions();
+    const children = React.Children.map(this.props.children,
+        (child) => React.cloneElement(child, { menuActions, }));
     return (
       <View
         key="main"
         style={this.stylesheet.main}
         ref="main"
         {...this.responder.panHandlers}>
-        {this.props.children}
       </View>
     )
   },
@@ -420,9 +429,6 @@ var drawer = React.createClass({
    * @return {React.Component}
    */
   getDrawerView: function() {
-    var drawerActions = {
-      close: this.closeDrawer
-    }
 
     return (
       <View
@@ -430,7 +436,6 @@ var drawer = React.createClass({
         style={this.stylesheet.drawer}
         ref="drawer"
         {...this.responder.panHandlers}>
-        {this.props.content}
       </View>
     )
   },
