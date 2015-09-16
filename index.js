@@ -1,5 +1,6 @@
 var React = require('react-native')
-var deviceScreen = React.NativeModules.UIManager.Dimensions.window
+var Dimensions = require('Dimensions');
+var deviceScreen = Dimensions.get('window');
 var tween = require('./Tweener')
 
 var { PanResponder, View, StyleSheet } = React
@@ -418,6 +419,7 @@ var drawer = React.createClass({
         style={this.stylesheet.main}
         ref="main"
         {...this.responder.panHandlers}>
+        {children}
       </View>
     )
   },
@@ -429,6 +431,7 @@ var drawer = React.createClass({
    * @return {React.Component}
    */
   getDrawerView: function() {
+    const menuActions = this.getMenuActions();
 
     return (
       <View
@@ -436,6 +439,7 @@ var drawer = React.createClass({
         style={this.stylesheet.drawer}
         ref="drawer"
         {...this.responder.panHandlers}>
+        {React.addons.cloneWithProps(this.props.content, { menuActions, })}
       </View>
     )
   },
