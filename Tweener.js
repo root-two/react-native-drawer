@@ -1,4 +1,3 @@
-var React = require('react-native')
 var easingTypes = require('tween-functions');
 
 module.exports = function(config) {
@@ -30,12 +29,7 @@ Tween.prototype._rafLoop = function() {
   var tweenVal = easingTypes[easingType](elapsed, start, end, duration)
   this._config.onFrame(tweenVal)
 
-  if(React.Platform.OS === 'android'){
-    setTimeout(this._rafLoop, 16)
-  }
-  else{
-    requestAnimationFrame(this._rafLoop)
-  }
+  requestAnimationFrame(this._rafLoop)
 }
 
 Tween.prototype.terminate = function(){
