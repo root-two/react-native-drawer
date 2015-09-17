@@ -3,6 +3,8 @@
 
 Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.  
 
+**Android**: Android support has been added in v1.3.0!
+
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
