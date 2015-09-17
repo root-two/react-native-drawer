@@ -1,8 +1,8 @@
 var React = require('react-native')
-var deviceScreen = React.NativeModules.UIManager.Dimensions.window
+var { PanResponder, View, StyleSheet, Dimensions } = React
+var deviceScreen = Dimensions.get('window')
 var tween = require('./Tweener')
 
-var { PanResponder, View, StyleSheet } = React
 
 /**
  * Check if the current gesture offset bigger than allowed one
