@@ -3,6 +3,9 @@
 
 Configurable react native pull out drawer. Supports displace, overlay (material design) static (slack style) transitions modes, as well as custom tweens.  
 
+[![npm version](https://img.shields.io/npm/v/react-native-drawer.svg?style=flat-square)](https://www.npmjs.com/package/react-native-drawer)
+[![npm downloads](https://img.shields.io/npm/dm/react-native-drawer.svg?style=flat-square)](https://www.npmjs.com/package/react-native-drawer)
+
 **Android**: Android support has been added in v1.3.0!
 
 - [Installation](#installation)
