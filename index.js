@@ -256,7 +256,30 @@ var drawer = React.createClass({
    * Permission to use responder
    * @return {Boolean} true
    */
-  handleStartShouldSetPanResponder: function(e: Object, gestureState: Object) {
+  handleStartShouldSetPanResponder: function(e, gestureState) {
+    if(!this.testPanResponderMask(e, gestureState)){
+      return false
+    }
+
+    this.processTapGestures()
+
+    return true
+  },
+
+  processTapGestures: function(){
+    if(this.props.acceptTap){
+      this._open ? this.close() : this.open()
+    }
+    else if(this.props.acceptDoubleTap){
+      var now = new Date().getTime()
+      if(now - this._lastPress < 500){
+        this._open ? this.close() : this.open()
+      }
+      this._lastPress = now
+    }
+  },
+
+  testPanResponderMask: function(e, gestureState){
     if(this.props.disabled){ return false }
     var x0 = e.nativeEvent.pageX
 
@@ -269,21 +292,6 @@ var drawer = React.createClass({
       ){
         return false
       }
-
-    if(this.props.acceptTap){
-      this._open ? this.close() : this.open()
-    }
-    else if(this.props.acceptDoubleTap){
-      var now = new Date().getTime()
-      if(now - this._lastPress < 500){
-        this._open ? this.close() : this.open()
-      }
-      this._lastPress = now
-    }
-
-    if(!this.props.acceptPan){
-      return false
-    }
     return true
   },
 
@@ -294,6 +302,11 @@ var drawer = React.createClass({
    * @return {Void}
    */
   handlePanResponderMove: function(e: Object, gestureState: Object) {
+
+    if(!this.props.acceptPan){
+      return false
+    }
+
     //Math is ugly overly verbose here, probably can be greatly cleaned up
     var dx = gestureState.dx
     //@TODO store adjustedDx max so that it does not uncompensate when panning back
