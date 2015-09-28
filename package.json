@@ -14,12 +14,15 @@
     "tween-functions": "^1.0.1"
   },
   "keywords": [
+    "react",
     "react-native",
     "react-component",
-    "ios",
     "drawer",
     "side-menu",
-    "menu"
+    "menu",
+    "ios",
+    "android",
+    "material design"
   ],
   "author": "rt2zz <zack@root-two.com>",
   "license": "MIT",
