@@ -113,13 +113,11 @@ var drawer = React.createClass({
       },
     }
     styles.main = Object.assign({
-        flex: 1,
         position: 'absolute',
         top: 0,
         height: this.state.viewport.height,
       }, this.props.styles.main)
     styles.drawer = Object.assign({
-        flex: 1,
         position: 'absolute',
         top: 0,
         height: this.state.viewport.height,
@@ -364,7 +362,7 @@ var drawer = React.createClass({
     return (
       <View
         key="main"
-        style={this.stylesheet.main}
+        style={[this.stylesheet.main, {width:this.state.viewport.width, height: this.state.viewport.height, backgroundColor: 'blue'}]}
         ref="main"
         {...this.responder.panHandlers}>
         {this.props.children}
@@ -380,7 +378,7 @@ var drawer = React.createClass({
     return (
       <View
         key="drawer"
-        style={this.stylesheet.drawer}
+        style={[this.stylesheet.drawer, {width:this.state.viewport.width, height: this.state.viewport.height, backgroundColor: 'red'}]}
         ref="drawer"
         {...this.responder.panHandlers}>
         {this.props.content}
