@@ -3,13 +3,6 @@ var { PanResponder, View, StyleSheet, Dimensions } = React
 var deviceScreen = Dimensions.get('window')
 var tween = require('./Tweener')
 
-
-/**
- * Check if the current gesture offset bigger than allowed one
- * before opening menu
- * @param  {Number} dx Gesture offset from the left side of the window
- * @return {Boolean}
- */
 var drawer = React.createClass({
 
   _left: 0,
@@ -81,20 +74,19 @@ var drawer = React.createClass({
     }
   },
 
+  getInitialState () {
+    return { viewport: deviceScreen }
+  },
+
+  setViewport (e) {
+    this.setState({ viewport: e.nativeEvent.layout })
+  },
+
   propsWhomRequireUpdate: [
     'closedDrawerOffset',
     'openDrawerOffset',
     'type'
   ],
-
-  //@TODO can this be optimization?
-  shouldComponentUpdate(nextProps, nextState) {
-    // this.propsWhomRequireUpdate.forEach((key) => {
-    //   if(this.props[key] !== nextProps[key]){ return true }
-    // })
-    // if(!shallowEquals(this.props.children.props, nextProps.children.props)){ return true }
-    return true
-  },
 
   requiresIntialize(nextProps){
     this.propsWhomRequireUpdate.forEach((key) => {
@@ -109,7 +101,7 @@ var drawer = React.createClass({
   },
 
   initialize(props){
-    var fullWidth = deviceScreen.width
+    var fullWidth = this.state.viewport.width
     this._offsetClosed = props.closedDrawerOffset%1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset*fullWidth
     this._offsetOpen = props.openDrawerOffset%1 === 0 ? props.openDrawerOffset : props.openDrawerOffset*fullWidth
 
@@ -124,13 +116,13 @@ var drawer = React.createClass({
         flex: 1,
         position: 'absolute',
         top: 0,
-        height: deviceScreen.height,
+        height: this.state.viewport.height,
       }, this.props.styles.main)
     styles.drawer = Object.assign({
         flex: 1,
         position: 'absolute',
         top: 0,
-        height: deviceScreen.height,
+        height: this.state.viewport.height,
       }, this.props.styles.drawer)
 
     //open
@@ -202,11 +194,6 @@ var drawer = React.createClass({
     this.initialize(this.props)
   },
 
-  /**
-   * Change `left` style attributes
-   * Works only if `drawer` is a ref to React.Component
-   * @return {Void}
-   */
   updatePosition: function() {
     var mainProps = {}
     var drawerProps = {}
@@ -215,7 +202,7 @@ var drawer = React.createClass({
 
     switch(this.props.type){
       case 'overlay':
-        drawerProps[this.props.side] = -deviceScreen.width+this._offsetOpen+this._left
+        drawerProps[this.props.side] = -this.state.viewport.width+this._offsetOpen+this._left
         mainProps[this.props.side] = this._offsetClosed
         break
       case 'static':
@@ -224,7 +211,7 @@ var drawer = React.createClass({
         break
       case 'displace':
         mainProps[this.props.side] = this._left
-        drawerProps[this.props.side] = -deviceScreen.width+this._left+this._offsetOpen
+        drawerProps[this.props.side] = -this.state.viewport.width+this._left+this._offsetOpen
         break
     }
 
@@ -239,10 +226,10 @@ var drawer = React.createClass({
 
   shouldOpenDrawer(dx: Number) {
     if(this._open){
-      return dx < deviceScreen.width*this.props.openDrawerThreshold
+      return dx < this.state.viewport.width*this.props.openDrawerThreshold
     }
     else{
-      return dx > deviceScreen.width*this.props.openDrawerThreshold
+      return dx > this.state.viewport.width*this.props.openDrawerThreshold
     }
   },
 
@@ -252,21 +239,20 @@ var drawer = React.createClass({
     }
   },
 
-  /**
-   * Permission to use responder
-   * @return {Boolean} true
-   */
-  handleStartShouldSetPanResponder: function(e, gestureState) {
-    if(!this.testPanResponderMask(e, gestureState)){
-      return false
-    }
+  handleStartShouldSetPanResponder: function(e: Object, gestureState: Object) {
+    if(this.props.disabled){ return false }
+    var x0 = e.nativeEvent.pageX
 
-    this.processTapGestures()
+    var deltaOpen = this.props.side === 'left' ? this.state.viewport.width - x0 : x0
+    var deltaClose = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
 
-    return true
-  },
+    //@TODO lol formatting?
+    if( this._open && deltaOpen > this.state.viewport.width*this.props.panCloseMask
+        || !this._open && deltaClose > this.state.viewport.width*this.props.panOpenMask
+      ){
+        return false
+      }
 
-  processTapGestures: function(){
     if(this.props.acceptTap){
       this._open ? this.close() : this.open()
     }
@@ -277,36 +263,14 @@ var drawer = React.createClass({
       }
       this._lastPress = now
     }
-  },
-
-  testPanResponderMask: function(e, gestureState){
-    if(this.props.disabled){ return false }
-    var x0 = e.nativeEvent.pageX
-
-    var deltaOpen = this.props.side === 'left' ? deviceScreen.width - x0 : x0
-    var deltaClose = this.props.side === 'left' ? x0 : deviceScreen.width - x0
-
-    //@TODO lol formatting?
-    if( this._open && deltaOpen > deviceScreen.width*this.props.panCloseMask
-        || !this._open && deltaClose > deviceScreen.width*this.props.panOpenMask
-      ){
-        return false
-      }
-    return true
-  },
-
-  /**
-   * Handler on responder move
-   * @param  {Synthetic Event} e
-   * @param  {Object} gestureState
-   * @return {Void}
-   */
-  handlePanResponderMove: function(e: Object, gestureState: Object) {
 
     if(!this.props.acceptPan){
       return false
     }
+    return true
+  },
 
+  handlePanResponderMove: function(e: Object, gestureState: Object) {
     //Math is ugly overly verbose here, probably can be greatly cleaned up
     var dx = gestureState.dx
     //@TODO store adjustedDx max so that it does not uncompensate when panning back
@@ -317,8 +281,8 @@ var drawer = React.createClass({
     var absDx = Math.abs(dx)
     var moveX = gestureState.moveX
     var relMoveX = this.props.side === 'left'
-      ? this._open ? -deviceScreen.width + moveX : moveX
-      : this._open ? -moveX : deviceScreen.width - moveX
+      ? this._open ? -this.state.viewport.width + moveX : moveX
+      : this._open ? -moveX : this.state.viewport.width - moveX
     var delta = relMoveX - dx
     var factor = absDx/Math.abs(relMoveX)
     var adjustedDx = dx + delta*factor
@@ -330,10 +294,6 @@ var drawer = React.createClass({
     this._panning = true
   },
 
-  /**
-   * Open drawer
-   * @return {Void}
-   */
   open: function() {
     if(this.props.disabled){ return null }
     tween({
@@ -354,10 +314,6 @@ var drawer = React.createClass({
     })
   },
 
-  /**
-   * Close drawer
-   * @return {Void}
-   */
   close: function() {
     if(this.props.disabled){ return null }
     tween({
@@ -382,12 +338,6 @@ var drawer = React.createClass({
     this._open ? this.close() : this.open()
   },
 
-  /**
-   * Handler on responder move ending
-   * @param  {Synthetic Event} e
-   * @param  {Object} gestureState
-   * @return {Void}
-   */
   handlePanResponderEnd: function(e: Object, gestureState: Object) {
     //Do nothing if we are not in an active pan state
     if(!this._panning){ return }
@@ -396,8 +346,8 @@ var drawer = React.createClass({
     // if(this._open ^ gestureState.dx < 0){ return }
 
     var absRelMoveX = this.props.side === 'left'
-      ? this._open ? deviceScreen.width - gestureState.moveX : gestureState.moveX
-      : this._open ? gestureState.moveX : deviceScreen.width - gestureState.moveX
+      ? this._open ? this.state.viewport.width - gestureState.moveX : gestureState.moveX
+      : this._open ? gestureState.moveX : this.state.viewport.width - gestureState.moveX
     var calcPos = this.props.relativeDrag ? Math.abs(gestureState.dx) : absRelMoveX
     if (this.shouldOpenDrawer(calcPos)) {
       this.open()
@@ -410,10 +360,6 @@ var drawer = React.createClass({
     this._panning = false
   },
 
-  /**
-   * Get content view. This view will be rendered over menu
-   * @return {React.Component}
-   */
   getMainView: function() {
     return (
       <View
@@ -426,12 +372,6 @@ var drawer = React.createClass({
     )
   },
 
-  /**
-   * Get menu view. This view will be rendered under
-   * content view. Also, this function will decorate
-   * passed `menu` component with side menu API
-   * @return {React.Component}
-   */
   getDrawerView: function() {
     var drawerActions = {
       close: this.closeDrawer
@@ -448,10 +388,6 @@ var drawer = React.createClass({
     )
   },
 
-  /**
-   * Compose and render menu and content view
-   * @return {React.Component}
-   */
   render: function() {
     switch(this.props.type){
       case 'overlay':
@@ -464,7 +400,7 @@ var drawer = React.createClass({
         break
     }
     return (
-      <View style={this.stylesheet.container} key="drawerContainer">
+      <View style={this.stylesheet.container} key="drawerContainer" onLayout={this.setViewport}>
         {first}
         {second}
       </View>
@@ -472,7 +408,7 @@ var drawer = React.createClass({
   },
 
   getOpenLeft: function(){
-    return deviceScreen.width - this._offsetOpen
+    return this.state.viewport.width - this._offsetOpen
   },
 
   getClosedLeft() {
