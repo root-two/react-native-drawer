@@ -90,19 +90,19 @@ var drawer = React.createClass({
     'type'
   ],
 
-  requiresIntialize(nextProps){
+  requiresIntialize (nextProps) {
     this.propsWhomRequireUpdate.forEach((key) => {
       if(this.props[key] !== nextProps[key]){ return true }
     })
   },
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps (nextProps) {
     if(this.requiresIntialize(nextProps)){
       this.initialize(nextProps)
     }
   },
 
-  initialize(props){
+  initialize (props) {
     var fullWidth = this.state.viewport.width
     this._offsetClosed = props.closedDrawerOffset%1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset*fullWidth
     this._offsetOpen = props.openDrawerOffset%1 === 0 ? props.openDrawerOffset : props.openDrawerOffset*fullWidth
@@ -133,20 +133,14 @@ var drawer = React.createClass({
       if(props.type === 'static'){
         styles.main[this.props.side] = fullWidth - this._offsetOpen
         styles.drawer[this.props.side] = 0
-        styles.main.width = fullWidth - this._offsetClosed
-        styles.drawer.width = fullWidth
       }
       if(props.type === 'overlay'){
         styles.main[this.props.side] = 0
         styles.drawer[this.props.side] = 0
-        styles.main.width = fullWidth
-        styles.drawer.width = fullWidth - this._offsetOpen
       }
       if(props.type === 'displace'){
         styles.main[this.props.side] = fullWidth - this._offsetOpen
         styles.drawer[this.props.side] = 0
-        styles.main.width = fullWidth - this._offsetClosed
-        styles.drawer.width = fullWidth - this._offsetOpen
       }
     }
     //closed
@@ -157,20 +151,14 @@ var drawer = React.createClass({
       if(props.type === 'static'){
         styles.main[this.props.side] = this._offsetClosed
         styles.drawer[this.props.side] = 0
-        styles.main.width = fullWidth - this._offsetClosed
-        styles.drawer.width = fullWidth
       }
       if(props.type === 'overlay'){
         styles.main[this.props.side] = this._offsetClosed
         styles.drawer[this.props.side] = this._offsetClosed + this._offsetOpen - fullWidth
-        styles.main.width = fullWidth
-        styles.drawer.width = fullWidth - this._offsetOpen
       }
       if(props.type === 'displace'){
         styles.main[this.props.side] = this._offsetClosed
         styles.drawer[this.props.side] = - fullWidth + this._offsetClosed + this._offsetOpen
-        styles.main.width = fullWidth - this._offsetClosed
-        styles.drawer.width = fullWidth - this._offsetOpen
       }
     }
 
@@ -190,11 +178,11 @@ var drawer = React.createClass({
     }
   },
 
-  componentWillMount: function() {
+  componentWillMount () {
     this.initialize(this.props)
   },
 
-  componentDidUpdate: function () {
+  componentDidUpdate () {
     this._offsetClosed = this.props.closedDrawerOffset%1 === 0 ? this.props.closedDrawerOffset : this.props.closedDrawerOffset*this.state.viewport.width
     this._offsetOpen = this.props.openDrawerOffset%1 === 0 ? this.props.openDrawerOffset : this.props.openDrawerOffset*this.state.viewport.width
     if(this._syncAfterUpdate){
@@ -203,7 +191,7 @@ var drawer = React.createClass({
     }
   },
 
-  updatePosition: function() {
+  updatePosition () {
     var mainProps = {}
     var drawerProps = {}
 
@@ -233,7 +221,7 @@ var drawer = React.createClass({
     this.refs.main.setNativeProps(mainProps)
   },
 
-  shouldOpenDrawer(dx: Number) {
+  shouldOpenDrawer (dx) {
     if(this._open){
       return dx < this.state.viewport.width*this.props.openDrawerThreshold
     }
@@ -242,13 +230,13 @@ var drawer = React.createClass({
     }
   },
 
-  handleStartShouldSetPanResponderCapture: function(e, gestureState){
+  handleStartShouldSetPanResponderCapture (e, gestureState) {
     if(this.props.captureGestures){
       return this.handleStartShouldSetPanResponder(e, gestureState)
     }
   },
 
-  handleStartShouldSetPanResponder: function(e: Object, gestureState: Object) {
+  handleStartShouldSetPanResponder (e, gestureState) {
     if(this.props.disabled){ return false }
     var x0 = e.nativeEvent.pageX
 
@@ -279,7 +267,7 @@ var drawer = React.createClass({
     return true
   },
 
-  handlePanResponderMove: function(e: Object, gestureState: Object) {
+  handlePanResponderMove (e, gestureState) {
     //Math is ugly overly verbose here, probably can be greatly cleaned up
     var dx = gestureState.dx
     //@TODO store adjustedDx max so that it does not uncompensate when panning back
@@ -303,7 +291,7 @@ var drawer = React.createClass({
     this._panning = true
   },
 
-  open: function() {
+  open () {
     if(this.props.disabled){ return null }
     tween({
       start: this._left,
@@ -323,7 +311,7 @@ var drawer = React.createClass({
     })
   },
 
-  close: function() {
+  close () {
     if(this.props.disabled){ return null }
     tween({
       start: this._left,
@@ -343,7 +331,7 @@ var drawer = React.createClass({
     })
   },
 
-  toggle: function() {
+  toggle () {
     this._open ? this.close() : this.open()
   },
 
@@ -369,11 +357,11 @@ var drawer = React.createClass({
     this._panning = false
   },
 
-  getMainView: function() {
+  getMainView () {
     return (
       <View
         key="main"
-        style={[this.stylesheet.main, {width:this.state.viewport.width, height: this.state.viewport.height, backgroundColor: 'blue'}]}
+        style={[this.stylesheet.main, {width: this.getMainWidth(), height: this.state.viewport.height, backgroundColor: 'blue'}]}
         ref="main"
         {...this.responder.panHandlers}>
         {this.props.children}
@@ -381,7 +369,7 @@ var drawer = React.createClass({
     )
   },
 
-  getDrawerView: function() {
+  getDrawerView () {
     var drawerActions = {
       close: this.closeDrawer
     }
@@ -389,7 +377,7 @@ var drawer = React.createClass({
     return (
       <View
         key="drawer"
-        style={[this.stylesheet.drawer, {width:this.state.viewport.width, height: this.state.viewport.height, backgroundColor: 'red'}]}
+        style={[this.stylesheet.drawer, {width: this.getDrawerWidth(), height: this.state.viewport.height, backgroundColor: 'red'}]}
         ref="drawer"
         {...this.responder.panHandlers}>
         {this.props.content}
@@ -397,7 +385,7 @@ var drawer = React.createClass({
     )
   },
 
-  render: function() {
+  render () {
     switch(this.props.type){
       case 'overlay':
         var first = this.getMainView()
@@ -416,13 +404,21 @@ var drawer = React.createClass({
     )
   },
 
-  getOpenLeft: function(){
+  getOpenLeft () {
     return this.state.viewport.width - this._offsetOpen
   },
 
-  getClosedLeft() {
+  getClosedLeft () {
     return this._offsetClosed
   },
+
+  getMainWidth () {
+    return this.state.viewport.width - this._offsetClosed
+  },
+
+  getDrawerWidth () {
+    return this.state.viewport.width - this._offsetOpen
+  }
 
 })
 
