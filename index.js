@@ -236,20 +236,17 @@ var drawer = React.createClass({
     }
   },
 
-  handleStartShouldSetPanResponder (e, gestureState) {
-    if(this.props.disabled){ return false }
-    var x0 = e.nativeEvent.pageX
+  handleStartShouldSetPanResponder: function(e, gestureState) {
+    if(!this.testPanResponderMask(e, gestureState)){
+      return false
+    }
 
-    var deltaOpen = this.props.side === 'left' ? this.state.viewport.width - x0 : x0
-    var deltaClose = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
+    this.processTapGestures()
 
-    //@TODO lol formatting?
-    if( this._open && deltaOpen > this.state.viewport.width*this.props.panCloseMask
-        || !this._open && deltaClose > this.state.viewport.width*this.props.panOpenMask
-      ){
-        return false
-      }
+    return true
+  },
 
+  processTapGestures () {
     if(this.props.acceptTap){
       this._open ? this.close() : this.open()
     }
@@ -260,14 +257,25 @@ var drawer = React.createClass({
       }
       this._lastPress = now
     }
+  },
 
-    if(!this.props.acceptPan){
-      return false
-    }
+  testPanResponderMask (e, gestureState) {
+    if(this.props.disabled){ return false }
+    var x0 = e.nativeEvent.pageX
+
+    var deltaOpen = this.props.side === 'left' ? deviceScreen.width - x0 : x0
+    var deltaClose = this.props.side === 'left' ? x0 : deviceScreen.width - x0
+
+    if( this._open && deltaOpen > deviceScreen.width*this.props.panCloseMask ) return false
+    if( !this._open && deltaClose > deviceScreen.width*this.props.panOpenMask ) return false
     return true
   },
 
   handlePanResponderMove (e, gestureState) {
+    if(!this.props.acceptPan){
+      return false
+    }
+
     //Math is ugly overly verbose here, probably can be greatly cleaned up
     var dx = gestureState.dx
     //@TODO store adjustedDx max so that it does not uncompensate when panning back
