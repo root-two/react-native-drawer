@@ -13,6 +13,7 @@ var drawer = React.createClass({
   _panning: false,
   _tweenPending: false,
   _lastPress: 0,
+  _syncAfterUpdate: false,
 
   propTypes: {
     type: React.PropTypes.string,
@@ -80,6 +81,7 @@ var drawer = React.createClass({
 
   setViewport (e) {
     this.setState({ viewport: e.nativeEvent.layout })
+    this._syncAfterUpdate = true
   },
 
   propsWhomRequireUpdate: [
@@ -192,6 +194,13 @@ var drawer = React.createClass({
     this.initialize(this.props)
   },
 
+  componentDidUpdate: function () {
+    if(this._syncAfterUpdate){
+      this._syncAfterUpdate = false
+      this._open ? this.open() : this.close()
+    }
+  },
+
   updatePosition: function() {
     var mainProps = {}
     var drawerProps = {}
@@ -293,6 +302,7 @@ var drawer = React.createClass({
   },
 
   open: function() {
+    console.log('fromto', this._left, this.getOpenLeft())
     if(this.props.disabled){ return null }
     tween({
       start: this._left,
@@ -362,7 +372,7 @@ var drawer = React.createClass({
     return (
       <View
         key="main"
-        style={[this.stylesheet.main, {width:this.state.viewport.width, height: this.state.viewport.height}]}
+        style={[this.stylesheet.main, {width:this.state.viewport.width, height: this.state.viewport.height, backgroundColor: 'blue'}]}
         ref="main"
         {...this.responder.panHandlers}>
         {this.props.children}
@@ -378,7 +388,7 @@ var drawer = React.createClass({
     return (
       <View
         key="drawer"
-        style={[this.stylesheet.drawer, {width:this.state.viewport.width, height: this.state.viewport.height}]}
+        style={[this.stylesheet.drawer, {width:this.state.viewport.width, height: this.state.viewport.height, backgroundColor: 'red'}]}
         ref="drawer"
         {...this.responder.panHandlers}>
         {this.props.content}
