@@ -195,6 +195,8 @@ var drawer = React.createClass({
   },
 
   componentDidUpdate: function () {
+    this._offsetClosed = this.props.closedDrawerOffset%1 === 0 ? this.props.closedDrawerOffset : this.props.closedDrawerOffset*this.state.viewport.width
+    this._offsetOpen = this.props.openDrawerOffset%1 === 0 ? this.props.openDrawerOffset : this.props.openDrawerOffset*this.state.viewport.width
     if(this._syncAfterUpdate){
       this._syncAfterUpdate = false
       this._open ? this.open() : this.close()
@@ -302,7 +304,6 @@ var drawer = React.createClass({
   },
 
   open: function() {
-    console.log('fromto', this._left, this.getOpenLeft())
     if(this.props.disabled){ return null }
     tween({
       start: this._left,
