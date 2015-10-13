@@ -369,7 +369,7 @@ var drawer = React.createClass({
     return (
       <View
         key="main"
-        style={[this.stylesheet.main, {width: this.getMainWidth(), height: this.state.viewport.height, backgroundColor: 'blue'}]}
+        style={[this.stylesheet.main, {width: this.getMainWidth(), height: this.state.viewport.height}]}
         ref="main"
         {...this.responder.panHandlers}>
         {this.props.children}
@@ -385,7 +385,7 @@ var drawer = React.createClass({
     return (
       <View
         key="drawer"
-        style={[this.stylesheet.drawer, {width: this.getDrawerWidth(), height: this.state.viewport.height, backgroundColor: 'red'}]}
+        style={[this.stylesheet.drawer, {width: this.getDrawerWidth(), height: this.state.viewport.height}]}
         ref="drawer"
         {...this.responder.panHandlers}>
         {this.props.content}
