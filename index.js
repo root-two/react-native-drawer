@@ -217,8 +217,8 @@ var drawer = React.createClass({
       mainProps = Object.assign(mainProps, propsFrag.main)
       drawerProps = Object.assign(drawerProps, propsFrag.drawer)
     }
-    this.refs.drawer.setNativeProps(drawerProps)
-    this.refs.main.setNativeProps(mainProps)
+    this.refs.drawer.setNativeProps({style: drawerProps})
+    this.refs.main.setNativeProps({style: mainProps})
   },
 
   shouldOpenDrawer (dx) {
