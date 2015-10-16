@@ -118,12 +118,12 @@ var drawer = React.createClass({
         position: 'absolute',
         top: 0,
         height: this.state.viewport.height,
-      }, this.props.styles.main)
+      }, {borderWidth:0}, this.props.styles.main)
     styles.drawer = Object.assign({
         position: 'absolute',
         top: 0,
         height: this.state.viewport.height,
-      }, this.props.styles.drawer)
+      }, {borderWidth:0}, this.props.styles.drawer)
 
     //open
     if(props.initializeOpen === true){
