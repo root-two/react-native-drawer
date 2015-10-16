@@ -80,7 +80,12 @@ var drawer = React.createClass({
   },
 
   setViewport (e) {
-    this.setState({ viewport: e.nativeEvent.layout })
+    var viewport = e.nativeEvent.layout
+    var oldViewport = this.state.viewport
+    if(viewport.width === oldViewport.width && viewport.height === oldViewport.height){
+      return
+    }
+    this.setState({ viewport: viewport })
     this._syncAfterUpdate = true
   },
 
