@@ -87,8 +87,8 @@ var drawer = React.createClass({
     }
     this.setState({ viewport: viewport })
     this._syncAfterUpdate = true
-    this._offsetClosed = this.props.closedDrawerOffset%1 === 0 ? this.props.closedDrawerOffset : this.props.closedDrawerOffset*this.state.viewport.width
-    this._offsetOpen = this.props.openDrawerOffset%1 === 0 ? this.props.openDrawerOffset : this.props.openDrawerOffset*this.state.viewport.width
+    this._offsetClosed = this.props.closedDrawerOffset%1 === 0 ? this.props.closedDrawerOffset : this.props.closedDrawerOffset * viewport.width
+    this._offsetOpen = this.props.openDrawerOffset%1 === 0 ? this.props.openDrawerOffset : this.props.openDrawerOffset * viewport.width
   },
 
   propsWhomRequireUpdate: [
