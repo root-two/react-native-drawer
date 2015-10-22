@@ -98,9 +98,10 @@ var drawer = React.createClass({
   ],
 
   requiresIntialize (nextProps) {
-    this.propsWhomRequireUpdate.forEach((key) => {
+    for (var i = 0; i < this.propsWhomRequireUpdate.length; i++) {
+      var key = this.propsWhomRequireUpdate[i]
       if(this.props[key] !== nextProps[key]){ return true }
-    })
+    }
   },
 
   componentWillReceiveProps (nextProps) {
