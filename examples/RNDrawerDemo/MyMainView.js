@@ -176,7 +176,7 @@ module.exports = React.createClass({
               maximumValue={.5}
               value={this.props.openDrawerOffset}
               onSlidingComplete={(value) => {
-                  this.setParentState({openDrawerOffset: value})
+                  this.setParentState({openDrawerOffset: parseFloat(value)})
                 }}
                 />
               <Text style={styles.sliderMetric}>{Math.round(this.props.openDrawerOffset*100)}%</Text>
@@ -188,7 +188,7 @@ module.exports = React.createClass({
               maximumValue={.5}
               value={this.props.closedDrawerOffset}
               onSlidingComplete={(value) => {
-                  this.setParentState({closedDrawerOffset: value})
+                  this.setParentState({closedDrawerOffset: parseFloat(value)})
                 }}
                 />
               <Text style={styles.sliderMetric}>{Math.round(this.props.closedDrawerOffset*100)}%</Text>

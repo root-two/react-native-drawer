@@ -141,7 +141,7 @@ Will result in a skewed fade out animation.
 
 ### Demo
 * `git clone https://github.com/rt2zz/react-native-drawer.git`
-* `cd rn-drawer && npm install`
+* `cd react-native-drawer/examples/RNDrawerDemo && npm install`
 * Open ``./examples/RNDrawerDemo/RNDrawerDemo.xcodeproject` in xcode
 * `command+r` (in xcode)
 

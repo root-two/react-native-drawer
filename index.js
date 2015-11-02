@@ -85,10 +85,16 @@ var drawer = React.createClass({
     if(viewport.width === oldViewport.width && viewport.height === oldViewport.height){
       return
     }
-    this.setState({ viewport: viewport })
+    this.resync(viewport)
+  },
+
+  resync (viewport, props) {
+    var viewport = viewport || this.state.viewport
+    var props = props || this.props
     this._syncAfterUpdate = true
-    this._offsetClosed = this.props.closedDrawerOffset%1 === 0 ? this.props.closedDrawerOffset : this.props.closedDrawerOffset * viewport.width
-    this._offsetOpen = this.props.openDrawerOffset%1 === 0 ? this.props.openDrawerOffset : this.props.openDrawerOffset * viewport.width
+    this._offsetClosed = props.closedDrawerOffset%1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
+    this._offsetOpen = props.openDrawerOffset%1 === 0 ? props.openDrawerOffset : props.openDrawerOffset * viewport.width
+    this.setState({ viewport: viewport })
   },
 
   propsWhomRequireUpdate: [
@@ -97,7 +103,7 @@ var drawer = React.createClass({
     'type'
   ],
 
-  requiresIntialize (nextProps) {
+  requiresResync (nextProps) {
     for (var i = 0; i < this.propsWhomRequireUpdate.length; i++) {
       var key = this.propsWhomRequireUpdate[i]
       if(this.props[key] !== nextProps[key]){ return true }
@@ -105,8 +111,8 @@ var drawer = React.createClass({
   },
 
   componentWillReceiveProps (nextProps) {
-    if(this.requiresIntialize(nextProps)){
-      this.initialize(nextProps)
+    if(this.requiresResync(nextProps)){
+      this.resync(null, nextProps)
     }
   },
 
@@ -171,8 +177,8 @@ var drawer = React.createClass({
     }
 
     if(this.refs.main){
-      this.refs.drawer.setNativeProps({ left: styles.drawer.left})
-      this.refs.main.setNativeProps({ left: styles.main.left})
+      this.refs.drawer.setNativeProps({ style: {left: styles.drawer.left}})
+      this.refs.main.setNativeProps({ style: {left: styles.main.left}})
     }
     else{
       this.stylesheet = StyleSheet.create(styles)
@@ -184,6 +190,8 @@ var drawer = React.createClass({
         onPanResponderRelease: this.handlePanResponderEnd,
       })
     }
+
+    this.resync(null, props)
   },
 
   componentWillMount () {
