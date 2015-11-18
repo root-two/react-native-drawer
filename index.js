@@ -13,6 +13,7 @@ var drawer = React.createClass({
   _panning: false,
   _tweenPending: false,
   _lastPress: 0,
+  _panStartTime: 0,
   _syncAfterUpdate: false,
 
   propTypes: {
@@ -252,13 +253,11 @@ var drawer = React.createClass({
     }
   },
 
-  handleStartShouldSetPanResponder: function(e, gestureState) {
+  handleStartShouldSetPanResponder (e, gestureState) {
+    this._panStartTime = Date.now()
     if(!this.testPanResponderMask(e, gestureState)){
       return false
     }
-
-    this.processTapGestures()
-
     return true
   },
 
@@ -354,12 +353,12 @@ var drawer = React.createClass({
     this._open ? this.close() : this.open()
   },
 
-  handlePanResponderEnd: function(e: Object, gestureState: Object) {
-    //Do nothing if we are not in an active pan state
+  handlePanResponderEnd (e, gestureState) {
+    // If pan start was > 250ms ago, assume this is a pan not a tap
+    if (Date.now() - this._panStartTime < 250) this.processTapGestures()
+
+    // Do nothing if we are not in an active pan state
     if(!this._panning){ return }
-    //@TODO:Reevaluate - If we are panning the wrong way when the pan ends,
-    // which animation should trigger?
-    // if(this._open ^ gestureState.dx < 0){ return }
 
     var absRelMoveX = this.props.side === 'left'
       ? this._open ? this.state.viewport.width - gestureState.moveX : gestureState.moveX
