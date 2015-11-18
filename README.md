@@ -87,6 +87,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `type` (String: displace:overlay:static) `displace`- Type of drawer.
 - `openDrawerOffset` (Number) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open.
 - `closedDrawerOffset` (Number) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
+- `tapToClose`  (Boolean) `false` - When the drawer is open, whether a tap should close it.
 - `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
 
 ##### Animation / Tween
