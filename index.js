@@ -33,6 +33,7 @@ var drawer = React.createClass({
     acceptDoubleTap: React.PropTypes.bool,
     acceptTap: React.PropTypes.bool,
     acceptPan: React.PropTypes.bool,
+    tapToClose: React.PropTypes.bool,
     styles: React.PropTypes.object,
     onOpen: React.PropTypes.func,
     onClose: React.PropTypes.func,
@@ -58,6 +59,7 @@ var drawer = React.createClass({
       acceptDoubleTap: false,
       acceptTap: false,
       acceptPan: true,
+      tapToClose: false,
       styles: {},
       onOpen: () => {},
       onClose: () => {},
@@ -261,10 +263,9 @@ var drawer = React.createClass({
   },
 
   processTapGestures () {
-    if(this.props.acceptTap){
-      this._open ? this.close() : this.open()
-    }
-    else if(this.props.acceptDoubleTap){
+    if (this.props.acceptTap) this._open ? this.close() : this.open()
+    if (this.props.tapToClose && this._open) this.close()
+    if (this.props.acceptDoubleTap) {
       var now = new Date().getTime()
       if(now - this._lastPress < 500){
         this._open ? this.close() : this.open()
