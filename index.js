@@ -70,9 +70,9 @@ var drawer = React.createClass({
 
   statics: {
     tweenPresets: {
-      parallax: (ratio) => {
+      parallax: (ratio, side = 'left') => {
         var drawer = {}
-        drawer.left = -150*(1-ratio)
+        drawer[side] = -150*(1-ratio)
         return { drawer: drawer }
       }
     }
@@ -230,7 +230,7 @@ var drawer = React.createClass({
     }
 
     if(this.props.tweenHandler){
-      var propsFrag = this.props.tweenHandler(ratio)
+      var propsFrag = this.props.tweenHandler(ratio, this.props.side)
       mainProps = Object.assign(mainProps, propsFrag.main)
       drawerProps = Object.assign(drawerProps, propsFrag.drawer)
     }
