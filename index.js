@@ -37,7 +37,9 @@ var drawer = React.createClass({
     tapToClose: React.PropTypes.bool,
     styles: React.PropTypes.object,
     onOpen: React.PropTypes.func,
+    onOpenStart: React.PropTypes.func,
     onClose: React.PropTypes.func,
+    onCloseStart: React.PropTypes.func,
     side: React.PropTypes.oneOf(['left', 'right']),
   },
 
@@ -314,6 +316,7 @@ var drawer = React.createClass({
   },
 
   open () {
+    this.props.onOpenStart && this.props.onOpenStart()
     tween({
       start: this._left,
       end: this.getOpenLeft(),
@@ -332,6 +335,7 @@ var drawer = React.createClass({
   },
 
   close () {
+    this.props.onCloseStart && this.props.onCloseStart()
     tween({
       start: this._left,
       end: this.getClosedLeft(),
