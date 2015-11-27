@@ -87,13 +87,11 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `type` (String: displace:overlay:static) `displace`- Type of drawer.
 - `openDrawerOffset` (Number) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open.
 - `closedDrawerOffset` (Number) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
-- `tapToClose`  (Boolean) `false` - When the drawer is open, whether a tap should close it.
 - `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
 
 ##### Animation / Tween
 - `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns and object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/} }
 - `tweenDuration` (Integer) `250` - The duration of the open/close animation.
-- `tweenEasing` (String) `linear` - A easing type supported by [tween-functions](https://www.npmjs.com/package/tween-functions)
 
 ##### Event Handlers
 - `onOpen` (Function) - Will be called immediately after the drawer has entered the open state.
@@ -104,15 +102,23 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
 - `acceptTap` (Boolean) `false` - Toggle drawer when any tap occurs within pan mask?
 - `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag). Set to false to effectively disable the drawer while still allowing programmatic control.
+- `tapToClose` (Boolean) `false` - Same as acceptTap, except only for close.
 
 ##### Additional Configurations
 - `openDrawerThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
-- `panOpenMask` (Number) `.05` - Ratio of screen width that is valid for the start of a pan open action. Make this number small if you need pans to propagate to children.
-- `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action. Make this number small if you need pans to propagate to children.
-- `relativeDrag` (Boolean) `true` - true -> open/close calculation based on pan dx : false -> calculation based on absolute pan position (i.e. touch location)
-- `panStartCompensation` (Boolean) `false` - Should the drawer catch up to the finger drag position?
+- `panOpenMask` (Number) `.05` - Ratio of screen width that is valid for the start of a pan open action.
+- `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action.
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
 - `side` (String left|right) `left` - which side the drawer should be on.
+
+##### Experimental & Deprecated Props
+**Subject to change or deletion**
+- `onOpenStart` (Boolean) callback fired at the start of an open animation
+- `onCloseStart` (Boolean) callback fired at the start of a close animation
+- `tweenEasing` (String) `linear` - A easing type supported by [tween-functions](https://www.npmjs.com/package/tween-functions)
+- `relativeDrag` (Boolean) `true` - true -> open/close calculation based on pan dx : false -> calculation based on absolute pan position (i.e. touch location)
+- `panStartCompensation` (Boolean) `false` - Should the drawer catch up to the finger drag position?
+
 
 ### Tween Handler
 You can achieve pretty much any animation you want using the tween handler with the transformMatrix property. E.G.
