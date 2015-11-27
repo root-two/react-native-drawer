@@ -358,21 +358,18 @@ var drawer = React.createClass({
   },
 
   handlePanResponderEnd (e, gestureState) {
-    // If pan start was > 250ms ago, assume this is a pan not a tap
-    if (Date.now() - this._panStartTime < 250) this.processTapGestures()
-
-    // Do nothing if we are not in an active pan state
-    if(!this._panning){ return }
+    if (gestureState.moveX < 25 && (Date.now() - this._panStartTime < 500)) {
+      this._panning = false
+      this.processTapGestures()
+      return
+    }
 
     var absRelMoveX = this.props.side === 'left'
       ? this._open ? this.state.viewport.width - gestureState.moveX : gestureState.moveX
       : this._open ? gestureState.moveX : this.state.viewport.width - gestureState.moveX
     var calcPos = this.props.relativeDrag ? Math.abs(gestureState.dx) : absRelMoveX
-    if (this.shouldOpenDrawer(calcPos)) {
-      this.open()
-    } else {
-      this.close()
-    }
+
+    this.shouldOpenDrawer(calcPos) ? this.open() : this.close()
 
     this.updatePosition()
     this._prevLeft = this._left
