@@ -43,7 +43,6 @@ var Application = React.createClass({
 ```
 
 ### Examples
-Simple
 ```js
 //Parallax Effect (slack style)
 <Drawer
@@ -141,6 +140,19 @@ tweenHandler={(ratio) => {
 Will result in a skewed fade out animation.
 
 **warning:** Frame rate, and perceived smoothness will vary based on the complexity and speed of the animation. It will likely require some tweaking and compromise to get the animation just right.
+
+### Opening & Closing the Drawer Programmatically
+Two options:
+1. Using the Drawer Ref:
+```js
+onPress={() => {this.refs.drawer.open()}}
+```
+2. Using Context
+```js
+contextTypes = {drawer: React.PropTypes.object}
+// later...
+this.context.drawer.open()
+```
 
 ### Demo
 * `git clone https://github.com/rt2zz/react-native-drawer.git`
