@@ -1,5 +1,5 @@
 var React = require('react-native')
-var { PanResponder, View, StyleSheet, Dimensions } = React
+var { PanResponder, View, StyleSheet, Dimensions, PropTypes } = React
 var deviceScreen = Dimensions.get('window')
 var tween = require('./Tweener')
 
@@ -15,6 +15,16 @@ var drawer = React.createClass({
   _lastPress: 0,
   _panStartTime: 0,
   _syncAfterUpdate: false,
+
+  statics: {
+    tweenPresets: {
+      parallax: (ratio, side = 'left') => {
+        var drawer = {}
+        drawer[side] = -150*(1-ratio)
+        return { drawer: drawer }
+      }
+    }
+  },
 
   propTypes: {
     type: React.PropTypes.string,
@@ -70,13 +80,13 @@ var drawer = React.createClass({
     }
   },
 
-  statics: {
-    tweenPresets: {
-      parallax: (ratio, side = 'left') => {
-        var drawer = {}
-        drawer[side] = -150*(1-ratio)
-        return { drawer: drawer }
-      }
+  childContextTypes: {
+    drawer: PropTypes.any
+  },
+
+  getChildContext () {
+    return {
+      drawer: this
     }
   },
 
@@ -125,6 +135,7 @@ var drawer = React.createClass({
     var fullWidth = this.state.viewport.width
     this._offsetClosed = props.closedDrawerOffset%1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset*fullWidth
     this._offsetOpen = props.openDrawerOffset%1 === 0 ? props.openDrawerOffset : props.openDrawerOffset*fullWidth
+    this._prevLeft = this._left
 
     var styles = {
       container: {
@@ -144,50 +155,27 @@ var drawer = React.createClass({
         height: this.state.viewport.height,
       }, {borderWidth:0}, this.props.styles.drawer)
 
-    //open
-    if(props.initializeOpen === true){
+    if (props.initializeOpen === true) { // open
       this._open = true
       this._left = fullWidth - this._offsetOpen
-      this._prevLeft = this._left
-      if(props.type === 'static'){
-        styles.main[this.props.side] = fullWidth - this._offsetOpen
-        styles.drawer[this.props.side] = 0
-      }
-      if(props.type === 'overlay'){
-        styles.main[this.props.side] = 0
-        styles.drawer[this.props.side] = 0
-      }
-      if(props.type === 'displace'){
-        styles.main[this.props.side] = fullWidth - this._offsetOpen
-        styles.drawer[this.props.side] = 0
-      }
-    }
-    //closed
-    else{
+      styles.main[this.props.side] = 0
+      styles.drawer[this.props.side] = 0
+      if(props.type === 'static') styles.main[this.props.side] = fullWidth - this._offsetOpen
+      if(props.type === 'displace') styles.main[this.props.side] = fullWidth - this._offsetOpen
+    } else { // closed
       this._open = false
       this._left = this._offsetClosed
-      this._prevLeft = this._left
-      if(props.type === 'static'){
-        styles.main[this.props.side] = this._offsetClosed
-        styles.drawer[this.props.side] = 0
-      }
-      if(props.type === 'overlay'){
-        styles.main[this.props.side] = this._offsetClosed
-        styles.drawer[this.props.side] = this._offsetClosed + this._offsetOpen - fullWidth
-      }
-      if(props.type === 'displace'){
-        styles.main[this.props.side] = this._offsetClosed
-        styles.drawer[this.props.side] = - fullWidth + this._offsetClosed + this._offsetOpen
-      }
+      styles.main[this.props.side] = this._offsetClosed
+      if(props.type === 'static') styles.drawer[this.props.side] = 0
+      if(props.type === 'overlay') styles.drawer[this.props.side] = this._offsetClosed + this._offsetOpen - fullWidth
+      if(props.type === 'displace') styles.drawer[this.props.side] = - fullWidth + this._offsetClosed + this._offsetOpen
     }
 
-    if(this.refs.main){
+    if (this.refs.main) {
       this.refs.drawer.setNativeProps({ style: {left: styles.drawer.left}})
       this.refs.main.setNativeProps({ style: {left: styles.main.left}})
-    }
-    else{
+    } else {
       this.stylesheet = StyleSheet.create(styles)
-
       this.responder = PanResponder.create({
         onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder,
         onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture,
@@ -214,9 +202,9 @@ var drawer = React.createClass({
     var mainProps = {}
     var drawerProps = {}
 
-    var ratio = (this._left-this._offsetClosed)/(this.getOpenLeft()-this._offsetClosed)
+    var ratio = (this._left-this._offsetClosed) / (this.getOpenLeft()-this._offsetClosed)
 
-    switch(this.props.type){
+    switch (this.props.type) {
       case 'overlay':
         drawerProps[this.props.side] = -this.state.viewport.width+this._offsetOpen+this._left
         mainProps[this.props.side] = this._offsetClosed
@@ -231,7 +219,7 @@ var drawer = React.createClass({
         break
     }
 
-    if(this.props.tweenHandler){
+    if (this.props.tweenHandler) {
       var propsFrag = this.props.tweenHandler(ratio, this.props.side)
       mainProps = Object.assign(mainProps, propsFrag.main)
       drawerProps = Object.assign(drawerProps, propsFrag.drawer)
@@ -389,10 +377,6 @@ var drawer = React.createClass({
   },
 
   getDrawerView () {
-    var drawerActions = {
-      close: this.closeDrawer
-    }
-
     return (
       <View
         key="drawer"
@@ -405,16 +389,9 @@ var drawer = React.createClass({
   },
 
   render () {
-    switch(this.props.type){
-      case 'overlay':
-        var first = this.getMainView()
-        var second = this.getDrawerView()
-        break
-      default:
-        var first = this.getDrawerView()
-        var second = this.getMainView()
-        break
-    }
+    var first = this.props.type === 'overlay' ? this.getMainView() : this.getDrawerView()
+    var second = this.props.type === 'overlay' ? this.getDrawerView() : this.getMainView()
+
     return (
       <View style={this.stylesheet.container} key="drawerContainer" onLayout={this.setViewport}>
         {first}
