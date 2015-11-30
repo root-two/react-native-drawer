@@ -36,6 +36,7 @@ var drawer = React.createClass({
     panOpenMask: React.PropTypes.number,
     panCloseMask: React.PropTypes.number,
     captureGestures: React.PropTypes.bool,
+    negotiatePan: React.PropTypes.bool,
     initializeOpen: React.PropTypes.bool,
     tweenHandler: React.PropTypes.func,
     tweenDuration: React.PropTypes.number,
@@ -64,6 +65,7 @@ var drawer = React.createClass({
       panOpenMask: .25,
       panCloseMask: .25,
       captureGestures: false,
+      negotiatePan: false,
       initializeOpen: false,
       tweenHandler: null,
       tweenDuration: 250,
@@ -180,6 +182,7 @@ var drawer = React.createClass({
         onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder,
         onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture,
         onMoveShouldSetPanResponder: this.handleMoveShouldSetPanResponder,
+        onMoveShouldSetPanResponderCapture: this.handleMoveShouldSetPanResponderCapture,
         onPanResponderMove: this.handlePanResponderMove,
         onPanResponderRelease: this.handlePanResponderEnd,
       })
@@ -239,12 +242,12 @@ var drawer = React.createClass({
   },
 
   handleStartShouldSetPanResponderCapture (e, gestureState) {
-    if(this.props.captureGestures){
-      return this.handleStartShouldSetPanResponder(e, gestureState)
-    }
+    if(this.props.captureGestures) return this.handleStartShouldSetPanResponder(e, gestureState)
+    return false
   },
 
   handleStartShouldSetPanResponder (e, gestureState) {
+    if (this.props.negotiatePan) return false
     this._panStartTime = Date.now()
     if(!this.testPanResponderMask(e, gestureState)){
       return false
@@ -252,7 +255,13 @@ var drawer = React.createClass({
     return true
   },
 
+  handleMoveShouldSetPanResponderCapture (e, gestureState) {
+    if (this.props.captureGestures && this.props.negotiatePan) return this.handleMoveShouldSetPanResponder(e, gestureState)
+    return false
+  },
+
   handleMoveShouldSetPanResponder (e, gestureState) {
+    if (!this.props.negotiatePan) return false
     var swipeToLeft = (gestureState.dx < 0) ? true : false;
     var swipeToRight = (gestureState.dx > 0) ? true : false;
     var swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false;
@@ -260,7 +269,7 @@ var drawer = React.createClass({
     if(swipeUpDown || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) return false
     return true
   },
-  
+
   processTapGestures () {
     if (this.props.acceptTap) this._open ? this.close() : this.open()
     if (this.props.tapToClose && this._open) this.close()
