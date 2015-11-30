@@ -179,6 +179,7 @@ var drawer = React.createClass({
       this.responder = PanResponder.create({
         onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder,
         onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture,
+        onMoveShouldSetPanResponder: this.handleMoveShouldSetPanResponder,
         onPanResponderMove: this.handlePanResponderMove,
         onPanResponderRelease: this.handlePanResponderEnd,
       })
@@ -251,6 +252,15 @@ var drawer = React.createClass({
     return true
   },
 
+  handleMoveShouldSetPanResponder (e, gestureState) {
+    var swipeToLeft = (gestureState.dx < 0) ? true : false;
+    var swipeToRight = (gestureState.dx > 0) ? true : false;
+    var swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false;
+    var swipeInCloseDirection = (this.props.side == 'left') ? swipeToLeft: swipeToRight;
+    if(swipeUpDown || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) return false
+    return true
+  },
+  
   processTapGestures () {
     if (this.props.acceptTap) this._open ? this.close() : this.open()
     if (this.props.tapToClose && this._open) this.close()
