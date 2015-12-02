@@ -106,9 +106,9 @@ var drawer = React.createClass({
   },
 
   resync (viewport, props) {
+    if (viewport) this._syncAfterUpdate = true
     var viewport = viewport || this.state.viewport
     var props = props || this.props
-    this._syncAfterUpdate = true
     this._offsetClosed = props.closedDrawerOffset%1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
     this._offsetOpen = props.openDrawerOffset%1 === 0 ? props.openDrawerOffset : props.openDrawerOffset * viewport.width
     this.setState({ viewport: viewport })
