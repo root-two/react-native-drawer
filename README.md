@@ -60,8 +60,8 @@ var Application = React.createClass({
   type="overlay"
   content={<ControlPanel />}
   tapToClose={true}
-  openDrawerOffset={.2} // 20% gap on the right side of drawer
-  panCloseMask={.2}
+  openDrawerOffset={0.2} // 20% gap on the right side of drawer
+  panCloseMask={0.2}
   closedDrawerOffset={-3}
   styles={{
     drawer: {shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
