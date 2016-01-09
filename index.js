@@ -394,7 +394,7 @@ var drawer = React.createClass({
         key="main"
         style={[this.stylesheet.main, {width: this.getMainWidth(), height: this.state.viewport.height}]}
         ref="main"
-        {...this.responder.panHandlers}>       
+        {...this.responder.panHandlers}>
         {this.props.children}
         <View ref="mainOverlay" style={[this.stylesheet.main, {width: this.getMainWidth(), height: 0,backgroundColor:'transparent'}]} />
       </View>
