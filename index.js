@@ -338,7 +338,7 @@ var drawer = React.createClass({
       onEnd: () => {
         this._open = true
         this._prevLeft = this._left
-        this.refs.mainOverlay.setNativeProps({ style: { height: this.state.viewport.height }})
+        if (this.props.type === 'overlay') this.refs.mainOverlay.setNativeProps({ style: { height: this.state.viewport.height }})
         this.props.onOpen()
       }
     })
@@ -358,7 +358,7 @@ var drawer = React.createClass({
       onEnd: () => {
         this._open = false
         this._prevLeft = this._left
-        this.refs.mainOverlay.setNativeProps({ style: { height: 0 }})
+        if (this.props.type === 'overlay') this.refs.mainOverlay.setNativeProps({ style: { height: 0 }})
         this.props.onClose()
       }
     })
@@ -396,7 +396,7 @@ var drawer = React.createClass({
         ref="main"
         {...this.responder.panHandlers}>
         {this.props.children}
-        <View ref="mainOverlay" style={[this.stylesheet.main, {width: this.getMainWidth(), height: 0,backgroundColor:'transparent'}]} />
+        {this.props.type === 'overlay' ? <View ref="mainOverlay" style={[this.stylesheet.main, {width: this.getMainWidth(), height: 0, backgroundColor:'transparent'}]} /> : null}
       </View>
     )
   },
