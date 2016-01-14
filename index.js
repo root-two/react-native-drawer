@@ -261,7 +261,7 @@ var drawer = React.createClass({
   },
 
   handleMoveShouldSetPanResponder (e, gestureState) {
-    if (!this.props.negotiatePan) return false
+    if (!this.props.negotiatePan || this.props.disabled) return false
     var swipeToLeft = (gestureState.dx < 0) ? true : false;
     var swipeToRight = (gestureState.dx > 0) ? true : false;
     var swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false;

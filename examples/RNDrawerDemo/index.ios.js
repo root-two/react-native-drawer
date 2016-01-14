@@ -30,7 +30,7 @@ var RNDrawerDemo = React.createClass({
   getInitialState(){
     return {
       drawerType: 'overlay',
-      openDrawerOffset:0,
+      openDrawerOffset:100,
       closedDrawerOffset:0,
       panOpenMask: .1,
       panCloseMask: .9,
@@ -98,6 +98,7 @@ var RNDrawerDemo = React.createClass({
         acceptTap={this.state.acceptTap}
         acceptPan={this.state.acceptPan}
         changeVal={this.state.changeVal}
+        negotiatePan={false}
         side={this.state.rightSide ? 'right' : 'left'}
         >
         <MyMainView
