@@ -51,6 +51,7 @@ var drawer = React.createClass({
     onOpenStart: React.PropTypes.func,
     onClose: React.PropTypes.func,
     onCloseStart: React.PropTypes.func,
+    onPeak: React.PropTypes.func,
     side: React.PropTypes.oneOf(['left', 'right']),
   },
 
@@ -267,6 +268,7 @@ var drawer = React.createClass({
     var swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false;
     var swipeInCloseDirection = (this.props.side == 'left') ? swipeToLeft: swipeToRight;
     if(swipeUpDown || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) return false
+    if(this.props.onPeak) this.props.onPeak();
     return true
   },
 
