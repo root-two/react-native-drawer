@@ -247,7 +247,8 @@ var drawer = React.createClass({
   },
 
   handleStartShouldSetPanResponder (e, gestureState) {
-    if (this.props.negotiatePan) return false
+    var isListeningForTaps = this.props.acceptTap || this.props.tapToClose || this.props.acceptDoubleTap
+    if (this.props.negotiatePan && !(this._open && isListeningForTaps)) return false
     this._panStartTime = Date.now()
     if(!this.testPanResponderMask(e, gestureState)){
       return false
