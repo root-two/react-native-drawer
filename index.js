@@ -371,6 +371,7 @@ var drawer = React.createClass({
   handlePanResponderEnd (e, gestureState) {
     // @TODO fine tune these thresholds
     if (gestureState.dx < 100 && (Date.now() - this._panStartTime < 500)) {
+      if (!this._open) this.close()
       this._panning = false
       this.processTapGestures()
       return
