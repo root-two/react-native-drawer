@@ -97,6 +97,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
 - `acceptTap` (Boolean) `false` - Toggle drawer when any tap occurs within pan mask?
 - `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag). Set to false to effectively disable the drawer while still allowing programmatic control.
+- `acceptSwipe` (Boolean) `true` - Allow for swipe to show/hide drawer.
 - `tapToClose` (Boolean) `false` - Same as acceptTap, except only for close.
 - `negotiatePan` (Boolean) `false` - If true, attempts to handle only horizontal swipes, making it play well with a child `ScrollView`.
 

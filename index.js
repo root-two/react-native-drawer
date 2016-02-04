@@ -45,6 +45,7 @@ var drawer = React.createClass({
     acceptDoubleTap: React.PropTypes.bool,
     acceptTap: React.PropTypes.bool,
     acceptPan: React.PropTypes.bool,
+    acceptSwipe: React.PropTypes.bool,
     tapToClose: React.PropTypes.bool,
     styles: React.PropTypes.object,
     onOpen: React.PropTypes.func,
@@ -74,6 +75,7 @@ var drawer = React.createClass({
       acceptDoubleTap: false,
       acceptTap: false,
       acceptPan: true,
+      acceptSwipe: true,
       tapToClose: false,
       styles: {},
       onOpen: () => {},
@@ -297,7 +299,7 @@ var drawer = React.createClass({
   },
 
   handlePanResponderMove (e, gestureState) {
-    if(!this.props.acceptPan){
+    if(!this.props.acceptPan || !this.props.acceptSwipe){
       return false
     }
 
@@ -376,6 +378,8 @@ var drawer = React.createClass({
       this.processTapGestures()
       return
     }
+
+    if(!this.props.acceptSwipe) return
 
     var absRelMoveX = this.props.side === 'left'
       ? this._open ? this.state.viewport.width - gestureState.moveX : gestureState.moveX
