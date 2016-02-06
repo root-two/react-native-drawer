@@ -2,6 +2,21 @@ var React = require('react-native')
 var { PanResponder, View, StyleSheet, Dimensions, PropTypes } = React
 var deviceScreen = Dimensions.get('window')
 var tween = require('./Tweener')
+var Orientation = require('react-native-orientation')
+
+Orientation.getOrientation((err,orientation)=> {
+  console.log("Current Device Orientation: ", orientation);
+  if(orientation == 'LANDSCAPE') {
+    deviceScreen = flipDevice(deviceScreen);
+  }
+});
+
+function flipDevice(deviceScreen) {
+  var temp = deviceScreen.width;
+  deviceScreen.width = deviceScreen.height;
+  deviceScreen.height = temp;
+  return deviceScreen;
+}
 
 var drawer = React.createClass({
 
@@ -193,6 +208,18 @@ var drawer = React.createClass({
 
   componentWillMount () {
     this.initialize(this.props)
+  },
+
+  componentDidMount () {
+    Orientation.addOrientationListener(this._orientationDidChange);
+  },
+
+  componentWillUnmount () {
+    Orientation.removeOrientationListener(this._orientationDidChange);
+  },
+
+  _orientationDidChange (orientation) {
+    deviceScreen = flipDevice(deviceScreen);
   },
 
   componentDidUpdate () {
