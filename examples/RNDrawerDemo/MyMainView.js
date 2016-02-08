@@ -1,13 +1,17 @@
 var React = require('react-native')
+var SliderJS = require('react-native-slider')
 
 var {
-  SwitchIOS,
+  Switch,
   SliderIOS,
   PickerIOS,
   PickerItemIOS,
   View,
   ScrollView,
   Text,
+	Platform,
+	StyleSheet,
+	Platform,
 } = React
 
 var styles = require('./styles')
@@ -46,7 +50,7 @@ module.exports = React.createClass({
           <Text style={styles.categoryLabel}>Drawer Type</Text>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Overlay</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {drawerType:'overlay'})}
               style={styles.rowInput}
               disabled={this.props.drawerType === 'overlay'}
@@ -54,7 +58,7 @@ module.exports = React.createClass({
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Displace</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {drawerType:'displace'})}
               style={styles.rowInput}
               disabled={this.props.drawerType === 'displace'}
@@ -62,7 +66,7 @@ module.exports = React.createClass({
           </View>
           <View style={styles.lastRow}>
             <Text style={styles.rowLabel}>Static</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {drawerType:'static'})}
               style={styles.rowInput}
               disabled={this.props.drawerType === 'static'}
@@ -73,43 +77,48 @@ module.exports = React.createClass({
           <Text style={styles.categoryLabel}>Trigger Options</Text>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>relativeDrag</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={ (value) => { this.setParentState({'relativeDrag': value})} }
               style={styles.rowInput}
               value={this.props.relativeDrag} />
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>panStartCompensation</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={ (value) => { this.setParentState({'panStartCompensation': value})} }
               style={styles.rowInput}
               value={this.props.panStartCompensation} />
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>disabled</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={ (value) => { this.setParentState({'disabled': value})} }
               style={styles.rowInput}
               value={this.props.disabled} />
           </View>
-          <View style={styles.row}>
-            <Text style={styles.rowLabel}>openDrawerThreshold</Text>
-            <SliderIOS
-              style={styles.slider}
-              maximumValue={1}
-              value={this.props.openDrawerThreshold}
-              onSlidingComplete={(value) => {
-                  this.setParentState({openDrawerThreshold: value})
-                }}
-                />
-              <Text style={styles.sliderMetric}>{Math.round(this.props.openDrawerThreshold*100)}%</Text>
+	        <View style={styles.row}>
+						<Text style={styles.rowLabel}>openDrawerThreshold</Text>
+						<SliderJS
+								style={styles.slider}
+								trackStyle={sliderStyles.track}
+		            thumbStyle={sliderStyles.thumb}
+		            minimumTrackTintColor={minimumTrackTintColor}
+		            maximumTrackTintColor={maximumTrackTintColor}
+								thumbTintColor={thumbTintColor}
+	              maximumValue={.5}
+	              value={this.props.closedDrawerOffset}
+	              onSlidingComplete={(value) => {
+	                  this.setParentState({openDrawerThreshold: value})
+	                }}
+							/>
+            <Text style={styles.sliderMetric}>{Math.round(this.props.openDrawerThreshold*100)}%</Text>
           </View>
 
           {/*tween presets*/}
           <Text style={styles.categoryLabel}>Example Tweens</Text>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>None</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {tweenHandlerPreset:null})}
               style={styles.rowInput}
               disabled={this.props.tweenHandlerPreset === null}
@@ -117,7 +126,7 @@ module.exports = React.createClass({
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Material Design</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {tweenHandlerPreset:'material'})}
               style={styles.rowInput}
               disabled={this.props.tweenHandlerPreset === 'material'}
@@ -125,7 +134,7 @@ module.exports = React.createClass({
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Rotate</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {tweenHandlerPreset:'rotate'})}
               style={styles.rowInput}
               disabled={this.props.tweenHandlerPreset === 'rotate'}
@@ -133,7 +142,7 @@ module.exports = React.createClass({
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Parallax</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {tweenHandlerPreset:'parallax'})}
               style={styles.rowInput}
               disabled={this.props.tweenHandlerPreset === 'parallax'}
@@ -144,7 +153,7 @@ module.exports = React.createClass({
           <Text style={styles.categoryLabel}>tweenEasing</Text>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>linear</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {tweenEasing:'linear'})}
               style={styles.rowInput}
               disabled={this.props.tweenEasing === 'linear'}
@@ -152,7 +161,7 @@ module.exports = React.createClass({
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>easeOutQuad</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {tweenEasing:'easeOutQuad'})}
               style={styles.rowInput}
               disabled={this.props.tweenEasing === 'easeOutQuad'}
@@ -160,7 +169,7 @@ module.exports = React.createClass({
           </View>
           <View style={styles.lastRow}>
             <Text style={styles.rowLabel}>easeOutElastic</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={this.setParentState.bind(this, {tweenEasing:'easeOutElastic'})}
               style={styles.rowInput}
               disabled={this.props.tweenEasing === 'easeOutElastic'}
@@ -171,8 +180,13 @@ module.exports = React.createClass({
           <Text style={styles.categoryLabel}>Offsets</Text>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>openDrawerOffset</Text>
-            <SliderIOS
+            <SliderJS
               style={styles.slider}
+							trackStyle={sliderStyles.track}
+							thumbStyle={sliderStyles.thumb}
+							minimumTrackTintColor={minimumTrackTintColor}
+							maximumTrackTintColor={maximumTrackTintColor}
+							thumbTintColor={thumbTintColor}
               maximumValue={.5}
               value={this.props.openDrawerOffset}
               onSlidingComplete={(value) => {
@@ -183,8 +197,13 @@ module.exports = React.createClass({
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>closedDrawerOffset</Text>
-            <SliderIOS
+            <SliderJS
               style={styles.slider}
+							trackStyle={sliderStyles.track}
+							thumbStyle={sliderStyles.thumb}
+							minimumTrackTintColor={minimumTrackTintColor}
+							maximumTrackTintColor={maximumTrackTintColor}
+							thumbTintColor={thumbTintColor}
               maximumValue={.5}
               value={this.props.closedDrawerOffset}
               onSlidingComplete={(value) => {
@@ -198,8 +217,13 @@ module.exports = React.createClass({
           <Text style={styles.categoryLabel}>Pan Mask</Text>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>panOpenMask</Text>
-            <SliderIOS
+            <SliderJS
               style={styles.slider}
+							trackStyle={sliderStyles.track}
+							thumbStyle={sliderStyles.thumb}
+							minimumTrackTintColor={minimumTrackTintColor}
+							maximumTrackTintColor={maximumTrackTintColor}
+							thumbTintColor={thumbTintColor}
               maximumValue={1}
               value={this.props.panOpenMask}
               onSlidingComplete={(value) => {
@@ -210,8 +234,13 @@ module.exports = React.createClass({
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>panCloseMask</Text>
-            <SliderIOS
+            <SliderJS
               style={styles.slider}
+							trackStyle={sliderStyles.track}
+							thumbStyle={sliderStyles.thumb}
+							minimumTrackTintColor={minimumTrackTintColor}
+							maximumTrackTintColor={maximumTrackTintColor}
+							thumbTintColor={thumbTintColor}
               maximumValue={1}
               value={this.props.panCloseMask}
               onSlidingComplete={(value) => {
@@ -225,28 +254,28 @@ module.exports = React.createClass({
           <Text style={styles.categoryLabel}>Others</Text>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Accept Tap</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={ (value) => { this.setParentState({'acceptTap': value})} }
               style={styles.rowInput}
               value={this.props.acceptTap} />
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Accept Double Tap</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={ (value) => { this.setParentState({'acceptDoubleTap': value})} }
               style={styles.rowInput}
               value={this.props.acceptDoubleTap} />
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Accept Pan</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={ (value) => { this.setParentState({'acceptPan': value})} }
               style={styles.rowInput}
               value={this.props.acceptPan} />
           </View>
           <View style={styles.row}>
             <Text style={styles.rowLabel}>Right Side (not hot changeable)</Text>
-            <SwitchIOS
+            <Switch
               onValueChange={ (value) => { this.setParentState({'rightSide': value})} }
               style={styles.rowInput}
               disabled={true}
@@ -257,3 +286,71 @@ module.exports = React.createClass({
     )
   }
 })
+
+
+
+// Shadow props are not supported in React-Native Android apps.
+// The below part handles this issue.
+
+// iOS Styles
+var iosStyles = StyleSheet.create({
+  track: {
+    height: 2,
+    borderRadius: 1,
+  },
+  thumb: {
+    width: 30,
+    height: 30,
+    borderRadius: 30 / 2,
+    backgroundColor: 'white',
+    shadowColor: 'black',
+    shadowOffset: {width: 3, height: 5},
+    shadowRadius: 5,
+    shadowOpacity: 0.75,
+  }
+});
+
+var iosMinTrTintColor = '#1073ff';
+var iosMaxTrTintColor = '#b7b7b7';
+var iosThumbTintColor = '#343434';
+
+// Android styles
+var androidStyles = StyleSheet.create({
+  container: {
+    height: 40,
+    justifyContent: 'center',
+  },
+  track: {
+    height: 4,
+    borderRadius: 4 / 2,
+  },
+  thumb: {
+    position: 'absolute',
+    width: 20,
+    height: 20,
+    borderRadius: 20 / 2,
+  },
+  touchArea: {
+    position: 'absolute',
+    backgroundColor: 'transparent',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  debugThumbTouchArea: {
+    position: 'absolute',
+    backgroundColor: 'green',
+    opacity: 0.5,
+  }
+});
+
+var androidMinTrTintColor = '#26A69A';
+var androidMaxTrTintColor = '#d3d3d3';
+var androidThumbTintColor = '#009688';
+
+
+var sliderStyles = (Platform.OS === 'ios') ? iosStyles : androidStyles;
+var minimumTrackTintColor = (Platform.OS === 'ios') ? iosMinTrTintColor : androidMinTrTintColor;
+var maximumTrackTintColor = (Platform.OS === 'ios') ? iosMaxTrTintColor : androidMaxTrTintColor;
+var thumbTintColor = (Platform.OS === 'ios') ? iosThumbTintColor : androidThumbTintColor;

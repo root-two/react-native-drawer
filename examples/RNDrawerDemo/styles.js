@@ -72,7 +72,7 @@ module.exports = StyleSheet.create({
   },
   slider: {
     width: 150,
-    height: 10,
+    height: 30,
     margin: 10,
   },
   picker: {
