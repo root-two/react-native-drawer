@@ -6,7 +6,10 @@ var Orientation = require('react-native-orientation')
 
 Orientation.getOrientation((err,orientation)=> {
   console.log("Current Device Orientation: ", orientation);
-  if(orientation == 'LANDSCAPE') {
+  if(orientation == 'LANDSCAPE' && (deviceScreen.height > deviceScreen.width)) {
+    deviceScreen = flipDevice(deviceScreen);
+  }
+  if(orientation == 'PORTRAIT' && (deviceScreen.height < deviceScreen.width)) {
     deviceScreen = flipDevice(deviceScreen);
   }
 });
