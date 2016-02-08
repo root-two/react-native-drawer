@@ -11,7 +11,8 @@
     "url": "git@github.com:rt2zz/react-native-drawer.git"
   },
   "dependencies": {
-    "tween-functions": "^1.0.1"
+    "tween-functions": "^1.0.1",
+    "react-native-orientation": "^1.13.0"
   },
   "keywords": [
     "react",
