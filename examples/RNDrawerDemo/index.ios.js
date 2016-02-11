@@ -67,7 +67,7 @@ var RNDrawerDemo = React.createClass({
   },
 
   openDrawer(){
-    this.refs.drawer.open()
+    this.drawer.open()
   },
 
   setStateFrag(frag){
@@ -75,10 +75,10 @@ var RNDrawerDemo = React.createClass({
   },
 
   render() {
-    var controlPanel = <MyControlPanel closeDrawer={() => {this.refs.drawer.close()}} />
+    var controlPanel = <MyControlPanel closeDrawer={() => {this.drawer.close()}} />
     return (
       <Drawer
-        ref="drawer"
+        ref={c => this.drawer = c}
         type={this.state.drawerType}
         animation={this.state.animation}
         openDrawerOffset={this.state.openDrawerOffset}

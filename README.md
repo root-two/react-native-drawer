@@ -24,10 +24,10 @@ var Drawer = require('react-native-drawer')
 
 var Application = React.createClass({
   closeControlPanel: function(){
-    this.refs.drawer.close()
+    this.drawer.close()
   },
   openControlPanel: function(){
-    this.refs.drawer.open()
+    this.drawer.open()
   },
   render: function() {
     return (
@@ -146,7 +146,7 @@ Will result in a skewed fade out animation.
 Two options:
 1. Using the Drawer Ref:
 ```js
-onPress={() => {this.refs.drawer.open()}}
+onPress={() => {this.drawer.open()}}
 ```
 2. Using Context
 ```js
