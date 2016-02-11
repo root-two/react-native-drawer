@@ -177,9 +177,7 @@
 
 		/* React Issues */
 		"react/display-name": [1, { "acceptTranspilerName": true }],          // Prevent missing displayName in a React component definition
-		"react/forbid-prop-types": 1,     // Forbid certain propTypes
 		"react/jsx-boolean-value": 1,     // Enforce boolean attributes notation in JSX (fixable)
-		"react/jsx-closing-bracket-location": 1,  // Validate closing bracket location in JSX
 		"react/jsx-curly-spacing": 1,     // Enforce or disallow spaces inside of curly braces in JSX attributes (fixable)
 		"react/jsx-equals-spacing": 1,    // Enforce or disallow spaces around equal signs in JSX attributes
 		"react/jsx-handler-names": 1,     // Enforce event handler naming conventions in JSX
@@ -197,12 +195,9 @@
 		"react/jsx-uses-vars": 1,         // Prevent variables used in JSX to be incorrectly marked as unused
 		"react/no-danger": 1,             // Prevent usage of dangerous JSX properties
 		"react/no-deprecated": 1,         // Prevent usage of deprecated methods
-		"react/no-did-mount-set-state": [1, "allow-in-func"],   // Prevent usage of setState in componentDidMount
-		"react/no-did-update-set-state": [1, "allow-in-func"],  // Prevent usage of setState in componentDidUpdate
 		"react/no-direct-mutation-state": 1,                    // Prevent direct mutation of this.state
 		"react/no-is-mounted": 1,         // Prevent usage of isMounted
 		"react/no-multi-comp": 1,         // Prevent multiple component definition per file
-		"react/no-set-state": 1,          // Prevent usage of setState
 		"react/no-string-refs": 1,        // Prevent using string references in ref attribute.
 		"react/no-unknown-property": 1,   // Prevent usage of unknown DOM property (fixable)
 		"react/prefer-es6-class": 1,      // Enforce ES5 or ES6 class for React Components

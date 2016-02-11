@@ -70,7 +70,7 @@ class Drawer extends Component {
       'type'
     ]
 
-    this.state = { viewport: props.deviceScreen } // getInitialState ()
+    this.state = { viewport: props.deviceScreen }
   }
 
   getChildContext () {
@@ -106,15 +106,15 @@ class Drawer extends Component {
     case 'overlay':
       drawerProps[this.props.side] = -this.state.viewport.width + this._offsetOpen + this._left
       mainProps[this.props.side] = this._offsetClosed
-      break;
+      break
     case 'static':
       mainProps[this.props.side] = this._left
       drawerProps[this.props.side] = 0
-      break;
+      break
     case 'displace':
       mainProps[this.props.side] = this._left
       drawerProps[this.props.side] = -this.state.viewport.width + this._left + this._offsetOpen
-      break;
+      break
     }
 
     if (this.props.tweenHandler) {
@@ -474,8 +474,8 @@ Drawer.propTypes = {
   children: React.PropTypes.node,
   closedDrawerOffset: React.PropTypes.number,
   content: React.PropTypes.node,
-  disabled: React.PropTypes.bool,
   deviceScreen: React.PropTypes.object,
+  disabled: React.PropTypes.bool,
   initializeOpen: React.PropTypes.bool,
   negotiatePan: React.PropTypes.bool,
   onClose: React.PropTypes.func,
