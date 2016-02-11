@@ -160,12 +160,12 @@
 		/* Stylistic Issues */
 		"camelcase": [1, {"properties": "never"}],
 		"eol-last": 1,
-		"indent": [1, "tab"],
+		"indent": [2, 2],
 		"quotes": [1, "single", "avoid-escape"],
 		"linebreak-style": [1, "unix"],
 		"new-parens": 1,
 		"no-trailing-spaces": 1,
-		"semi": [1, "always"],
+		"semi": [2, "never"],
 		"semi-spacing": 1,	             // require a space after a semi-colon
 		"space-after-keywords": 1,
 		"space-infix-ops": 1,
@@ -183,8 +183,6 @@
 		"react/jsx-curly-spacing": 1,     // Enforce or disallow spaces inside of curly braces in JSX attributes (fixable)
 		"react/jsx-equals-spacing": 1,    // Enforce or disallow spaces around equal signs in JSX attributes
 		"react/jsx-handler-names": 1,     // Enforce event handler naming conventions in JSX
-		"react/jsx-indent-props": [1, "tab"],  // Validate props indentation in JSX
-		"react/jsx-indent": [1, "tab"],   // Validate JSX indentation
 		"react/jsx-key": 1,               // Validate JSX has key prop when in array or iterator
 		"react/jsx-max-props-per-line": 1,  // Limit maximum of props on a single line in JSX
 		"react/jsx-no-bind": [1, { "ignoreRefs": false, "allowArrowFunctions": true, "allowBind": true }],  // Prevent usage of .bind() and arrow functions in JSX props
