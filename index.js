@@ -51,7 +51,7 @@ class Drawer extends Component {
     tweenDuration: React.PropTypes.number,
     tweenEasing: React.PropTypes.string,
     tweenHandler: React.PropTypes.func,
-    type: React.PropTypes.string,
+    type: React.PropTypes.oneOf(['overlay', 'static', 'displace']),
   }
 
   static defaultProps = {
@@ -185,9 +185,7 @@ class Drawer extends Component {
   }
 
   handleStartShouldSetPanResponder(e, gestureState) {
-    if (this.props.negotiatePan) {
-      return false
-    }
+    if (this.props.negotiatePan && !this._open) return false
     this._panStartTime = Date.now()
     if (!this.testPanResponderMask(e, gestureState)) return false
     return true
@@ -205,8 +203,10 @@ class Drawer extends Component {
     let swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false
     let swipeInCloseDirection = (this.props.side === 'left') ? swipeToLeft : swipeToRight
     if (swipeUpDown || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) {
+      console.log('HMSS', false)
       return false
     }
+    console.log('HMSS', true)
     return true
   }
 
