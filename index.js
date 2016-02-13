@@ -59,7 +59,7 @@ class Drawer extends Component {
     tweenEasing: React.PropTypes.string,
     tweenHandler: React.PropTypes.func,
     type: React.PropTypes.oneOf(['overlay', 'static', 'displace']),
-  }
+  };
 
   static defaultProps = {
     type: 'displace',
@@ -86,7 +86,7 @@ class Drawer extends Component {
     onOpen: () => {},
     onClose: () => {},
     side: 'left',
-  }
+  };
 
   constructor(props) {
     super(props)
