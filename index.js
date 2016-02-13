@@ -23,6 +23,13 @@ class Drawer extends Component {
   _panStartTime = 0;
   _syncAfterUpdate = false;
 
+  static tweenPresets = {
+    parallax: (ratio, side = 'left') => {
+      let drawer = { [side] : -150 * (1 - ratio)}
+      return { drawer }
+    }
+  };
+
   static propTypes = {
     acceptDoubleTap: React.PropTypes.bool,
     acceptPan: React.PropTypes.bool,
@@ -180,18 +187,23 @@ class Drawer extends Component {
   }
 
   handleStartShouldSetPanResponderCapture(e, gestureState) {
-    if (this.props.captureGestures) return this.handleStartShouldSetPanResponder(e, gestureState)
+    if (this.props.captureGestures) return this.processShouldSet(e, gestureState)
     return false
   }
 
   handleStartShouldSetPanResponder(e, gestureState) {
+    if (!this.props.captureGestures) return this.processShouldSet(e, gestureState)
+    return false
+  }
+
+  processShouldSet = (e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
     if (inMask) this.processTapGestures()
     if (this.props.negotiatePan && !this._open) return false
     this._panStartTime = Date.now()
     if (!inMask) return false
     return true
-  }
+  };
 
   handleMoveShouldSetPanResponderCapture(e, gestureState) {
     if (this.props.captureGestures && this.props.negotiatePan) return this.handleMoveShouldSetPanResponder(e, gestureState)
@@ -474,15 +486,6 @@ class Drawer extends Component {
     )
   }
 
-}
-
-Drawer.statics = {
-  tweenPresets: {
-    parallax: (ratio, side = 'left') => {
-      let drawer = { [side] : -150 * (1 - ratio)}
-      return { drawer }
-    }
-  }
 }
 
 const styles = StyleSheet.create({
