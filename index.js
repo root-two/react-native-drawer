@@ -102,11 +102,7 @@ class Drawer extends Component {
     this.componentDidUpdate = this.componentDidUpdate.bind(this)
     this.updatePosition = this.updatePosition.bind(this)
     this.shouldOpenDrawer = this.shouldOpenDrawer.bind(this)
-    this.processTapGestures = this.processTapGestures.bind(this)
     this.testPanResponderMask = this.testPanResponderMask.bind(this)
-    this.open = this.open.bind(this)
-    this.close = this.close.bind(this)
-    this.toggle = this.toggle.bind(this)
     this.getMainView = this.getMainView.bind(this)
     this.getDrawerView = this.getDrawerView.bind(this)
     this.getOpenLeft = this.getOpenLeft.bind(this)
@@ -198,7 +194,7 @@ class Drawer extends Component {
 
   processShouldSet = (e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
-    if (inMask) this.processTapGestures()
+    if (inMask) this.processTapGestures() && return false
     if (this.props.negotiatePan && !this._open) return false
     this._panStartTime = Date.now()
     if (!inMask) return false
@@ -222,18 +218,27 @@ class Drawer extends Component {
     return true
   }
 
-  processTapGestures() {
+  processTapGestures = () => {
     let minLastPressInterval = 500
-    if (this.props.acceptTap) this._open ? this.close() : this.open()
-    if (this.props.tapToClose && this._open) this.close()
+    if (this.props.acceptTap) {
+      this._open ? this.close() : this.open()
+      return true
+    }
+    if (this.props.tapToClose && this._open) {
+      this.close()
+      return true
+    }
     if (this.props.acceptDoubleTap) {
       let now = new Date().getTime()
-      if (now - this._lastPress < minLastPressInterval) {
-        this._open ? this.close() : this.open()
-      }
+      let timeDelta = now - this._lastPress
       this._lastPress = now
+      if (timeDelta < minLastPressInterval) {
+        this._open ? this.close() : this.open()
+        return true
+      }
     }
-  }
+    return false
+  };
 
   testPanResponderMask(e, gestureState) {
     if (this.props.disabled) return false
@@ -273,7 +278,7 @@ class Drawer extends Component {
     this._panning = true
   }
 
-  open() {
+  open = () => {
     this.props.onOpenStart && this.props.onOpenStart()
     tween({
       start: this._left,
@@ -293,9 +298,9 @@ class Drawer extends Component {
         this.props.onOpen()
       }
     })
-  }
+  };
 
-  close() {
+  close = () => {
     this.props.onCloseStart && this.props.onCloseStart()
     tween({
       start: this._left,
@@ -313,11 +318,11 @@ class Drawer extends Component {
         this.props.onClose()
       }
     })
-  }
+  };
 
-  toggle() {
+  toggle = () => {
     this._open ? this.close() : this.open()
-  }
+  };
 
   handlePanResponderEnd(e, gestureState) {
     let minDx = 100
