@@ -22,16 +22,16 @@ React native drawer, configurable to achieve material design style, slack style,
 
 ### Usage
 ```javascript
-var Drawer = require('react-native-drawer')
+import Drawer from 'react-native-drawer'
 
-var Application = React.createClass({
-  closeControlPanel: function(){
+class Application extends Component {  
+  closeControlPanel = () => {
     this.drawer.close()
-  },
-  openControlPanel: function(){
+  };
+  openControlPanel = () => {
     this.drawer.open()
-  },
-  render: function() {
+  };
+  render () {
     return (
       <Drawer
         ref="drawer"
