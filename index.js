@@ -297,7 +297,7 @@ class Drawer extends Component {
       onEnd: () => {
         this._open = false
         this._prevLeft = this._left
-        if (this.props.type === 'overlay') this.mainOverlay.setNativeProps({ style: { height: 0 }})
+        if (this.props.type === 'overlay') this.mainOverlay.setNativeProps({ style: { width: 0 }})
         this.props.onClose()
       }
     })
@@ -335,13 +335,13 @@ class Drawer extends Component {
         {...this.responder.panHandlers}
         key="main"
         ref={c => this.main = c}
-        style={[this.stylesheet.main, {width: this.getMainWidth(), height: this.state.viewport.height}]}
-      >
+        style={[this.stylesheet.main, {width: this.getMainWidth()}]}
+        >
         {this.props.children}
         {this.props.type === 'overlay'
           ? <View
               ref={c => this.mainOverlay = c}
-              style={[this.stylesheet.main, {width: 0, backgroundColor: 'transparent'}]}
+              style={styles.mainOverlay}
               />
           : null}
       </View>
@@ -486,5 +486,16 @@ Drawer.statics = {
     }
   }
 }
+
+const styles = StyleSheet.create({
+  mainOverlay: {
+    width: 0,
+    left: 0,
+    top: 0,
+    bottom: 0,
+    position: 'absolute',
+    backgroundColor: 'transparent'
+  }
+})
 
 export default Drawer
