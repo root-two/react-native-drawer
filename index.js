@@ -276,7 +276,7 @@ class Drawer extends Component {
         this._open = true
         this._prevLeft = this._left
         if (this.props.type === 'overlay') {
-          this.mainOverlay.setNativeProps({ style: { height: this.state.viewport.height }})
+          this.mainOverlay.setNativeProps({ style: { width: this.getMainWidth() }})
         }
         this.props.onOpen()
       }
@@ -308,12 +308,10 @@ class Drawer extends Component {
   }
 
   handlePanResponderEnd(e, gestureState) {
-    let minDx = 100, minPanStartTime = 500
+    let minDx = 100
     // @TODO fine tune these thresholds
-    if (gestureState.dx < minDx && (Date.now() - this._panStartTime < minPanStartTime)) {
-      if (!this._open) {
-        this.close()
-      }
+    if (Math.abs(gestureState.dx) < minDx) {
+      this._open ? this.open() : this.close()
       this._panning = false
       this.processTapGestures()
       return
@@ -342,10 +340,8 @@ class Drawer extends Component {
         {this.props.children}
         {this.props.type === 'overlay'
           ? <View
-            ref={c => this.mainOverlay = c}
-            style={
-                  [this.stylesheet.main, {width: this.getMainWidth(), height: 0, backgroundColor:'transparent'}]
-                }
+              ref={c => this.mainOverlay = c}
+              style={[this.stylesheet.main, {width: 0, backgroundColor: 'transparent'}]}
               />
           : null}
       </View>
@@ -444,21 +440,17 @@ class Drawer extends Component {
   handleSetViewport(e) {
     let viewport = e.nativeEvent.layout
     let oldViewport = this.state.viewport
-    if (viewport.width === oldViewport.width && viewport.height === oldViewport.height) {
-      return
-    }
+    if (viewport.width === oldViewport.width && viewport.height === oldViewport.height) return
     this.resync(viewport)
   }
 
   resync(viewport, props) {
-    if (viewport) {
-      this._syncAfterUpdate = true
-    }
+    if (viewport) this._syncAfterUpdate = true
     viewport = viewport || this.state.viewport
     props = props || this.props
     this._offsetClosed = props.closedDrawerOffset % 1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
     this._offsetOpen = props.openDrawerOffset % 1 === 0 ? props.openDrawerOffset : props.openDrawerOffset * viewport.width
-    this.setState({ viewport: viewport })
+    this.setState({ viewport })
   }
 
   requiresResync(nextProps) {
