@@ -185,9 +185,11 @@ class Drawer extends Component {
   }
 
   handleStartShouldSetPanResponder(e, gestureState) {
+    let inMask = this.testPanResponderMask(e, gestureState)
+    if (inMask) this.processTapGestures()
     if (this.props.negotiatePan && !this._open) return false
     this._panStartTime = Date.now()
-    if (!this.testPanResponderMask(e, gestureState)) return false
+    if (!inMask) return false
     return true
   }
 
@@ -197,16 +199,14 @@ class Drawer extends Component {
   }
 
   handleMoveShouldSetPanResponder(e, gestureState) {
-    if (!this.props.negotiatePan || this.props.disabled) return false
+    if (!this.props.negotiatePan || this.props.disabled || !this.props.acceptPan) return false
     let swipeToLeft = (gestureState.dx < 0) ? true : false
     let swipeToRight = (gestureState.dx > 0) ? true : false
     let swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false
     let swipeInCloseDirection = (this.props.side === 'left') ? swipeToLeft : swipeToRight
     if (swipeUpDown || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) {
-      console.log('HMSS', false)
       return false
     }
-    console.log('HMSS', true)
     return true
   }
 
@@ -311,9 +311,7 @@ class Drawer extends Component {
     let minDx = 100
     // @TODO fine tune these thresholds
     if (Math.abs(gestureState.dx) < minDx) {
-      this._open ? this.open() : this.close()
       this._panning = false
-      this.processTapGestures()
       return
     }
 
