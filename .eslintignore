@@ -1,4 +1,0 @@
-# node_modules ignored by default
-android/**
-ios/**
-node_modules/**
