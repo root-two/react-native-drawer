@@ -496,4 +496,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default Drawer
+module.exports = Drawer
