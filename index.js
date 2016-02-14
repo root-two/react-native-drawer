@@ -198,11 +198,12 @@ class Drawer extends Component {
     if (inMask) {
       let toggled = this.processTapGestures()
       if (toggled) return false
-      if (this.props.captureGestures) return true
+      if (this.props.captureGestures && this.props.acceptPan) return true
     }
     if (this.props.negotiatePan) return false
     this._panStartTime = Date.now()
     if (!inMask) return false
+    if (!this.props.acceptPan) return false
     this.terminateActiveTween()
     return true
   };
@@ -215,6 +216,7 @@ class Drawer extends Component {
   handleMoveShouldSetPanResponder(e, gestureState) {
     let inMask = this.testPanResponderMask(e, gestureState)
     if (!inMask) return false
+    if (!this.props.acceptPan) return false
 
     if (!this.props.negotiatePan || this.props.disabled || !this.props.acceptPan || this._panning) return false
     let swipeToLeft = (gestureState.dx < 0) ? true : false
