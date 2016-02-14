@@ -19,6 +19,7 @@ class Drawer extends Component {
   _open = false;
   _panning = false;
   _tweenPending = false;
+  _activeTween = null;
   _lastPress = 0;
   _panStartTime = 0;
   _syncAfterUpdate = false;
@@ -194,10 +195,14 @@ class Drawer extends Component {
 
   processShouldSet = (e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
-    if (inMask) this.processTapGestures() && return false
+    if (inMask) {
+      let toggled = this.processTapGestures()
+      if (toggled) return false
+    }
     if (this.props.negotiatePan && !this._open) return false
     this._panStartTime = Date.now()
     if (!inMask) return false
+    this.terminateActiveTween()
     return true
   };
 
@@ -207,7 +212,7 @@ class Drawer extends Component {
   }
 
   handleMoveShouldSetPanResponder(e, gestureState) {
-    if (!this.props.negotiatePan || this.props.disabled || !this.props.acceptPan) return false
+    if (!this.props.negotiatePan || this.props.disabled || !this.props.acceptPan || this._panning) return false
     let swipeToLeft = (gestureState.dx < 0) ? true : false
     let swipeToRight = (gestureState.dx > 0) ? true : false
     let swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false
@@ -215,10 +220,12 @@ class Drawer extends Component {
     if (swipeUpDown || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) {
       return false
     }
+    this.terminateActiveTween()
     return true
   }
 
   processTapGestures = () => {
+    if (this._activeTween) return false // disable tap gestures during tween
     let minLastPressInterval = 500
     if (this.props.acceptTap) {
       this._open ? this.close() : this.open()
@@ -278,9 +285,16 @@ class Drawer extends Component {
     this._panning = true
   }
 
+  terminateActiveTween = () => {
+    if (this._activeTween) {
+      this._activeTween.terminate()
+      this._activeTween = null
+    }
+  };
+
   open = () => {
     this.props.onOpenStart && this.props.onOpenStart()
-    tween({
+    this._activeTween = tween({
       start: this._left,
       end: this.getOpenLeft(),
       duration: this.props.tweenDuration,
@@ -290,6 +304,7 @@ class Drawer extends Component {
         this.updatePosition()
       },
       onEnd: () => {
+        this._activeTween = null
         this._open = true
         this._prevLeft = this._left
         if (this.props.type === 'overlay') {
@@ -302,7 +317,7 @@ class Drawer extends Component {
 
   close = () => {
     this.props.onCloseStart && this.props.onCloseStart()
-    tween({
+    this._activeTween = tween({
       start: this._left,
       end: this.getClosedLeft(),
       easingType: this.props.tweenEasing,
@@ -312,6 +327,7 @@ class Drawer extends Component {
         this.updatePosition()
       },
       onEnd: () => {
+        this._activeTween = null
         this._open = false
         this._prevLeft = this._left
         if (this.props.type === 'overlay') this.mainOverlay.setNativeProps({ style: { width: 0 }})
@@ -325,12 +341,7 @@ class Drawer extends Component {
   };
 
   handlePanResponderEnd(e, gestureState) {
-    let minDx = 100
-    // @TODO fine tune these thresholds
-    if (Math.abs(gestureState.dx) < minDx) {
-      this._panning = false
-      return
-    }
+    if (Math.abs(gestureState.dx) < 50 && this._activeTween) return
 
     let absRelMoveX = this.props.side === 'left'
       ? this._open ? this.state.viewport.width - gestureState.moveX : gestureState.moveX
