@@ -368,7 +368,7 @@ class Drawer extends Component {
         {...this.responder.panHandlers}
         key="main"
         ref={c => this.main = c}
-        style={[this.stylesheet.main, {width: this.getMainWidth()}]}
+        style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth()}]}
         >
         {this.props.children}
         {this.props.type === 'overlay'
@@ -387,7 +387,7 @@ class Drawer extends Component {
         {...this.responder.panHandlers}
         key="drawer"
         ref={c => this.drawer = c}
-        style={[this.stylesheet.drawer, {width: this.getDrawerWidth(), height: this.state.viewport.height}]}
+        style={[this.stylesheet.drawer, {height: this.getHeight(), width: this.getDrawerWidth()}]}
       >
         {this.props.content}
       </View>
@@ -400,6 +400,10 @@ class Drawer extends Component {
 
   getClosedLeft() {
     return this._offsetClosed
+  }
+
+  getHeight() {
+    return this.state.viewport.height
   }
 
   getMainWidth() {
@@ -427,13 +431,11 @@ class Drawer extends Component {
     styles.main = Object.assign({
       position: 'absolute',
       top: 0,
-      height: this.state.viewport.height,
     }, {borderWidth:0}, this.props.styles.main)
 
     styles.drawer = Object.assign({
       position: 'absolute',
       top: 0,
-      height: this.state.viewport.height,
     }, {borderWidth:0}, this.props.styles.drawer)
 
     if (props.initializeOpen === true) { // open
