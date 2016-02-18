@@ -368,7 +368,7 @@ class Drawer extends Component {
         {...this.responder.panHandlers}
         key="main"
         ref={c => this.main = c}
-        style={[this.stylesheet.main, {width: this.getMainWidth()}]}
+        style={[this.stylesheet.main, {width: this.getMainWidth(), height: this.state.viewport.height}]}
         >
         {this.props.children}
         {this.props.type === 'overlay'
