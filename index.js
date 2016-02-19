@@ -4,7 +4,8 @@ import React, {
   StyleSheet,
   Dimensions,
   PropTypes,
-  Component
+  Component,
+  TouchableWithoutFeedback
 } from 'react-native'
 import tween from './tweener'
 
@@ -56,6 +57,7 @@ class Drawer extends Component {
     side: React.PropTypes.oneOf(['left', 'right']),
     styles: React.PropTypes.object,
     tapToClose: React.PropTypes.bool,
+    tapOverlayToClose: React.PropTypes.bool,
     tweenDuration: React.PropTypes.number,
     tweenEasing: React.PropTypes.string,
     tweenHandler: React.PropTypes.func,
@@ -83,6 +85,7 @@ class Drawer extends Component {
     acceptTap: false,
     acceptPan: true,
     tapToClose: false,
+    tapOverlayToClose: true,
     styles: {},
     onOpen: () => {},
     onClose: () => {},
@@ -345,8 +348,15 @@ class Drawer extends Component {
     })
   };
 
+
   toggle = () => {
     this._open ? this.close() : this.open()
+  };
+
+  closeUsingOverlay = () => {
+    if (this.props.tapOverlayToClose){
+      this.close();
+    }
   };
 
   handlePanResponderEnd(e, gestureState) {
@@ -374,10 +384,12 @@ class Drawer extends Component {
         >
         {this.props.children}
         {this.props.type === 'overlay'
-          ? <View
-              ref={c => this.mainOverlay = c}
-              style={styles.mainOverlay}
+          ? <TouchableWithoutFeedback onPress={() => this.closeUsingOverlay()}>
+              <View
+                ref={c => this.mainOverlay = c}
+                style={styles.mainOverlay}
               />
+            </TouchableWithoutFeedback>
           : null}
       </View>
     )
