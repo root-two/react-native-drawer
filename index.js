@@ -301,6 +301,7 @@ class Drawer extends Component {
 
   open = () => {
     this.props.onOpenStart && this.props.onOpenStart()
+    if (this._activeTween) return
     this._activeTween = tween({
       start: this._left,
       end: this.getOpenLeft(),
@@ -324,6 +325,7 @@ class Drawer extends Component {
 
   close = () => {
     this.props.onCloseStart && this.props.onCloseStart()
+    if (this._activeTween) return
     this._activeTween = tween({
       start: this._left,
       end: this.getClosedLeft(),
