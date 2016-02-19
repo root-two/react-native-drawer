@@ -476,11 +476,12 @@ class Drawer extends Component {
     let viewport = e.nativeEvent.layout
     let oldViewport = this.state.viewport
     if (viewport.width === oldViewport.width && viewport.height === oldViewport.height) return
-    this.resync(viewport)
+    let didRotationChange = viewport.width !== oldViewport.width
+    this.resync(viewport, null, didRotationChange)
   }
 
-  resync(viewport, props) {
-    if (viewport) this._syncAfterUpdate = true
+  resync(viewport, props, didRotationChange) {
+    if (didRotationChange) this._syncAfterUpdate = true
     viewport = viewport || this.state.viewport
     props = props || this.props
     this._offsetClosed = props.closedDrawerOffset % 1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
