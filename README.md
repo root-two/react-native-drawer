@@ -104,7 +104,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 
 ##### Additional Configurations
 - `openDrawerThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
-- `panOpenMask` (Number) `.05` - Ratio of screen width that is valid for the start of a pan open action.
+- `panOpenMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan open action.
 - `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action.
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
 - `side` (String left|right) `left` - which side the drawer should be on.
