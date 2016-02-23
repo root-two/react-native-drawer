@@ -26,3 +26,4 @@ project.xcworkspace
 #
 node_modules/
 npm-debug.log
+.gradle
