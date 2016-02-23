@@ -160,8 +160,12 @@ this.context.drawer.open()
 ### Demo
 * `git clone https://github.com/rt2zz/react-native-drawer.git`
 * `cd react-native-drawer/examples/RNDrawerDemo && npm install`
-* Open ``./examples/RNDrawerDemo/RNDrawerDemo.xcodeproject` in xcode
-* `command+r` (in xcode)
+* **iOS**
+	* Open ``./examples/RNDrawerDemo/RNDrawerDemo.xcodeproject` in xcode
+	* `command+r` (in xcode)
+* **Android**
+	* Run android simulator / plug in your android device
+	* Run `react-native run-android` in terminal
 
 ### Credits
 Component was adapted from and inspired by
