@@ -9,6 +9,8 @@ import React, {
 import tween from './tweener'
 
 let deviceScreen = Dimensions.get('window')
+const VIEW_TYPE_DRAWER = 0
+const VIEW_TYPE_MAIN = 1
 
 class Drawer extends Component {
 
@@ -183,21 +185,21 @@ class Drawer extends Component {
     return dx > this.state.viewport.width * this.props.openDrawerThreshold
   }
 
-  handleStartShouldSetPanResponderCapture(e, gestureState) {
-    if (this.props.captureGestures) return this.processShouldSet(e, gestureState)
+  handleStartShouldSetPanResponderCapture(viewType, e, gestureState) {
+    if (this.props.captureGestures) return this.processShouldSet(viewType, e, gestureState)
     return false
   }
 
-  handleStartShouldSetPanResponder(e, gestureState) {
-    if (!this.props.captureGestures) return this.processShouldSet(e, gestureState)
+  handleStartShouldSetPanResponder(viewType, e, gestureState) {
+    if (!this.props.captureGestures) return this.processShouldSet(viewType, e, gestureState)
     return false
   }
 
-  processShouldSet = (e, gestureState) => {
+  processShouldSet = (viewType, e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
     if (inMask) {
       let toggled = this.processTapGestures()
-      if (toggled) return false
+      if (toggled) return viewType === VIEW_TYPE_DRAWER ? false : true
       if (this.props.captureGestures && this.props.acceptPan) return true
     }
     if (this.props.negotiatePan) return false
@@ -301,6 +303,7 @@ class Drawer extends Component {
 
   open = () => {
     this.props.onOpenStart && this.props.onOpenStart()
+    if (this._activeTween) return
     this._activeTween = tween({
       start: this._left,
       end: this.getOpenLeft(),
@@ -324,6 +327,7 @@ class Drawer extends Component {
 
   close = () => {
     this.props.onCloseStart && this.props.onCloseStart()
+    if (this._activeTween) return
     this._activeTween = tween({
       start: this._left,
       end: this.getClosedLeft(),
@@ -365,7 +369,7 @@ class Drawer extends Component {
   getMainView() {
     return (
       <View
-        {...this.responder.panHandlers}
+        {...this.responderMainView.panHandlers}
         key="main"
         ref={c => this.main = c}
         style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth()}]}
@@ -460,13 +464,17 @@ class Drawer extends Component {
     } else {
       this.stylesheet = StyleSheet.create(styles)
       this.responder = PanResponder.create({
-        onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder,
-        onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture,
+        onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder.bind(this, VIEW_TYPE_DRAWER),
+        onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture.bind(this, VIEW_TYPE_DRAWER),
         onMoveShouldSetPanResponder: this.handleMoveShouldSetPanResponder,
         onMoveShouldSetPanResponderCapture: this.handleMoveShouldSetPanResponderCapture,
         onPanResponderMove: this.handlePanResponderMove,
         onPanResponderRelease: this.handlePanResponderEnd,
       })
+      this.responderMainView = PanResponder.create(Object.assign({}, this.responder, {
+        onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder.bind(this, VIEW_TYPE_MAIN),
+        onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture.bind(this, VIEW_TYPE_MAIN),
+      }))
     }
 
     this.resync(null, props)
@@ -476,11 +484,12 @@ class Drawer extends Component {
     let viewport = e.nativeEvent.layout
     let oldViewport = this.state.viewport
     if (viewport.width === oldViewport.width && viewport.height === oldViewport.height) return
-    this.resync(viewport)
+    let didRotationChange = viewport.width !== oldViewport.width
+    this.resync(viewport, null, didRotationChange)
   }
 
-  resync(viewport, props) {
-    if (viewport) this._syncAfterUpdate = true
+  resync(viewport, props, didRotationChange) {
+    if (didRotationChange) this._syncAfterUpdate = true
     viewport = viewport || this.state.viewport
     props = props || this.props
     this._offsetClosed = props.closedDrawerOffset % 1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
