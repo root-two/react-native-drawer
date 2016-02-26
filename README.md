@@ -146,16 +146,20 @@ Will result in a skewed fade out animation.
 
 ### Opening & Closing the Drawer Programmatically
 Two options:
+
 1. Using the Drawer Ref:
-```js
-onPress={() => {this.drawer.open()}}
-```
+    
+    ```js
+    onPress={() => {this.drawer.open()}}
+    ```
+
 2. Using Context
-```js
-contextTypes = {drawer: React.PropTypes.object}
-// later...
-this.context.drawer.open()
-```
+
+    ```js
+    contextTypes = {drawer: React.PropTypes.object}
+    // later...
+   this.context.drawer.open()
+   ```
 
 ### Demo
 * `git clone https://github.com/rt2zz/react-native-drawer.git`
