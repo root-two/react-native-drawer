@@ -26,10 +26,10 @@ import Drawer from 'react-native-drawer'
 
 class Application extends Component {  
   closeControlPanel = () => {
-    this.drawer.close()
+    this.refs.drawer.close()
   };
   openControlPanel = () => {
-    this.drawer.open()
+    this.refs.drawer.open()
   };
   render () {
     return (
