@@ -9,6 +9,8 @@ import React, {
 import tween from './tweener'
 
 let deviceScreen = Dimensions.get('window')
+const VIEW_TYPE_DRAWER = 0
+const VIEW_TYPE_MAIN = 1
 
 class Drawer extends Component {
 
@@ -183,21 +185,21 @@ class Drawer extends Component {
     return dx > this.state.viewport.width * this.props.openDrawerThreshold
   }
 
-  handleStartShouldSetPanResponderCapture(e, gestureState) {
-    if (this.props.captureGestures) return this.processShouldSet(e, gestureState)
+  handleStartShouldSetPanResponderCapture(viewType, e, gestureState) {
+    if (this.props.captureGestures) return this.processShouldSet(viewType, e, gestureState)
     return false
   }
 
-  handleStartShouldSetPanResponder(e, gestureState) {
-    if (!this.props.captureGestures) return this.processShouldSet(e, gestureState)
+  handleStartShouldSetPanResponder(viewType, e, gestureState) {
+    if (!this.props.captureGestures) return this.processShouldSet(viewType, e, gestureState)
     return false
   }
 
-  processShouldSet = (e, gestureState) => {
+  processShouldSet = (viewType, e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
     if (inMask) {
       let toggled = this.processTapGestures()
-      if (toggled) return false
+      if (toggled) return viewType === VIEW_TYPE_DRAWER ? false : true
       if (this.props.captureGestures && this.props.acceptPan) return true
     }
     if (this.props.negotiatePan) return false
@@ -367,7 +369,7 @@ class Drawer extends Component {
   getMainView() {
     return (
       <View
-        {...this.responder.panHandlers}
+        {...this.responderMainView.panHandlers}
         key="main"
         ref={c => this.main = c}
         style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth()}]}
@@ -462,13 +464,17 @@ class Drawer extends Component {
     } else {
       this.stylesheet = StyleSheet.create(styles)
       this.responder = PanResponder.create({
-        onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder,
-        onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture,
+        onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder.bind(this, VIEW_TYPE_DRAWER),
+        onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture.bind(this, VIEW_TYPE_DRAWER),
         onMoveShouldSetPanResponder: this.handleMoveShouldSetPanResponder,
         onMoveShouldSetPanResponderCapture: this.handleMoveShouldSetPanResponderCapture,
         onPanResponderMove: this.handlePanResponderMove,
         onPanResponderRelease: this.handlePanResponderEnd,
       })
+      this.responderMainView = PanResponder.create(Object.assign({}, this.responder, {
+        onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder.bind(this, VIEW_TYPE_MAIN),
+        onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture.bind(this, VIEW_TYPE_MAIN),
+      }))
     }
 
     this.resync(null, props)
