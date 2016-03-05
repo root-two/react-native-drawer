@@ -42,6 +42,7 @@ class Drawer extends Component {
     deviceScreen: React.PropTypes.object,
     disabled: React.PropTypes.bool,
     initializeOpen: React.PropTypes.bool,
+    open: React.PropTypes.bool,
     negotiatePan: React.PropTypes.bool,
     onClose: React.PropTypes.func,
     onCloseStart: React.PropTypes.func,
@@ -75,6 +76,7 @@ class Drawer extends Component {
     captureGestures: false,
     negotiatePan: false,
     initializeOpen: false,
+    open: false,
     tweenHandler: null,
     tweenDuration: 250,
     tweenEasing: 'linear',
@@ -139,6 +141,11 @@ class Drawer extends Component {
   componentWillReceiveProps(nextProps) {
     if (this.requiresResync(nextProps)) {
       this.resync(null, nextProps)
+    }
+
+    if (this._open !== nextProps.open) {
+      this._syncAfterUpdate = true;
+      this._open = nextProps.open;
     }
   }
 
@@ -440,7 +447,7 @@ class Drawer extends Component {
       top: 0,
     }, {borderWidth:0}, this.props.styles.drawer)
 
-    if (props.initializeOpen === true) { // open
+    if (props.initializeOpen || props.open) { // open
       this._open = true
       this._left = fullWidth - this._offsetOpen
       styles.main[this.props.side] = 0
