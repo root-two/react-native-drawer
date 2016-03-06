@@ -525,7 +525,6 @@ class Drawer extends Component {
       </View>
     )
   }
-
 }
 
 const styles = StyleSheet.create({
