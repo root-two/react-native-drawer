@@ -1,7 +1,7 @@
 ## React Native Drawer
 <img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/react-native-drawer/master/examples/rn-drawer.gif" />
 
-**NOTE** there have been some fairly major, and potentially buggy changes in 1.16.0. Please test it out and report feedback. We will troubleshoot asap.  
+**2.0** is in progress if if you are in the early stages of your project it is probably worth switching now. To access 2.0 run `npm install react-native-drawer@next`.
 
 React native drawer, configurable to achieve material design style, slack style, parallax, and more. Works in both iOS and Android.
 
@@ -103,7 +103,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `negotiatePan` (Boolean) `false` - If true, attempts to handle only horizontal swipes, making it play well with a child `ScrollView`.
 
 ##### Additional Configurations
-- `openDrawerThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
+- `panThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
 - `panOpenMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan open action.
 - `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action.
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
@@ -114,9 +114,6 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `onOpenStart` (Boolean) callback fired at the start of an open animation
 - `onCloseStart` (Boolean) callback fired at the start of a close animation
 - `tweenEasing` (String) `linear` - A easing type supported by [tween-functions](https://www.npmjs.com/package/tween-functions)
-- `relativeDrag` (Boolean) `true` - true -> open/close calculation based on pan dx : false -> calculation based on absolute pan position (i.e. touch location)
-- `panStartCompensation` (Boolean) `false` - Should the drawer catch up to the finger drag position?
-
 
 ### Tween Handler
 You can achieve pretty much any animation you want using the tween handler with the transformMatrix property. E.G.
@@ -148,7 +145,7 @@ Will result in a skewed fade out animation.
 Two options:
 
 1. Using the Drawer Ref:
-    
+
     ```js
     onPress={() => {this.drawer.open()}}
     ```
