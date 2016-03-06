@@ -10,6 +10,7 @@ import tween from './tweener'
 
 let deviceScreen = Dimensions.get('window')
 const DOUBLE_TAP_INTERVAL = 500
+const propsWhomRequireUpdate = ['closedDrawerOffset', 'openDrawerOffset', 'type']
 
 class Drawer extends Component {
 
@@ -24,12 +25,6 @@ class Drawer extends Component {
   _lastPress = 0;
   _panStartTime = 0;
   _syncAfterUpdate = false;
-
-  static propsWhomRequireUpdate = [
-    'closedDrawerOffset',
-    'openDrawerOffset',
-    'type'
-  ];
 
   static tweenPresets = {
     parallax: (ratio, side = 'left') => {
@@ -504,8 +499,8 @@ class Drawer extends Component {
   };
 
   requiresResync = (nextProps) => {
-    for (let i = 0; i < this.propsWhomRequireUpdate.length; i++) {
-      let key = this.propsWhomRequireUpdate[i]
+    for (let i = 0; i < propsWhomRequireUpdate.length; i++) {
+      let key = propsWhomRequireUpdate[i]
       if (this.props[key] !== nextProps[key]) return true
     }
   };
