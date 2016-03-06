@@ -95,7 +95,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `onClose` (Function) - Will be called immediately after the drawer has entered the closed state.
 
 ##### Gestures
-- `captureGestures` (Boolean) `false` - If true, will capture all gestures inside of the pan mask. Meaning child buttons and scroll views will not trigger.
+- `captureGestures` (oneOf(true, false, 'open', 'closed')) `open` - If true, will capture all gestures inside of the pan mask. If 'open' will only capture when drawer is open.
 - `acceptDoubleTap` (Boolean) `false` - Toggle drawer when double tap occurs within pan mask?
 - `acceptTap` (Boolean) `false` - Toggle drawer when any tap occurs within pan mask?
 - `acceptPan` (Boolean) `true` - Allow for drawer pan (on touch drag). Set to false to effectively disable the drawer while still allowing programmatic control.
@@ -103,16 +103,16 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `negotiatePan` (Boolean) `false` - If true, attempts to handle only horizontal swipes, making it play well with a child `ScrollView`.
 
 ##### Additional Configurations
-- `panThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close
-- `panOpenMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan open action.
-- `panCloseMask` (Number) `.25` - Ratio of screen width that is valid for the start of a pan close action.
+- `panThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close.
+- `panOpenMask` (Number) `null` - Ratio of screen width that is valid for the start of a pan open action. If null -> defaults to `max(.05, closedDrawerOffset)`.
+- `panCloseMask` (Number) `null` - Ratio of screen width that is valid for the start of a pan close action. If null -> defaults to `max(.05, openDrawerOffset)`.
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
 - `side` (String left|right) `left` - which side the drawer should be on.
 
 ##### Experimental & Deprecated Props
 **Subject to change or deletion**
-- `onOpenStart` (Boolean) callback fired at the start of an open animation
-- `onCloseStart` (Boolean) callback fired at the start of a close animation
+- `onOpenStart` (Function) callback fired at the start of an open animation
+- `onCloseStart` (Function) callback fired at the start of a close animation
 - `tweenEasing` (String) `linear` - A easing type supported by [tween-functions](https://www.npmjs.com/package/tween-functions)
 
 ### Tween Handler
