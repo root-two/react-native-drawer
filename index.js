@@ -109,7 +109,6 @@ class Drawer extends Component {
   }
 
   componentWillMount() {
-    console.log('CWM', this.props)
     if (this.props.openDrawerThreshold && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: openDrawerThreshold is obsolete. Use panThreshold instead.')
     this.initialize(this.props)
   }
@@ -128,7 +127,7 @@ class Drawer extends Component {
   componentDidUpdate() {
     if (this._syncAfterUpdate) {
       this._syncAfterUpdate = false
-      this._open ? this.open() : this.close()
+      this._open ? this.open('force') : this.close('force')
     }
   }
 
@@ -222,20 +221,16 @@ class Drawer extends Component {
   };
 
   processTapGestures = () => {
-    console.log('PTG', Date.now() - this._lastPress, this._activeTween)
     if (this._activeTween) return false // disable tap gestures during tween
     if (this.props.acceptTap || (this.props.tapToClose && this._open)) {
       this._open ? this.close() : this.open()
       return true
     }
     if (this.props.acceptDoubleTap) {
-      console.log('test double tap')
       let now = new Date().getTime()
       let timeDelta = now - this._lastPress
       this._lastPress = now
-      console.log('timeDelta', timeDelta, timeDelta < DOUBLE_TAP_INTERVAL)
       if (timeDelta < DOUBLE_TAP_INTERVAL) {
-        console.log('toggle')
         this._open ? this.close() : this.open()
         return true
       }
@@ -290,10 +285,12 @@ class Drawer extends Component {
     let start = this._left
     let end = this.getOpenLeft()
 
-    if (this._activeTween) return
-    if (start - end === 0) return // do nothing if the delta is 0
-    this.props.onOpenStart && this.props.onOpenStart()
+    if (type && type === 'force') {
+      if (this._activeTween) return
+      if (start - end === 0) return // do nothing if the delta is 0
+    }
 
+    this.props.onOpenStart && this.props.onOpenStart()
     this._activeTween = tween({
       start: this._left,
       end: this.getOpenLeft(),
@@ -315,12 +312,14 @@ class Drawer extends Component {
     })
   };
 
-  close = () => {
+  close = (type) => {
     let start = this._left
     let end = this.getClosedLeft()
 
-    if (this._activeTween) return
-    if (start - end === 0) return // do nothing if the delta is 0
+    if (type && type !== 'force') {
+      if (this._activeTween) return
+      if (start - end === 0) return // do nothing if the delta is 0
+    }
 
     this.props.onCloseStart && this.props.onCloseStart()
     this._activeTween = tween({
