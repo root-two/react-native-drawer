@@ -9,6 +9,7 @@ import React, {
 import tween from './tweener'
 
 let deviceScreen = Dimensions.get('window')
+const DOUBLE_TAP_INTERVAL = 500
 
 class Drawer extends Component {
 
@@ -45,7 +46,7 @@ class Drawer extends Component {
     acceptDoubleTap: PropTypes.bool,
     acceptPan: PropTypes.bool,
     acceptTap: PropTypes.bool,
-    captureGestures: PropTypes.oneOf([PropTypes.bool, PropTypes.oneOf(['open', 'closed'])]),
+    captureGestures: PropTypes.oneOf([true, false, 'open', 'closed']),
     children: PropTypes.node,
     closedDrawerOffset: PropTypes.number,
     content: PropTypes.node,
@@ -113,6 +114,7 @@ class Drawer extends Component {
   }
 
   componentWillMount() {
+    console.log('CWM', this.props)
     if (this.props.openDrawerThreshold && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: openDrawerThreshold is obsolete. Use panThreshold instead.')
     this.initialize(this.props)
   }
@@ -225,17 +227,20 @@ class Drawer extends Component {
   };
 
   processTapGestures = () => {
+    console.log('PTG', Date.now() - this._lastPress, this._activeTween)
     if (this._activeTween) return false // disable tap gestures during tween
-    let minLastPressInterval = 500
     if (this.props.acceptTap || (this.props.tapToClose && this._open)) {
       this._open ? this.close() : this.open()
       return true
     }
     if (this.props.acceptDoubleTap) {
+      console.log('test double tap')
       let now = new Date().getTime()
       let timeDelta = now - this._lastPress
       this._lastPress = now
-      if (timeDelta < minLastPressInterval) {
+      console.log('timeDelta', timeDelta, timeDelta < DOUBLE_TAP_INTERVAL)
+      if (timeDelta < DOUBLE_TAP_INTERVAL) {
+        console.log('toggle')
         this._open ? this.close() : this.open()
         return true
       }
@@ -287,8 +292,13 @@ class Drawer extends Component {
   };
 
   open = () => {
-    this.props.onOpenStart && this.props.onOpenStart()
+    let start = this._left
+    let end = this.getOpenLeft()
+
     if (this._activeTween) return
+    if (start - end === 0) return // do nothing if the delta is 0
+    this.props.onOpenStart && this.props.onOpenStart()
+
     this._activeTween = tween({
       start: this._left,
       end: this.getOpenLeft(),
@@ -311,11 +321,16 @@ class Drawer extends Component {
   };
 
   close = () => {
-    this.props.onCloseStart && this.props.onCloseStart()
+    let start = this._left
+    let end = this.getClosedLeft()
+
     if (this._activeTween) return
+    if (start - end === 0) return // do nothing if the delta is 0
+
+    this.props.onCloseStart && this.props.onCloseStart()
     this._activeTween = tween({
-      start: this._left,
-      end: this.getClosedLeft(),
+      start,
+      end,
       easingType: this.props.tweenEasing,
       duration: this.props.tweenDuration,
       onFrame: (tweenValue) => {
@@ -404,12 +419,12 @@ class Drawer extends Component {
   };
 
   getOpenMask = () => {
-    let panCloseMask = this.props.panCloseMask === null ? this.props.openDrawerOffset : this.props.panCloseMask
+    let panCloseMask = this.props.panCloseMask === null ? Math.max(0.05, this.props.openDrawerOffset) : this.props.panCloseMask
     return panCloseMask % 1 === 0 ? panCloseMask : deviceScreen.width * panCloseMask
   };
 
   getClosedMask = () => {
-    let panOpenMask = this.props.panOpenMask === null ? this.props.closedDrawerOffset : this.props.panOpenMask
+    let panOpenMask = this.props.panOpenMask === null ? Math.max(0.05, this.props.closedDrawerOffset) : this.props.panOpenMask
     return panOpenMask % 1 === 0 ? panOpenMask : deviceScreen.width * panOpenMask
   };
 
