@@ -281,7 +281,7 @@ class Drawer extends Component {
     }
   };
 
-  open = () => {
+  open = (type) => {
     let start = this._left
     let end = this.getOpenLeft()
 
