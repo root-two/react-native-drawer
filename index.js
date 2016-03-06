@@ -285,8 +285,8 @@ class Drawer extends Component {
     let start = this._left
     let end = this.getOpenLeft()
 
+    if (this._activeTween) return
     if (type && type === 'force') {
-      if (this._activeTween) return
       if (start - end === 0) return // do nothing if the delta is 0
     }
 
@@ -316,8 +316,8 @@ class Drawer extends Component {
     let start = this._left
     let end = this.getClosedLeft()
 
+    if (this._activeTween) return
     if (type && type !== 'force') {
-      if (this._activeTween) return
       if (start - end === 0) return // do nothing if the delta is 0
     }
 
