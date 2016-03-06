@@ -304,8 +304,8 @@ class Drawer extends Component {
         this._activeTween = null
         this._open = true
         this._prevLeft = this._left
-        if (this.props.type === 'overlay') {
-          this.mainOverlay.setNativeProps({ style: { width: this.getMainWidth() }})
+        if (this.shouldCaptureGestures()) {
+          if (this.mainOverlay) this.mainOverlay.setNativeProps({ style: { width: this.getMainWidth() }})
         }
         this.props.onOpen()
       }
@@ -335,7 +335,7 @@ class Drawer extends Component {
         this._activeTween = null
         this._open = false
         this._prevLeft = this._left
-        if (this.props.type === 'overlay') this.mainOverlay.setNativeProps({ style: { width: 0 }})
+        if (this.mainOverlay) this.mainOverlay.setNativeProps({ style: { width: 0 }})
         this.props.onClose()
       }
     })
@@ -369,7 +369,7 @@ class Drawer extends Component {
         style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth()}]}
         >
         {this.props.children}
-        {this.props.type === 'overlay'
+        {this.shouldCaptureGestures()
           ? <View
               ref={c => this.mainOverlay = c}
               style={styles.mainOverlay}
