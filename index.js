@@ -119,8 +119,8 @@ class Drawer extends Component {
     }
 
     if (this._open !== nextProps.open) {
-      this._syncAfterUpdate = true;
-      this._open = nextProps.open;
+      this._syncAfterUpdate = true
+      this._open = nextProps.open
     }
   }
 
