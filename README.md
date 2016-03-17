@@ -77,6 +77,8 @@ class Application extends Component {
 </Drawer>
 ```
 
+Also a [react-native-router-flux](https://github.com/aksonov/react-native-router-flux) implemented example is  **[here](https://github.com/efkan/rndrawer-implemented-rnrouter)**.
+
 ### Props
 This module supports a wide range of drawer styles, and hence has *a lot* of props.
 ##### Important
