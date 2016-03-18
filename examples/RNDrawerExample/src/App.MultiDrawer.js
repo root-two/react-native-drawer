@@ -41,13 +41,27 @@ export default class App extends Component {
           console.log('onclose')
           this.setState({drawerOpen: false})
         }}
+        captureGestures
         tweenDuration={100}
         negotiatePan={true}
         panThreshold={0.08}
         panOpenMask={0.35}
         disabled={this.state.drawerDisabled}
         tweenHandler={Drawer.tweenPresets.parallax}>
-        <Main />
+        <Drawer
+          captureGestures
+          negotiatePan
+          ref={(ref) => this._drawer2 = ref}
+          onOpen={() => {
+            console.log('onopenInner')
+          }}
+          onClose={() => {
+            console.log('oncloseInner')
+          }}
+          side="right"
+          >
+          <Main />
+        </Drawer>
       </Drawer>
     )
   }

@@ -4,6 +4,7 @@
   "rules": {
     "array-bracket-spacing": 0,
     "comma-dangle": 0,
+    "jsx-no-bind": 1,
     "jsx-quotes": [ 2, "prefer-double" ],
     "no-console": 0,
     "no-multiple-empty-lines": 2,
