@@ -85,7 +85,7 @@ class Drawer extends Component {
 
     disabled: false,
     negotiatePan: false,
-    captureGestures: 'closed',
+    captureGestures: 'open',
     acceptDoubleTap: false,
     acceptTap: false,
     acceptPan: true,
@@ -100,15 +100,26 @@ class Drawer extends Component {
     panStartCompensation: true, //@TODO consider for deprecation
   };
 
+  static contextTypes = {
+    drawer: PropTypes.object,
+  };
+
   static childContextTypes = {
-    drawer: PropTypes.any
+    drawer: PropTypes.object,
   };
 
   getChildContext() {
     return { drawer: this }
   }
 
+  _registerChildDrawer(drawer) {
+    // Store child drawer for gesture disambiguation with multi drawer
+    // @TODO make cleaner, generalize to work with 3+ drawers, prop to disable/configure
+    this._childDrawer = drawer
+  }
+
   componentWillMount() {
+    if (this.context.drawer) this.context.drawer._registerChildDrawer(this)
     if (this.props.openDrawerThreshold && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: openDrawerThreshold is obsolete. Use panThreshold instead.')
     this.initialize(this.props)
   }
@@ -240,8 +251,13 @@ class Drawer extends Component {
 
   testPanResponderMask = (e, gestureState) => {
     if (this.props.disabled) return false
-    let x0 = e.nativeEvent.pageX
 
+    // Disable if parent or child drawer exist and are open
+    // @TODO make cleaner, generalize to work with 3+ drawers, prop to disable/configure
+    if (this.context.drawer && this.context.drawer._open) return false
+    if (this._childDrawer && this._childDrawer._open) return false
+
+    let x0 = e.nativeEvent.pageX
     let deltaOpen = this.props.side === 'left' ? this.state.viewport.width - x0 : x0
     let deltaClose = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
 
@@ -286,9 +302,7 @@ class Drawer extends Component {
     let end = this.getOpenLeft()
 
     if (this._activeTween) return
-    if (type && type === 'force') {
-      if (start - end === 0) return // do nothing if the delta is 0
-    }
+    if (type !== 'force' && start - end === 0) return // do nothing if the delta is 0
 
     this.props.onOpenStart && this.props.onOpenStart()
     this._activeTween = tween({
@@ -317,9 +331,7 @@ class Drawer extends Component {
     let end = this.getClosedLeft()
 
     if (this._activeTween) return
-    if (type && type !== 'force') {
-      if (start - end === 0) return // do nothing if the delta is 0
-    }
+    if (type !== 'force' && start - end === 0) return // do nothing if the delta is 0
 
     this.props.onCloseStart && this.props.onCloseStart()
     this._activeTween = tween({
