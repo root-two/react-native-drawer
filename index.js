@@ -69,7 +69,7 @@ class Drawer extends Component {
   };
 
   static defaultProps = {
-    open: false,
+    open: null,
     initializeOpen: false,
 
     type: 'displace',
@@ -118,7 +118,7 @@ class Drawer extends Component {
       this.resync(null, nextProps)
     }
 
-    if (this._open !== nextProps.open) {
+    if (nextProps.open !== null && this._open !== nextProps.open) {
       this._syncAfterUpdate = true
       this._open = nextProps.open
     }

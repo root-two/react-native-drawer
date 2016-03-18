@@ -8,5 +8,11 @@
   "dependencies": {
     "react-native": "^0.21.0",
     "react-native-drawer": "github:rt2zz/react-native-drawer"
+  },
+  "devDependencies": {
+    "babel-eslint": "^5.0.0",
+    "eslint-config-rackt": "^1.1.1",
+    "eslint-config-standard-react": "^2.3.0",
+    "eslint-plugin-react": "^4.2.3"
   }
 }
