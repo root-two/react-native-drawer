@@ -242,8 +242,8 @@ class Drawer extends Component {
     if (this.props.disabled) return false
     let x0 = e.nativeEvent.pageX
 
-    let deltaOpen = this.props.side === 'left' ? deviceScreen.width - x0 : x0
-    let deltaClose = this.props.side === 'left' ? x0 : deviceScreen.width - x0
+    let deltaOpen = this.props.side === 'left' ? this.state.viewport.width - x0 : x0
+    let deltaClose = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
 
     if ( this._open && deltaOpen > this.getOpenMask() ) return false
     if ( !this._open && deltaClose > this.getClosedMask() ) return false
@@ -414,12 +414,12 @@ class Drawer extends Component {
 
   getOpenMask = () => {
     let panCloseMask = this.props.panCloseMask === null ? Math.max(0.05, this.props.openDrawerOffset) : this.props.panCloseMask
-    return panCloseMask % 1 === 0 ? panCloseMask : deviceScreen.width * panCloseMask
+    return panCloseMask % 1 === 0 ? panCloseMask : this.state.viewport.width * panCloseMask
   };
 
   getClosedMask = () => {
     let panOpenMask = this.props.panOpenMask === null ? Math.max(0.05, this.props.closedDrawerOffset) : this.props.panOpenMask
-    return panOpenMask % 1 === 0 ? panOpenMask : deviceScreen.width * panOpenMask
+    return panOpenMask % 1 === 0 ? panOpenMask : this.state.viewport.width * panOpenMask
   };
 
   initialize = (props) => {
