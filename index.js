@@ -165,13 +165,16 @@ class Drawer extends Component {
         break
     }
 
+    let mainOverlayProps = null
     if (this.props.tweenHandler) {
       let propsFrag = this.props.tweenHandler(ratio, this.props.side)
       mainProps = Object.assign(mainProps, propsFrag.main)
       drawerProps = Object.assign(drawerProps, propsFrag.drawer)
+      mainOverlayProps = propsFrag.mainOverlayProps
     }
     this.drawer.setNativeProps({style: drawerProps})
     this.main.setNativeProps({style: mainProps})
+    if (mainOverlayProps) this.mainOverlay.setNativeProps({style: mainOverlayProps})
   };
 
   shouldOpenDrawer = (dx) => {
@@ -317,9 +320,7 @@ class Drawer extends Component {
         this._activeTween = null
         this._open = true
         this._prevLeft = this._left
-        if (this.shouldCaptureGestures()) {
-          if (this.mainOverlay) this.mainOverlay.setNativeProps({ style: { width: this.getMainWidth() }})
-        }
+        if (this.shouldCaptureGestures() && this.mainOverlay) this.mainOverlay.setNativeProps({ pointerEvents: 'auto' })
         this.props.onOpen()
       }
     })
@@ -346,7 +347,7 @@ class Drawer extends Component {
         this._activeTween = null
         this._open = false
         this._prevLeft = this._left
-        if (this.mainOverlay) this.mainOverlay.setNativeProps({ style: { width: 0 }})
+        if (this.mainOverlay) this.mainOverlay.setNativeProps({ pointerEvents: 'none' })
         this.props.onClose()
       }
     })
@@ -382,8 +383,9 @@ class Drawer extends Component {
         {this.props.children}
         {this.captureGestures !== false
           ? <View
+              pointerEvents={ this.shouldCaptureGestures() ? 'auto' : 'none' }
               ref={c => this.mainOverlay = c}
-              style={styles.mainOverlay}
+              style={[styles.mainOverlay, this.props.styles && this.props.styles.mainOverlay]}
               />
           : null}
       </View>
@@ -535,7 +537,7 @@ class Drawer extends Component {
 
 const styles = StyleSheet.create({
   mainOverlay: {
-    width: 0,
+    right: 0,
     left: 0,
     top: 0,
     bottom: 0,
