@@ -302,7 +302,7 @@ class Drawer extends Component {
     let end = this.getOpenLeft()
 
     if (this._activeTween) return
-    if (type !== 'force' && start - end === 0) return // do nothing if the delta is 0
+    if (type !== 'force' && start - end === 0 && this._open === true) return // do nothing if the delta is 0
 
     this.props.onOpenStart && this.props.onOpenStart()
     this._activeTween = tween({
@@ -331,7 +331,7 @@ class Drawer extends Component {
     let end = this.getClosedLeft()
 
     if (this._activeTween) return
-    if (type !== 'force' && start - end === 0) return // do nothing if the delta is 0
+    if (type !== 'force' && start - end === 0 && this._open === false) return // do nothing if the delta is 0
 
     this.props.onCloseStart && this.props.onCloseStart()
     this._activeTween = tween({
