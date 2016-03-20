@@ -31,8 +31,7 @@ export default class App extends Component {
           <ControlPanel closeDrawer={this.closeDrawer} />
         }
         acceptDoubleTap
-        openDrawerOffset={0.35}
-        styles={{main: {shadowColor: "#000000", shadowOpacity: 0.3, shadowRadius: 15}}}
+        styles={{main: {shadowColor: '#000000', shadowOpacity: 0.3, shadowRadius: 15}}}
         onOpen={() => {
           console.log('onopen')
           this.setState({drawerOpen: true})
@@ -42,11 +41,12 @@ export default class App extends Component {
           this.setState({drawerOpen: false})
         }}
         tweenDuration={100}
-        negotiatePan={true}
         panThreshold={0.08}
-        panOpenMask={0.35}
         disabled={this.state.drawerDisabled}
-        tweenHandler={Drawer.tweenPresets.parallax}>
+        openDrawerOffset={0.2}
+        panOpenMask={0.2}
+        negotiatePan
+        >
         <Main />
       </Drawer>
     )

@@ -189,6 +189,7 @@ class Drawer extends Component {
     return false
   };
 
+  // @TODO using shouldCaptureGestures in pan responder may be obsolete now that we have overlay
   shouldCaptureGestures = () => {
     if (this.props.captureGestures === true) return true
     if (this.props.captureGestures === 'closed' && this._open === false) return true
@@ -212,11 +213,16 @@ class Drawer extends Component {
   };
 
   handleMoveShouldSetPanResponderCapture = (e, gestureState) => {
-    if (this.shouldCaptureGestures() && this.props.negotiatePan) return this.handleMoveShouldSetPanResponder(e, gestureState)
+    if (this.shouldCaptureGestures() && this.props.negotiatePan) return this.processMoveShouldSet(e, gestureState)
     return false
   };
 
   handleMoveShouldSetPanResponder = (e, gestureState) => {
+    if (!this.shouldCaptureGestures() && this.props.negotiatePan) return this.processMoveShouldSet(e, gestureState)
+    return false
+  };
+
+  processMoveShouldSet = (e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
     if (!inMask) return false
     if (!this.props.acceptPan) return false
@@ -374,7 +380,7 @@ class Drawer extends Component {
         style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth()}]}
         >
         {this.props.children}
-        {this.shouldCaptureGestures()
+        {this.captureGestures !== false
           ? <View
               ref={c => this.mainOverlay = c}
               style={styles.mainOverlay}
@@ -497,6 +503,7 @@ class Drawer extends Component {
     if (didRotationChange) this._syncAfterUpdate = true
     viewport = viewport || this.state.viewport
     props = props || this.props
+    // @TODO code should be methodized and shared with similar calls
     this._offsetClosed = props.closedDrawerOffset % 1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
     this._offsetOpen = props.openDrawerOffset % 1 === 0 ? props.openDrawerOffset : props.openDrawerOffset * viewport.width
     this.setState({ viewport })
