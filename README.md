@@ -26,15 +26,15 @@ import Drawer from 'react-native-drawer'
 
 class Application extends Component {  
   closeControlPanel = () => {
-    this.refs.drawer.close()
+    this._drawer.close()
   };
   openControlPanel = () => {
-    this.refs.drawer.open()
+    this._drawer.open()
   };
   render () {
     return (
       <Drawer
-        ref="drawer"
+        ref={(ref) => this._drawer = ref)}
         content={<ControlPanel />}
         >
         <MainView />
@@ -85,14 +85,19 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `openDrawerOffset` (Number) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open.
 - `closedDrawerOffset` (Number) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
 - `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
+- `styles` (Object) `null` - Styles for the drawer, main and mainOverlay container Views.
 
 ##### Animation / Tween
-- `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns and object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/} }
+**Note**: In the future animations with use Animated, and the api will change.
+- `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns and object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/}, mainOverlay: {/*native props*/} }
 - `tweenDuration` (Integer) `250` - The duration of the open/close animation.
+- `tweenEasing` (String) `linear` - A easing type supported by [tween-functions](https://www.npmjs.com/package/tween-functions)
 
 ##### Event Handlers
 - `onOpen` (Function) - Will be called immediately after the drawer has entered the open state.
+- `onOpenStart` (Function) callback fired at the start of an open animation.
 - `onClose` (Function) - Will be called immediately after the drawer has entered the closed state.
+- `onCloseStart` (Function) callback fired at the start of a close animation.
 
 ##### Gestures
 - `captureGestures` (oneOf(true, false, 'open', 'closed')) `open` - If true, will capture all gestures inside of the pan mask. If 'open' will only capture when drawer is open.
@@ -108,12 +113,6 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `panCloseMask` (Number) `null` - Ratio of screen width that is valid for the start of a pan close action. If null -> defaults to `max(.05, openDrawerOffset)`.
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
 - `side` (String left|right) `left` - which side the drawer should be on.
-
-##### Experimental & Deprecated Props
-**Subject to change or deletion**
-- `onOpenStart` (Function) callback fired at the start of an open animation
-- `onCloseStart` (Function) callback fired at the start of a close animation
-- `tweenEasing` (String) `linear` - A easing type supported by [tween-functions](https://www.npmjs.com/package/tween-functions)
 
 ### Tween Handler
 You can achieve pretty much any animation you want using the tween handler with the transformMatrix property. E.G.
@@ -139,15 +138,14 @@ tweenHandler={(ratio) => {
 ```
 Will result in a skewed fade out animation.
 
-**warning:** Frame rate, and perceived smoothness will vary based on the complexity and speed of the animation. It will likely require some tweaking and compromise to get the animation just right.
-
 ### Opening & Closing the Drawer Programmatically
 Two options:
 
 1. Using the Drawer Ref:
 
     ```js
-    onPress={() => {this.drawer.open()}}
+    // assuming ref is set up on the drawer as (ref) => this._drawer = ref
+    onPress={() => {this._drawer.open()}}
     ```
 
 2. Using Context
@@ -155,8 +153,8 @@ Two options:
     ```js
     contextTypes = {drawer: React.PropTypes.object}
     // later...
-   this.context.drawer.open()
-   ```
+    this.context.drawer.open()
+    ```
 
 ### Demo
 * `git clone https://github.com/rt2zz/react-native-drawer.git`
