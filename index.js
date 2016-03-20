@@ -383,7 +383,7 @@ class Drawer extends Component {
         {this.props.children}
         {this.captureGestures !== false
           ? <View
-              pointerEvents={ this.shouldCaptureGestures() ? 'auto' : 'none' }
+              pointerEvents={ this._open && this.shouldCaptureGestures() ? 'auto' : 'none' }
               ref={c => this.mainOverlay = c}
               style={[styles.mainOverlay, this.props.styles && this.props.styles.mainOverlay]}
               />
