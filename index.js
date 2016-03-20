@@ -57,7 +57,6 @@ class Drawer extends Component {
     panThreshold: PropTypes.number,
     panCloseMask: PropTypes.number,
     panOpenMask: PropTypes.number,
-    panStartCompensation: PropTypes.bool,
     relativeDrag: PropTypes.bool,
     side: PropTypes.oneOf(['left', 'right']),
     styles: PropTypes.object,
@@ -66,6 +65,10 @@ class Drawer extends Component {
     tweenEasing: PropTypes.string,
     tweenHandler: PropTypes.func,
     type: PropTypes.oneOf(['overlay', 'static', 'displace']),
+
+    // deprecated
+    panStartCompensation: PropTypes.bool,
+    openDrawerThreshold: PropTypes.any,
   };
 
   static defaultProps = {
@@ -97,7 +100,6 @@ class Drawer extends Component {
     side: 'left',
 
     relativeDrag: true, //@TODO consider for deprecation
-    panStartCompensation: true, //@TODO consider for deprecation
   };
 
   static contextTypes = {
@@ -121,6 +123,7 @@ class Drawer extends Component {
   componentWillMount() {
     if (this.context.drawer) this.context.drawer._registerChildDrawer(this)
     if (this.props.openDrawerThreshold && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: openDrawerThreshold is obsolete. Use panThreshold instead.')
+    if (this.props.panStartCompensation && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: panStartCompensation is deprecated.')
     this.initialize(this.props)
   }
 
@@ -269,20 +272,10 @@ class Drawer extends Component {
   handlePanResponderMove = (e, gestureState) => {
     if (!this.props.acceptPan) return false
 
-    //Math is ugly overly verbose here, probably can be greatly cleaned up
-    let dx = gestureState.dx
     //Do nothing if we are panning the wrong way
-    if (this._open ^ dx < 0 ^ this.props.side === 'right') return false
+    if (this._open ^ gestureState.dx < 0 ^ this.props.side === 'right') return false
 
-    let absDx = Math.abs(dx)
-    let moveX = gestureState.moveX
-    let relMoveX = this.props.side === 'left'
-      ? this._open ? -this.state.viewport.width + moveX : moveX
-      : this._open ? -moveX : this.state.viewport.width - moveX
-    let delta = relMoveX - dx
-    let factor = absDx / Math.abs(relMoveX)
-    let adjustedDx = dx + delta * factor
-    let left = this.props.panStartCompensation ? this._prevLeft + adjustedDx : this._prevLeft + dx
+    let left = this._prevLeft + gestureState.dx
     left = Math.min(left, this.getOpenLeft())
     left = Math.max(left, this.getClosedLeft())
     this._left = left
