@@ -170,7 +170,7 @@ class Drawer extends Component {
       let propsFrag = this.props.tweenHandler(ratio, this.props.side)
       mainProps = Object.assign(mainProps, propsFrag.main)
       drawerProps = Object.assign(drawerProps, propsFrag.drawer)
-      mainOverlayProps = propsFrag.mainOverlayProps
+      mainOverlayProps = propsFrag.mainOverlay
     }
     this.drawer.setNativeProps({style: drawerProps})
     this.main.setNativeProps({style: mainProps})
