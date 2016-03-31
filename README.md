@@ -8,8 +8,6 @@ React native drawer, configurable to achieve material design style, slack style,
 [![npm version](https://img.shields.io/npm/v/react-native-drawer.svg?style=flat-square)](https://www.npmjs.com/package/react-native-drawer)
 [![npm downloads](https://img.shields.io/npm/dm/react-native-drawer.svg?style=flat-square)](https://www.npmjs.com/package/react-native-drawer)
 
-**Android**: Android support has been added in v1.3.0!
-
 - [Installation](#installation)
 - [Usage](#usage)
 - [Examples](#examples)
