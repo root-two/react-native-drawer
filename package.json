@@ -1,6 +1,6 @@
 {
   "name": "react-native-drawer",
-  "version": "2.0.0-wip1",
+  "version": "2.0.0",
   "description": "React Native Drawer",
   "main": "index.js",
   "scripts": {
