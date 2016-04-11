@@ -43,7 +43,9 @@ export default class App extends Component {
         tweenDuration={100}
         panThreshold={0.08}
         disabled={this.state.drawerDisabled}
-        openDrawerOffset={0.2}
+        openDrawerOffset={(viewport) => {
+          return viewport.width - 200
+        }}
         panOpenMask={0.2}
         negotiatePan
         >

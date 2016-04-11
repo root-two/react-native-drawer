@@ -10,7 +10,7 @@ import tween from './tweener'
 
 let deviceScreen = Dimensions.get('window')
 const DOUBLE_TAP_INTERVAL = 500
-const propsWhomRequireUpdate = ['closedDrawerOffset', 'openDrawerOffset', 'type']
+const propsWhomRequireUpdate = ['closedDrawerOffset', 'openDrawerOffset', 'type', 'styles']
 
 class Drawer extends Component {
 
@@ -43,7 +43,7 @@ class Drawer extends Component {
     acceptTap: PropTypes.bool,
     captureGestures: PropTypes.oneOf([true, false, 'open', 'closed']),
     children: PropTypes.node,
-    closedDrawerOffset: PropTypes.number,
+    closedDrawerOffset: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
     content: PropTypes.node,
     disabled: PropTypes.bool,
     initializeOpen: PropTypes.bool,
@@ -53,7 +53,7 @@ class Drawer extends Component {
     onCloseStart: PropTypes.func,
     onOpen: PropTypes.func,
     onOpenStart: PropTypes.func,
-    openDrawerOffset: PropTypes.number,
+    openDrawerOffset: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
     panThreshold: PropTypes.number,
     panCloseMask: PropTypes.number,
     panOpenMask: PropTypes.number,
@@ -426,19 +426,30 @@ class Drawer extends Component {
   };
 
   getOpenMask = () => {
-    let panCloseMask = this.props.panCloseMask === null ? Math.max(0.05, this.props.openDrawerOffset) : this.props.panCloseMask
+    let panCloseMask = this.props.panCloseMask === null ? Math.max(0.05, this._offsetOpen) : this.props.panCloseMask
     return panCloseMask % 1 === 0 ? panCloseMask : this.state.viewport.width * panCloseMask
   };
 
   getClosedMask = () => {
-    let panOpenMask = this.props.panOpenMask === null ? Math.max(0.05, this.props.closedDrawerOffset) : this.props.panOpenMask
+    let panOpenMask = this.props.panOpenMask === null ? Math.max(0.05, this._offsetClosed) : this.props.panOpenMask
     return panOpenMask % 1 === 0 ? panOpenMask : this.state.viewport.width * panOpenMask
+  };
+
+  getOpenOffset = (props, viewport) => {
+    if (typeof props.openDrawerOffset === 'function') return props.openDrawerOffset(viewport)
+    return props.openDrawerOffset % 1 === 0 ? props.openDrawerOffset : props.openDrawerOffset * viewport.width
+  };
+
+  getClosedOffset = (props, viewport) => {
+    if (typeof props.closedDrawerOffset === 'function') return props.closedDrawerOffset(viewport)
+    return props.closedDrawerOffset % 1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
   };
 
   initialize = (props) => {
     let fullWidth = this.state.viewport.width
-    this._offsetClosed = props.closedDrawerOffset % 1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * fullWidth
-    this._offsetOpen = props.openDrawerOffset % 1 === 0 ? props.openDrawerOffset : props.openDrawerOffset * fullWidth
+    this._offsetClosed = this.getClosedOffset(props, this.state.viewport)
+    this._offsetOpen = this.getOpenOffset(props, this.state.viewport)
+    // add function options
     this._prevLeft = this._left
 
     let styles = {
@@ -505,9 +516,8 @@ class Drawer extends Component {
     if (didRotationChange) this._syncAfterUpdate = true
     viewport = viewport || this.state.viewport
     props = props || this.props
-    // @TODO code should be methodized and shared with similar calls
-    this._offsetClosed = props.closedDrawerOffset % 1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
-    this._offsetOpen = props.openDrawerOffset % 1 === 0 ? props.openDrawerOffset : props.openDrawerOffset * viewport.width
+    this._offsetClosed = this.getClosedOffset(props, viewport)
+    this._offsetOpen = this.getOpenOffset(props, viewport)
     this.setState({ viewport })
   };
 

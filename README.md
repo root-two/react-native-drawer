@@ -80,8 +80,8 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 ##### Important
 - `content` (React.Component) `null` - Menu component
 - `type` (String: displace:overlay:static) `displace`- Type of drawer.
-- `openDrawerOffset` (Number) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open.
-- `closedDrawerOffset` (Number) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
+- `openDrawerOffset` (Number|Function) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open. Or, can be function which returns offset: `(viewport) => viewport.width - 200`
+- `closedDrawerOffset` (Number|Function) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
 - `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
 - `styles` (Object) `null` - Styles for the drawer, main and mainOverlay container Views.
 
