@@ -32,7 +32,7 @@ class Application extends Component {
   render () {
     return (
       <Drawer
-        ref={(ref) => this._drawer = ref)}
+        ref={(ref) => this._drawer = ref}
         content={<ControlPanel />}
         >
         <MainView />
