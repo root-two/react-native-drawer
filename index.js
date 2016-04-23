@@ -26,6 +26,7 @@ class Drawer extends Component {
   _lastPress = 0;
   _panStartTime = 0;
   _syncAfterUpdate = false;
+  _interactionHandle = null;
 
   static tweenPresets = {
     parallax: (ratio, side = 'left') => {
@@ -66,6 +67,7 @@ class Drawer extends Component {
     tweenEasing: PropTypes.string,
     tweenHandler: PropTypes.func,
     type: PropTypes.oneOf(['overlay', 'static', 'displace']),
+    useInteractionManager: PropTypes.bool,
 
     // deprecated
     panStartCompensation: PropTypes.bool,
@@ -100,6 +102,8 @@ class Drawer extends Component {
     onClose: () => {},
     side: 'left',
 
+    useInteractionManager: false,
+
     relativeDrag: true, //@TODO consider for deprecation
   };
 
@@ -129,9 +133,7 @@ class Drawer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.requiresResync(nextProps)) {
-      this.resync(null, nextProps)
-    }
+    if (this.requiresResync(nextProps)) this.resync(null, nextProps)
 
     if (nextProps.open !== null && this._open !== nextProps.open) {
       this._syncAfterUpdate = true
@@ -308,7 +310,7 @@ class Drawer extends Component {
     if (type !== 'force' && start - end === 0 && this._open === true) return // do nothing if the delta is 0
 
     this.props.onOpenStart && this.props.onOpenStart()
-    const handle = InteractionManager.createInteractionHandle()
+    this.setInteractionHandle()
     this._activeTween = tween({
       start: this._left,
       end: this.getOpenLeft(),
@@ -324,10 +326,19 @@ class Drawer extends Component {
         this._prevLeft = this._left
         if (this.shouldCaptureGestures() && this.mainOverlay) this.mainOverlay.setNativeProps({ pointerEvents: 'auto' })
         this.props.onOpen()
-        InteractionManager.clearInteractionHandle(handle)
+        this.clearInteractionHandle()
       }
     })
   };
+
+  setInteractionHandle() {
+    if (this._interactionHandle) InteractionManager.clearInteractionHandle(this._interactionHandle)
+    if (this.props.useInteractionManager) this._interactionHandle = InteractionManager.createInteractionHandle()
+  }
+
+  clearInteractionHandle() {
+    if (this._interactionHandle) InteractionManager.clearInteractionHandle(this._interactionHandle)
+  }
 
   close = (type) => {
     let start = this._left
@@ -337,7 +348,7 @@ class Drawer extends Component {
     if (type !== 'force' && start - end === 0 && this._open === false) return // do nothing if the delta is 0
 
     this.props.onCloseStart && this.props.onCloseStart()
-    const handle = InteractionManager.createInteractionHandle()
+    this.setInteractionHandle()
     this._activeTween = tween({
       start,
       end,
@@ -353,7 +364,7 @@ class Drawer extends Component {
         this._prevLeft = this._left
         if (this.mainOverlay) this.mainOverlay.setNativeProps({ pointerEvents: 'none' })
         this.props.onClose()
-        InteractionManager.clearInteractionHandle(handle)
+        this.clearInteractionHandle()
       }
     })
   };
