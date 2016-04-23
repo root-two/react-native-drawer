@@ -519,13 +519,11 @@ class Drawer extends Component {
         style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth()}]}
         >
         {this.props.children}
-        {this.captureGestures !== false
-          ? <View
-              pointerEvents={ this._open && this.shouldCaptureGestures() ? 'auto' : 'none' }
-              ref={c => this.mainOverlay = c}
-              style={[styles.mainOverlay, this.props.styles && this.props.styles.mainOverlay]}
-              />
-          : null}
+        <View
+          pointerEvents={ this._open && this.shouldCaptureGestures() ? 'auto' : 'none' }
+          ref={c => this.mainOverlay = c}
+          style={[styles.overlay, this.props.styles && this.props.styles.mainOverlay]}
+          />
       </View>
     )
   }
@@ -539,13 +537,18 @@ class Drawer extends Component {
         style={[this.stylesheet.drawer, {height: this.getHeight(), width: this.getDrawerWidth()}]}
         >
         {this.props.content}
+        <View
+          pointerEvents={ !this._open && this.shouldCaptureGestures() ? 'auto' : 'none' }
+          ref={c => this.drawerOverlay = c}
+          style={[styles.overlay, this.props.styles && this.props.styles.drawerOverlay]}
+          />
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  mainOverlay: {
+  overlay: {
     right: 0,
     left: 0,
     top: 0,

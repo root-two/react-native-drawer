@@ -49,7 +49,7 @@ class Application extends Component {
   type="static"
   content={<ControlPanel />}
   openDrawerOffset={100}
-  styles={{main: {shadowColor: "#000000", shadowOpacity: 0.4, shadowRadius: 3}}}
+  styles={drawerStyles}
   tweenHandler={Drawer.tweenPresets.parallax}
   >
     <Main />
@@ -63,16 +63,18 @@ class Application extends Component {
   openDrawerOffset={0.2} // 20% gap on the right side of drawer
   panCloseMask={0.2}
   closedDrawerOffset={-3}
-  styles={{
-    drawer: {shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
-    main: {paddingLeft: 3}
-  }}
+  styles={drawerStyles}
   tweenHandler={(ratio) => ({
     main: { opacity:(2-ratio)/2 }
   })}
   >
     <Main />
 </Drawer>
+
+const drawerStyles = StyleSheet.create({
+  drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
+  main: {paddingLeft: 3},
+})
 ```
 
 ### Props
@@ -83,7 +85,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `openDrawerOffset` (Number|Function) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open. Or, can be function which returns offset: `(viewport) => viewport.width - 200`
 - `closedDrawerOffset` (Number|Function) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
 - `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
-- `styles` (Object) `null` - Styles for the drawer, main and mainOverlay container Views.
+- `styles` (Object) `null` - Styles for the drawer, main, drawerOverlay and mainOverlay container Views.
 
 ##### Animation / Tween
 **Note**: In the future animations with use Animated, and the api will change.
