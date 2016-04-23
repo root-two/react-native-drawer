@@ -4,7 +4,8 @@ import React, {
   StyleSheet,
   Dimensions,
   PropTypes,
-  Component
+  Component,
+  InteractionManager
 } from 'react-native'
 import tween from './tweener'
 
@@ -307,6 +308,7 @@ class Drawer extends Component {
     if (type !== 'force' && start - end === 0 && this._open === true) return // do nothing if the delta is 0
 
     this.props.onOpenStart && this.props.onOpenStart()
+    const handle = InteractionManager.createInteractionHandle()
     this._activeTween = tween({
       start: this._left,
       end: this.getOpenLeft(),
@@ -322,6 +324,7 @@ class Drawer extends Component {
         this._prevLeft = this._left
         if (this.shouldCaptureGestures() && this.mainOverlay) this.mainOverlay.setNativeProps({ pointerEvents: 'auto' })
         this.props.onOpen()
+        InteractionManager.clearInteractionHandle(handle)
       }
     })
   };
@@ -334,6 +337,7 @@ class Drawer extends Component {
     if (type !== 'force' && start - end === 0 && this._open === false) return // do nothing if the delta is 0
 
     this.props.onCloseStart && this.props.onCloseStart()
+    const handle = InteractionManager.createInteractionHandle()
     this._activeTween = tween({
       start,
       end,
@@ -349,6 +353,7 @@ class Drawer extends Component {
         this._prevLeft = this._left
         if (this.mainOverlay) this.mainOverlay.setNativeProps({ pointerEvents: 'none' })
         this.props.onClose()
+        InteractionManager.clearInteractionHandle(handle)
       }
     })
   };
