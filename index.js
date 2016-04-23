@@ -13,7 +13,7 @@ let deviceScreen = Dimensions.get('window')
 const DOUBLE_TAP_INTERVAL = 500
 const propsWhomRequireUpdate = ['closedDrawerOffset', 'openDrawerOffset', 'type', 'styles']
 
-class Drawer extends Component {
+export default class Drawer extends Component {
 
   _left = 0;
   _prevLeft = 0;
@@ -228,15 +228,18 @@ class Drawer extends Component {
     }
 
     let mainOverlayProps = null
+    let drawerOverlayProps = null
     if (this.props.tweenHandler) {
       let propsFrag = this.props.tweenHandler(ratio, this.props.side)
       mainProps = Object.assign(mainProps, propsFrag.main)
       drawerProps = Object.assign(drawerProps, propsFrag.drawer)
       mainOverlayProps = propsFrag.mainOverlay
+      drawerOverlayProps = propsFrag.drawerOverlay
     }
     this.drawer.setNativeProps({style: drawerProps})
     this.main.setNativeProps({style: mainProps})
     if (mainOverlayProps) this.mainOverlay.setNativeProps({style: mainOverlayProps})
+    if (drawerOverlayProps) this.drawerOverlay.setNativeProps({style: drawerOverlayProps})
   };
 
   shouldOpenDrawer = (dx) => {
@@ -563,5 +566,3 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   }
 })
-
-module.exports = Drawer
