@@ -195,12 +195,12 @@ export default class Drawer extends Component {
     } else {
       this.stylesheet = StyleSheet.create(styles)
       this.responder = PanResponder.create({
-        onStartShouldSetPanResponder: this.handleStartShouldSetPanResponder,
-        onStartShouldSetPanResponderCapture: this.handleStartShouldSetPanResponderCapture,
-        onMoveShouldSetPanResponder: this.handleMoveShouldSetPanResponder,
-        onMoveShouldSetPanResponderCapture: this.handleMoveShouldSetPanResponderCapture,
-        onPanResponderMove: this.handlePanResponderMove,
-        onPanResponderRelease: this.handlePanResponderEnd,
+        onStartShouldSetPanResponder: this.onStartShouldSetPanResponder,
+        onStartShouldSetPanResponderCapture: this.onStartShouldSetPanResponderCapture,
+        onMoveShouldSetPanResponder: this.onMoveShouldSetPanResponder,
+        onMoveShouldSetPanResponderCapture: this.onMoveShouldSetPanResponderCapture,
+        onPanResponderMove: this.onPanResponderMove,
+        onPanResponderRelease: this.onPanResponderRelease,
       })
     }
 
@@ -242,36 +242,60 @@ export default class Drawer extends Component {
     if (drawerOverlayProps) this.drawerOverlay.setNativeProps({style: drawerOverlayProps})
   };
 
-  shouldOpenDrawer = (dx) => {
-    if (this._open) return dx < this.state.viewport.width * this.props.panThreshold
-    return dx > this.state.viewport.width * this.props.panThreshold
-  };
+  shouldOpenDrawer(dx) {
+    let hasActiveHeading = this._open ^ dx > 0 ^ this.props.side === 'right'
+    if (!hasActiveHeading) return this._open
+    else return this._open ^ Math.abs(dx) > this.state.viewport.width * this.props.panThreshold
+  }
 
-  handleStartShouldSetPanResponderCapture = (e, gestureState) => {
+  onStartShouldSetPanResponderCapture = (e, gestureState) => {
     if (this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
   };
 
-  handleStartShouldSetPanResponder = (e, gestureState) => {
+  onStartShouldSetPanResponder = (e, gestureState) => {
     if (!this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
   };
 
-  handleMoveShouldSetPanResponderCapture = (e, gestureState) => {
+  onMoveShouldSetPanResponderCapture = (e, gestureState) => {
     if (this.shouldCaptureGestures() && this.props.negotiatePan) return this.processMoveShouldSet(e, gestureState)
     return false
   };
 
-  handleMoveShouldSetPanResponder = (e, gestureState) => {
+  onMoveShouldSetPanResponder = (e, gestureState) => {
     if (!this.shouldCaptureGestures() && this.props.negotiatePan) return this.processMoveShouldSet(e, gestureState)
     return false
+  };
+
+  onPanResponderMove = (e, gestureState) => {
+    if (!this.props.acceptPan) return false
+
+    //Do nothing if we are panning the wrong way
+    if (this._open ^ gestureState.dx < 0 ^ this.props.side === 'right') return false
+
+    let left = this._prevLeft + gestureState.dx
+    left = Math.min(left, this.getOpenLeft())
+    left = Math.max(left, this.getClosedLeft())
+    this._left = left
+    this.updatePosition()
+    this._panning = true
+  };
+
+  onPanResponderRelease = (e, gestureState) => {
+    if (gestureState.moveX < 50) this.processTapGestures()
+    if (Math.abs(gestureState.dx) < 50 && this._activeTween) return
+
+    this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
+
+    this.updatePosition()
+    this._prevLeft = this._left
+    this._panning = false
   };
 
   processShouldSet = (e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
     if (inMask) {
-      let toggled = this.processTapGestures()
-      if (toggled) return false
       if (this.shouldCaptureGestures()) return true
     }
     if (this.props.negotiatePan) return false
@@ -340,35 +364,6 @@ export default class Drawer extends Component {
     if ( this._open && deltaOpen > this.getOpenMask() ) return false
     if ( !this._open && deltaClose > this.getClosedMask() ) return false
     return true
-  };
-
-  handlePanResponderMove = (e, gestureState) => {
-    if (!this.props.acceptPan) return false
-
-    //Do nothing if we are panning the wrong way
-    if (this._open ^ gestureState.dx < 0 ^ this.props.side === 'right') return false
-
-    let left = this._prevLeft + gestureState.dx
-    left = Math.min(left, this.getOpenLeft())
-    left = Math.max(left, this.getClosedLeft())
-    this._left = left
-    this.updatePosition()
-    this._panning = true
-  };
-
-  handlePanResponderEnd = (e, gestureState) => {
-    if (Math.abs(gestureState.dx) < 50 && this._activeTween) return
-
-    let absRelMoveX = this.props.side === 'left'
-      ? this._open ? this.state.viewport.width - gestureState.moveX : gestureState.moveX
-      : this._open ? gestureState.moveX : this.state.viewport.width - gestureState.moveX
-    let calcPos = this.props.relativeDrag ? Math.abs(gestureState.dx) : absRelMoveX
-
-    this.shouldOpenDrawer(calcPos) ? this.open() : this.close()
-
-    this.updatePosition()
-    this._prevLeft = this._left
-    this._panning = false
   };
 
   terminateActiveTween = () => {
