@@ -3,8 +3,6 @@
 
 React native drawer, configurable to achieve material design style, slack style, parallax, and more. Works in both iOS and Android.
 
-[**2.0** has just been released](https://github.com/root-two/react-native-drawer/releases/tag/v2). We need help testing all use cases and updating recipes and documentation accordingly. Open an issue with questions or a PR with updates!
-
 [![npm version](https://img.shields.io/npm/v/react-native-drawer.svg?style=flat-square)](https://www.npmjs.com/package/react-native-drawer)
 [![npm downloads](https://img.shields.io/npm/dm/react-native-drawer.svg?style=flat-square)](https://www.npmjs.com/package/react-native-drawer)
 
@@ -16,7 +14,7 @@ React native drawer, configurable to achieve material design style, slack style,
 - [Credits](#credits)
 
 ### Installation
-`npm install react-native-drawer`
+`npm install --save react-native-drawer`
 
 ### Usage
 ```javascript

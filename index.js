@@ -59,7 +59,6 @@ export default class Drawer extends Component {
     panThreshold: PropTypes.number,
     panCloseMask: PropTypes.number,
     panOpenMask: PropTypes.number,
-    relativeDrag: PropTypes.bool,
     side: PropTypes.oneOf(['left', 'right']),
     styles: PropTypes.object,
     tapToClose: PropTypes.bool,
@@ -103,21 +102,13 @@ export default class Drawer extends Component {
     side: 'left',
 
     useInteractionManager: false,
-
-    relativeDrag: true, //@TODO consider for deprecation
   };
 
-  static contextTypes = {
-    drawer: PropTypes.object,
-  };
-
-  static childContextTypes = {
-    drawer: PropTypes.object,
-  };
-
-  getChildContext() {
-    return { drawer: this }
-  }
+  /*** CONTEXT ***/
+  static contextTypes = { drawer: PropTypes.object };
+  static childContextTypes = { drawer: PropTypes.object };
+  getChildContext = () => ({ drawer: this });
+  /*** END CONTEXT ***/
 
   _registerChildDrawer(drawer) {
     // Store child drawer for gesture disambiguation with multi drawer
@@ -129,6 +120,7 @@ export default class Drawer extends Component {
     if (this.context.drawer) this.context.drawer._registerChildDrawer(this)
     if (this.props.openDrawerThreshold && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: openDrawerThreshold is obsolete. Use panThreshold instead.')
     if (this.props.panStartCompensation && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: panStartCompensation is deprecated.')
+    if (this.props.relativeDrag && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: relativeDrag is deprecated.')
     this.initialize(this.props)
   }
 
