@@ -342,12 +342,12 @@ export default class Drawer extends Component {
     return false
   };
 
-  shouldCaptureGestures = () => {
+  shouldCaptureGestures() {
     if (this.props.captureGestures === true) return true
     if (this.props.captureGestures === 'closed' && this._open === false) return true
     if (this.props.captureGestures === 'open' && this._open === true) return true
     return false
-  };
+  }
 
   testPanResponderMask = (e, gestureState) => {
     if (this.props.disabled) return false
@@ -433,8 +433,9 @@ export default class Drawer extends Component {
 
   adjustForCaptureGestures() {
     if (!this.props.captureGestures) return
-    this.mainOverlay.setNativeProps({ pointerEvents: this._open ? 'auto' : 'none' })
-    this.drawerOverlay.setNativeProps({ pointerEvents: !this._open ? 'auto' : 'none' })
+    let shouldCapture = this.shouldCaptureGestures()
+    this.mainOverlay.setNativeProps({ pointerEvents: shouldCapture && this._open ? 'auto' : 'none' })
+    this.drawerOverlay.setNativeProps({ pointerEvents: shouldCapture && !this._open ? 'auto' : 'none' })
   }
 
   setInteractionHandle() {
