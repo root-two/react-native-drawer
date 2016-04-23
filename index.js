@@ -397,7 +397,7 @@ class Drawer extends Component {
         this._activeTween = null
         this._open = true
         this._prevLeft = this._left
-        if (this.shouldCaptureGestures() && this.mainOverlay) this.mainOverlay.setNativeProps({ pointerEvents: 'auto' })
+        this.adjustForCaptureGestures()
         this.props.onOpen()
         this.clearInteractionHandle()
       }
@@ -426,12 +426,18 @@ class Drawer extends Component {
         this._activeTween = null
         this._open = false
         this._prevLeft = this._left
-        if (this.mainOverlay) this.mainOverlay.setNativeProps({ pointerEvents: 'none' })
+        this.adjustForCaptureGestures()
         this.props.onClose()
         this.clearInteractionHandle()
       }
     })
   };
+
+  adjustForCaptureGestures() {
+    if (!this.props.captureGestures) return
+    this.mainOverlay.setNativeProps({ pointerEvents: this._open ? 'auto' : 'none' })
+    this.drawerOverlay.setNativeProps({ pointerEvents: !this._open ? 'auto' : 'none' })
+  }
 
   setInteractionHandle() {
     if (this._interactionHandle) InteractionManager.clearInteractionHandle(this._interactionHandle)
