@@ -80,6 +80,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 ##### Important
 - `content` (React.Component) `null` - Menu component
 - `type` (String: displace:overlay:static) `displace`- Type of drawer.
+- `open` (Boolean) `null` - If true will trigger drawer open, if false will trigger close.
 - `openDrawerOffset` (Number|Function) `0` - Can either be a integer (pixel value) or decimal (ratio of screen width). Defines the right hand margin when the drawer is open. Or, can be function which returns offset: `(viewport) => viewport.width - 200`
 - `closedDrawerOffset` (Number|Function) `0` - Same as openDrawerOffset, except defines left hand margin when drawer is closed.
 - `disabled` (Boolean) `false` - If true the drawer can not be opened and will not respond to pans.
@@ -138,16 +139,23 @@ tweenHandler={(ratio) => {
 Will result in a skewed fade out animation.
 
 ### Opening & Closing the Drawer Programmatically
-Two options:
+Three options:
 
-1. Using the Drawer Ref:
+1. Use the open prop (controlled mode):  
+
+    ```js
+    <Drawer
+      open={true}
+    ```
+
+2. Using the Drawer Ref:
 
     ```js
     // assuming ref is set up on the drawer as (ref) => this._drawer = ref
     onPress={() => {this._drawer.open()}}
     ```
 
-2. Using Context
+3. Using Context
 
     ```js
     contextTypes = {drawer: React.PropTypes.object}
