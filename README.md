@@ -111,6 +111,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `panCloseMask` (Number) `null` - Ratio of screen width that is valid for the start of a pan close action. If null -> defaults to `max(.05, openDrawerOffset)`.
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
 - `side` (String left|right) `left` - which side the drawer should be on.
+- `useInteractionManager` (Boolean) `false` - if true will run InteractionManager for open/close animations.
 
 ### Tween Handler
 You can achieve pretty much any animation you want using the tween handler with the transformMatrix property. E.G.
