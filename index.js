@@ -468,11 +468,11 @@ export default class Drawer extends Component {
   };
 
   /*** DYNAMIC GETTERS ***/
-  getOpenLeft = () => this.state.viewport.width - this._offsetOpen
-  getClosedLeft = () => this._offsetClosed
-  getHeight = () => this.state.viewport.height
-  getMainWidth = () => this.state.viewport.width - this._offsetClosed
-  getDrawerWidth = () => this.state.viewport.width - this._offsetOpen
+  getOpenLeft = () => this.state.viewport.width - this._offsetOpen;
+  getClosedLeft = () => this._offsetClosed;
+  getHeight = () => this.state.viewport.height;
+  getMainWidth = () => this.state.viewport.width - this._offsetClosed;
+  getDrawerWidth = () => this.state.viewport.width - this._offsetOpen;
   getOpenMask = () => {
     let panCloseMask = this.props.panCloseMask === null ? Math.max(0.05, this._offsetOpen) : this.props.panCloseMask
     return panCloseMask % 1 === 0 ? panCloseMask : this.state.viewport.width * panCloseMask
