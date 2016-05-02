@@ -228,10 +228,12 @@ export default class Drawer extends Component {
       mainOverlayProps = propsFrag.mainOverlay
       drawerOverlayProps = propsFrag.drawerOverlay
     }
-    this.drawer.setNativeProps({style: drawerProps})
-    this.main.setNativeProps({style: mainProps})
-    if (mainOverlayProps) this.mainOverlay.setNativeProps({style: mainOverlayProps})
-    if (drawerOverlayProps) this.drawerOverlay.setNativeProps({style: drawerOverlayProps})
+    if (this.main && this.drawer && this.mainOverlay && this.drawerOverlay) {
+      this.drawer.setNativeProps({style: drawerProps})
+      this.main.setNativeProps({style: mainProps})
+      if (mainOverlayProps) this.mainOverlay.setNativeProps({style: mainOverlayProps})
+      if (drawerOverlayProps) this.drawerOverlay.setNativeProps({style: drawerOverlayProps})
+    }
   };
 
   shouldOpenDrawer(dx) {
@@ -426,8 +428,10 @@ export default class Drawer extends Component {
   adjustForCaptureGestures() {
     if (!this.props.captureGestures) return
     let shouldCapture = this.shouldCaptureGestures()
-    this.mainOverlay.setNativeProps({ pointerEvents: shouldCapture && this._open ? 'auto' : 'none' })
-    this.drawerOverlay.setNativeProps({ pointerEvents: shouldCapture && !this._open ? 'auto' : 'none' })
+    if (this.mainOverlay && this.drawerOverlay) {
+      this.mainOverlay.setNativeProps({ pointerEvents: shouldCapture && this._open ? 'auto' : 'none' })
+      this.drawerOverlay.setNativeProps({ pointerEvents: shouldCapture && !this._open ? 'auto' : 'none' })
+    }
   }
 
   setInteractionHandle() {
