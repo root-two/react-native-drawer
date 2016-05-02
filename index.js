@@ -228,10 +228,12 @@ export default class Drawer extends Component {
       mainOverlayProps = propsFrag.mainOverlay
       drawerOverlayProps = propsFrag.drawerOverlay
     }
-    this.drawer.setNativeProps({style: drawerProps})
-    this.main.setNativeProps({style: mainProps})
-    if (mainOverlayProps) this.mainOverlay.setNativeProps({style: mainOverlayProps})
-    if (drawerOverlayProps) this.drawerOverlay.setNativeProps({style: drawerOverlayProps})
+    if (this.main && mainOverlayProps && drawerOverlayProps) {
+      this.drawer.setNativeProps({style: drawerProps})
+      this.main.setNativeProps({style: mainProps})
+      this.mainOverlay.setNativeProps({style: mainOverlayProps})
+      this.drawerOverlay.setNativeProps({style: drawerOverlayProps})
+    }
   };
 
   shouldOpenDrawer(dx) {
