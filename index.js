@@ -1,14 +1,14 @@
-import React, {
-  PanResponder,
-  View,
-  StyleSheet,
+import React, { Component } from 'react'
+import {
   Dimensions,
+  InteractionManager,
+  PanResponder,
   PropTypes,
-  Component,
-  InteractionManager
+  StyleSheet,
+  View,
 } from 'react-native'
-import tween from './tweener'
 
+import tween from './tweener'
 let deviceScreen = Dimensions.get('window')
 const DOUBLE_TAP_INTERVAL = 500
 const propsWhomRequireUpdate = ['closedDrawerOffset', 'openDrawerOffset', 'type', 'styles']
