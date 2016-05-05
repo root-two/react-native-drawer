@@ -1,7 +1,7 @@
 import React, {
   PropTypes,
   Component,
-} from 'react';
+} from 'react'
 import {
   PanResponder,
   View,
