@@ -480,12 +480,14 @@ export default class Drawer extends Component {
   getMainWidth = () => this.state.viewport.width - this._offsetClosed;
   getDrawerWidth = () => this.state.viewport.width - this._offsetOpen;
   getOpenMask = () => {
-    let panCloseMask = this.props.panCloseMask === null ? Math.max(0.05, this._offsetOpen) : this.props.panCloseMask
-    return panCloseMask % 1 === 0 ? panCloseMask : this.state.viewport.width * panCloseMask
+    if (this.props.panCloseMask && this.props.panCloseMask % 1 === 0) return this.props.panCloseMask
+    if (this.props.panCloseMask) return this.state.viewport.width * panCloseMask
+    return Math.max(0.05, this._offsetOpen)
   };
   getClosedMask = () => {
-    let panOpenMask = this.props.panOpenMask === null ? Math.max(0.05, this._offsetClosed) : this.props.panOpenMask
-    return panOpenMask % 1 === 0 ? panOpenMask : this.state.viewport.width * panOpenMask
+    if (this.props.panOpenMask && this.props.panOpenMask % 1 === 0) return this.props.panOpenMask
+    if (this.props.panOpenMask) return this.state.viewport.width * panOpenMask
+    return Math.max(0.05, this._offsetClosed)
   };
   getOpenOffset = (props, viewport) => {
     if (typeof props.openDrawerOffset === 'function') return props.openDrawerOffset(viewport)
