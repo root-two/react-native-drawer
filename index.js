@@ -3,7 +3,7 @@ import React, {
   Component,
 } from 'react'
 
-import React, {
+import {
   PanResponder,
   View,
   StyleSheet,
