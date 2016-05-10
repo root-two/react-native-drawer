@@ -279,7 +279,7 @@ export default class Drawer extends Component {
   };
 
   onPanResponderRelease = (e, gestureState) => {
-    if (gestureState.moveX < 50) this.processTapGestures()
+    if (gestureState.moveX < 125) this.processTapGestures()
     if (Math.abs(gestureState.dx) < 50 && this._activeTween) return
 
     this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
