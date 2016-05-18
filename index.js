@@ -270,10 +270,12 @@ export default class Drawer extends Component {
     //Do nothing if we are panning the wrong way
     if (this._open ^ gestureState.dx < 0 ^ this.props.side === 'right') return false
 
-    let left = this._prevLeft + gestureState.dx
+    let dx = this.props.side === 'right' ? gestureState.dx * -1 : gestureState.dx
+    let left = this._prevLeft + dx
     left = Math.min(left, this.getOpenLeft())
     left = Math.max(left, this.getClosedLeft())
     this._left = left
+
     this.updatePosition()
     this._panning = true
   };
