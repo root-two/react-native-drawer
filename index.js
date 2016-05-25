@@ -50,6 +50,7 @@ export default class Drawer extends Component {
     closedDrawerOffset: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
     content: PropTypes.node,
     disabled: PropTypes.bool,
+    elevation: PropTypes.number,
     initializeOpen: PropTypes.bool,
     open: PropTypes.bool,
     negotiatePan: PropTypes.bool,
@@ -99,6 +100,7 @@ export default class Drawer extends Component {
     tapToClose: false,
 
     styles: {},
+    elevation: 0,
     onOpen: () => {},
     onClose: () => {},
     side: 'left',
@@ -541,6 +543,7 @@ export default class Drawer extends Component {
         {...this.responder.panHandlers}
         key="drawer"
         ref={c => this.drawer = c}
+        elevation={this.props.elevation}
         style={[this.stylesheet.drawer, {height: this.getHeight(), width: this.getDrawerWidth()}]}
         >
         {this.props.content}
