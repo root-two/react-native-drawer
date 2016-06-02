@@ -113,6 +113,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
 - `side` (String left|right) `left` - which side the drawer should be on.
 - `useInteractionManager` (Boolean) `false` - if true will run InteractionManager for open/close animations.
+- `elevation` (Number) `0` - (Android-only) Sets the elevation of the drawer using Android's underlying [elevation API](https://developer.android.com/training/material/shadows-clipping.html#Elevation)
 
 ### Tween Handler
 You can achieve pretty much any animation you want using the tween handler with the transformMatrix property. E.G.
