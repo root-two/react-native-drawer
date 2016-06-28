@@ -283,6 +283,7 @@ export default class Drawer extends Component {
   };
 
   onPanResponderRelease = (e, gestureState) => {
+    this._panning = false;
     if (gestureState.moveX < 125) this.processTapGestures()
     if (Math.abs(gestureState.dx) < 50 && this._activeTween) return
 
@@ -290,7 +291,6 @@ export default class Drawer extends Component {
 
     this.updatePosition()
     this._prevLeft = this._left
-    this._panning = false
   };
 
   processShouldSet = (e, gestureState) => {
