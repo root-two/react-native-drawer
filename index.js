@@ -1,18 +1,11 @@
-import React, {
-  PropTypes,
-  Component,
-} from 'react'
-import {
-  PanResponder,
-  View,
-  StyleSheet,
-  Dimensions,
-  InteractionManager
-} from 'react-native'
+import React, { PropTypes, Component } from 'react'
+import { PanResponder, View, StyleSheet, Dimensions, InteractionManage } from 'react-native'
+
 import tween from './tweener'
 
 let deviceScreen = Dimensions.get('window')
 const DOUBLE_TAP_INTERVAL = 500
+const TAP_DURATION = 100
 const propsWhomRequireUpdate = ['closedDrawerOffset', 'openDrawerOffset', 'type', 'styles']
 
 export default class Drawer extends Component {
@@ -283,24 +276,21 @@ export default class Drawer extends Component {
   };
 
   onPanResponderRelease = (e, gestureState) => {
-    this._panning = false;
-    if (gestureState.moveX < 125) this.processTapGestures()
+    this._panning = false
+    if (Date.now() - this._panStartTime < TAP_DURATION) this.processTapGestures()
     if (Math.abs(gestureState.dx) < 50 && this._activeTween) return
 
     this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
-
     this.updatePosition()
     this._prevLeft = this._left
   };
 
   processShouldSet = (e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
-    if (inMask) {
-      if (this.shouldCaptureGestures()) return true
-    }
-    if (this.props.negotiatePan) return false
-    this._panStartTime = Date.now()
     if (!inMask) return false
+    this._panStartTime = Date.now()
+    if (inMask && this.shouldCaptureGestures()) return true
+    if (this.props.negotiatePan) return false
     if (!this.props.acceptPan) return false
     this.terminateActiveTween()
     return true
