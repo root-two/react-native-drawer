@@ -5,7 +5,7 @@ import tween from './tweener'
 
 let deviceScreen = Dimensions.get('window')
 const DOUBLE_TAP_INTERVAL = 500
-const TAP_DURATION = 100
+const TAP_DURATION = 250
 const propsWhomRequireUpdate = ['closedDrawerOffset', 'openDrawerOffset', 'type', 'styles']
 
 export default class Drawer extends Component {
