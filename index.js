@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { PanResponder, View, StyleSheet, Dimensions, InteractionManage } from 'react-native'
+import { PanResponder, View, StyleSheet, Dimensions, InteractionManager } from 'react-native'
 
 import tween from './tweener'
 
