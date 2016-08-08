@@ -51,6 +51,7 @@ export default class Drawer extends Component {
     onCloseStart: PropTypes.func,
     onOpen: PropTypes.func,
     onOpenStart: PropTypes.func,
+    onUpdate: PropTypes.func,
     openDrawerOffset: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
     panThreshold: PropTypes.number,
     panCloseMask: PropTypes.number,
@@ -200,6 +201,8 @@ export default class Drawer extends Component {
     let mainProps = {}
     let drawerProps = {}
     let ratio = (this._left - this._offsetClosed) / (this.getOpenLeft() - this._offsetClosed)
+
+    this.props.onUpdate && this.props.onUpdate(this._left)
 
     switch (this.props.type) {
       case 'overlay':

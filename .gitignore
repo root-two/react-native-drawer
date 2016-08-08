@@ -5,6 +5,7 @@
 # node.js
 #
 node_modules/
-npm-debug.loga
+npm-debug.log
+.idea
 
 .reploy
