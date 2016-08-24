@@ -241,6 +241,7 @@ export default class Drawer extends Component {
   }
 
   onPanResponderTerminate = (e, gestureState) => {
+    this._panning = false
     this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
   };
     
