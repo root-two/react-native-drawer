@@ -190,6 +190,7 @@ export default class Drawer extends Component {
         onMoveShouldSetPanResponderCapture: this.onMoveShouldSetPanResponderCapture,
         onPanResponderMove: this.onPanResponderMove,
         onPanResponderRelease: this.onPanResponderRelease,
+	onPanResponderTerminate: this.onPanResponderTerminate
       })
     }
 
@@ -239,6 +240,11 @@ export default class Drawer extends Component {
     else return this._open ^ Math.abs(dx) > this.state.viewport.width * this.props.panThreshold
   }
 
+  onPanResponderTerminate = (e, gestureState) => {
+    this._panning = false
+    this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
+  };
+    
   onStartShouldSetPanResponderCapture = (e, gestureState) => {
     if (this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
