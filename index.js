@@ -395,11 +395,9 @@ export default class Drawer extends Component {
         this.props.onOpen()
         this.clearInteractionHandle()
 
-         if(typeof(type) == 'function') {
-            type(); // this is actually a callback
-          } else if(typeof(cb) == 'function') {
-            cb();
-          }
+        if(typeof type === 'function') {
+          type() // this is actually a callback
+        } else cb && cb()
         
       }
     })
@@ -431,11 +429,9 @@ export default class Drawer extends Component {
         this.props.onClose()
         this.clearInteractionHandle()
 
-        if(typeof(type) == 'function') {
-          type(); // this is actually a callback
-        } else if(typeof(cb) == 'function') {
-          cb();
-        }
+        if(typeof type === 'function') {
+          type() // this is actually a callback
+        } else cb && cb()
 
       }
     })
