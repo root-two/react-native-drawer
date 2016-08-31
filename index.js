@@ -369,7 +369,7 @@ export default class Drawer extends Component {
     }
   };
 
-  open = (type) => {
+  open = (type, cb) => {
     let start = this._left
     let end = this.getOpenLeft()
 
@@ -394,11 +394,16 @@ export default class Drawer extends Component {
         this.adjustForCaptureGestures()
         this.props.onOpen()
         this.clearInteractionHandle()
+
+        if(typeof type === 'function') {
+          type() // this is actually a callback
+        } else cb && cb()
+        
       }
     })
   };
 
-  close = (type) => {
+  close = (type, cb) => {
     let start = this._left
     let end = this.getClosedLeft()
 
@@ -423,6 +428,11 @@ export default class Drawer extends Component {
         this.adjustForCaptureGestures()
         this.props.onClose()
         this.clearInteractionHandle()
+
+        if(typeof type === 'function') {
+          type() // this is actually a callback
+        } else cb && cb()
+
       }
     })
   };
