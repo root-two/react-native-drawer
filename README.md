@@ -171,8 +171,8 @@ Three options:
 	* Open ``./examples/RNDrawerDemo/RNDrawerDemo.xcodeproject` in xcode
 	* `command+r` (in xcode)
 * **Android**
-	* Run android simulator / plug in your android device
-	* Run `react-native run-android` in terminal
+	* `npm i -g run-react-native` (assuming you haven't installed it already)
+	* Run `run-react-native`
 
 ### Credits
 Component was adapted from and inspired by
