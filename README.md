@@ -63,7 +63,7 @@ class Application extends Component {
   closedDrawerOffset={-3}
   styles={drawerStyles}
   tweenHandler={(ratio) => ({
-    main: { opacity:(2-ratio)/2 }
+    mainOverlay: { opacity: (ratio) / 2},
   })}
   >
     <Main />
@@ -72,6 +72,7 @@ class Application extends Component {
 const drawerStyles = {
   drawer: { shadowColor: '#000000', shadowOpacity: 0.8, shadowRadius: 3},
   main: {paddingLeft: 3},
+  mainOverlay: {opacity: 0, backgroundColor: '#000'}
 }
 ```
 
