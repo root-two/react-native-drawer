@@ -2,15 +2,15 @@
  * rn-drawer example app
  * https://github.com/facebook/react-native
  */
-var React = require('react-native');
-var {
+import React, { Component } from 'react';
+import {
   AppRegistry,
   Text,
   View,
-} = React;
+} from 'react-native';
 
-var styles = require('./styles')
-var drawerStyles = {
+import styles from './styles';
+const drawerStyles = {
   drawer: {
     shadowColor: "#000000",
     shadowOpacity: 0.8,
@@ -18,64 +18,68 @@ var drawerStyles = {
   }
 }
 
-var Drawer = require('react-native-drawer')
-var MyMainView = require('./MyMainView')
-var MyControlPanel = require('./ControlPanel')
+import Drawer from 'react-native-drawer';
+import MyMainView from './MyMainView';
+import MyControlPanel from './ControlPanel';
 
-var deviceScreen = require('Dimensions').get('window')
-var tweens = require('./tweens')
+import tweens from './tweens';
 
-var counter = 0
-var RNDrawerDemo = React.createClass({
-  getInitialState(){
-    return {
+let counter = 0;
+export class RNDrawerDemo extends Component {
+
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
       drawerType: 'overlay',
       openDrawerOffset:100,
       closedDrawerOffset:0,
       panOpenMask: .1,
       panCloseMask: .9,
       relativeDrag: false,
-      panStartCompensation: true,
-      openDrawerThreshold: .25,
+      panThreshold: .25,
       tweenHandlerOn: false,
       tweenDuration: 350,
       tweenEasing: 'linear',
       disabled: false,
       tweenHandlerPreset: null,
-      acceptDoubleTap: true,
+      acceptDoubleTap: false,
       acceptTap: false,
       acceptPan: true,
-      rightSide: false,
-    }
-  },
+      tapToClose: false,
+      negotiatePan: false,
+      rightSide: true,
+    };
+  }
 
   setDrawerType(type){
     this.setState({
       drawerType: type
     })
-  },
+  }
 
   tweenHandler(ratio){
     if(!this.state.tweenHandlerPreset){ return {} }
     return tweens[this.state.tweenHandlerPreset](ratio)
-  },
+  }
 
   noopChange(){
     this.setState({
       changeVal: Math.random()
     })
-  },
+  }
 
   openDrawer(){
     this.drawer.open()
-  },
+  }
 
-  setStateFrag(frag){
-    this.setState(frag)
-  },
+  setStateFrag(frag) {
+    this.setState(frag);
+  }
 
   render() {
-    var controlPanel = <MyControlPanel closeDrawer={() => {this.drawer.close()}} />
+    var controlPanel = <MyControlPanel closeDrawer={() => {
+      this.drawer.close();
+    }} />
     return (
       <Drawer
         ref={c => this.drawer = c}
@@ -86,25 +90,26 @@ var RNDrawerDemo = React.createClass({
         panOpenMask={this.state.panOpenMask}
         panCloseMask={this.state.panCloseMask}
         relativeDrag={this.state.relativeDrag}
-        panStartCompensation={this.state.panStartCompensation}
-        openDrawerThreshold={this.state.openDrawerThreshold}
+        panThreshold={this.state.panThreshold}
         content={controlPanel}
         styles={drawerStyles}
         disabled={this.state.disabled}
-        tweenHandler={this.tweenHandler}
+        tweenHandler={this.tweenHandler.bind(this)}
         tweenDuration={this.state.tweenDuration}
         tweenEasing={this.state.tweenEasing}
         acceptDoubleTap={this.state.acceptDoubleTap}
         acceptTap={this.state.acceptTap}
         acceptPan={this.state.acceptPan}
+        tapToClose={this.state.tapToClose}
+        negotiatePan={this.state.negotiatePan}
         changeVal={this.state.changeVal}
         negotiatePan={false}
         side={this.state.rightSide ? 'right' : 'left'}
         >
         <MyMainView
           drawerType={this.state.drawerType}
-          setParentState={this.setStateFrag}
-          openDrawer={this.openDrawer}
+          setParentState={this.setStateFrag.bind(this)}
+          openDrawer={this.openDrawer.bind(this)}
           openDrawerOffset={this.state.openDrawerOffset}
           closedDrawerOffset={this.state.closedDrawerOffset}
           panOpenMask={this.state.panOpenMask}
@@ -113,19 +118,21 @@ var RNDrawerDemo = React.createClass({
           panStartCompensation= {this.state.panStartCompensation}
           tweenHandlerOn={this.state.tweenHandlerOn}
           disabled={this.state.disabled}
-          openDrawerThreshold={this.state.openDrawerThreshold}
+          panThreshold={this.state.panThreshold}
           tweenEasing={this.state.tweenEasing}
           tweenHandlerPreset={this.state.tweenHandlerPreset}
           animation={this.state.animation}
-          noopChange={this.noopChange}
+          noopChange={this.noopChange.bind(this)}
           acceptTap={this.state.acceptTap}
           acceptDoubleTap={this.state.acceptDoubleTap}
           acceptPan={this.state.acceptPan}
+          tapToClose={this.state.tapToClose}
+          negotiatePan={this.state.negotiatePan}
           rightSide={this.state.rightSide}
           />
       </Drawer>
     );
   }
-});
+}
 
 AppRegistry.registerComponent('RNDrawerDemo', () => RNDrawerDemo);

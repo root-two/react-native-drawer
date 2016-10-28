@@ -1,4 +1,4 @@
-var deviceScreen = require('Dimensions').get('window')
+const deviceScreen = require('Dimensions').get('window')
 
 module.exports = {
   material: (ratio) => {

@@ -1,5 +1,5 @@
-var { StyleSheet, PixelRatio } = require('react-native')
-var deviceScreen = require('Dimensions').get('window')
+import { StyleSheet, PixelRatio } from 'react-native';
+const deviceScreen = require('Dimensions').get('window')
 
 module.exports = StyleSheet.create({
   scrollView: {
