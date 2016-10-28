@@ -1,21 +1,22 @@
-var React = require('react-native')
-var {
+import React, { Component } from 'react';
+import {
   View,
   Text,
   TouchableHighlight
-} = React
+} from 'react-native';
 
-var styles = require('./styles')
-
-module.exports = React.createClass({
-  render: function(){
+import styles from './styles';
+export default class Button extends Component {
+  render() {
     return(
       <TouchableHighlight
         style={styles.button}
         underlayColor="#B5B5B5"
-        onPress={this.props.onPress}>
+        onPress={() => {
+          this.props.onPress();
+        }}>
         <Text style={styles.buttonText}>{this.props.text}</Text>
       </TouchableHighlight>
-    )
+    )    
   }
-})
+}

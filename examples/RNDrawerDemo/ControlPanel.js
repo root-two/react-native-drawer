@@ -1,26 +1,27 @@
-var React = require('react-native')
-
-var {
+import React, { Component } from 'react';
+import {
   SwitchIOS,
   View,
   Text
-} = React
+} from 'react-native';
 
-var styles = require('./styles')
-var Button = require('./Button')
+import styles from './styles';
+import Button from './Button';
 
-module.exports = React.createClass({
-  render(){
+export default class ControlPanel extends Component {
+  render() {
     return (
       <View style={styles.controlPanel}>
         <Text style={styles.controlPanelWelcome}>
           Control Panel
         </Text>
         <Button
-          onPress={this.props.closeDrawer}
+          onPress={() => {
+            this.props.closeDrawer();
+          }}
           text="Close Drawer"
-          />
+        />
       </View>
     )
   }
-})
+}
