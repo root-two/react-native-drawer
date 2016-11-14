@@ -263,6 +263,12 @@ export default class Drawer extends Component {
   };
 
   onMoveShouldSetPanResponderCapture = (e, gestureState) => {
+    var tabHeight = deviceScreen.height / 10;
+    var tabWidth = deviceScreen.width / 10;
+    // if we drag on the top left corner of our screen we don't capture the response and instead allow the MenuCorner to capture - Alberto
+    if(!this._open && e.nativeEvent.pageX < tabWidth && e.nativeEvent.pageY < tabHeight) {
+        return false;
+    }
     if (this.shouldCaptureGestures() && this.props.negotiatePan) return this.processMoveShouldSet(e, gestureState)
     return false
   };
