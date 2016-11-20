@@ -16,8 +16,6 @@ import SliderJS from 'react-native-slider';
 import styles from './styles';
 import Button from './Button';
 
-const drawerTypes = ['overlay', 'displace', 'static'];
-
 export default class MyMainView extends Component {
   setParentState(args){
     this.props.setParentState(args)
