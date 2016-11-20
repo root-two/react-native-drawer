@@ -1,17 +1,25 @@
 {
   "name": "RNDrawerDemo",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node_modules/react-native/packager/packager.sh"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "test": "jest"
   },
   "dependencies": {
     "react": "15.3.2",
+    "react-native": "0.37.0",
     "react-native-drawer": "latest",
-    "react-native": "0.35.0",
-    "react-native-slider": "0.9.1"
+    "react-native-slider": "^0.9.1"
+  },
+  "jest": {
+    "preset": "jest-react-native"
   },
   "devDependencies": {
-    "babel-preset-react-native": "1.9.0"
+    "babel-jest": "17.0.2",
+    "babel-preset-react-native": "1.9.0",
+    "jest": "17.0.3",
+    "jest-react-native": "17.0.3",
+    "react-test-renderer": "15.3.2"
   }
 }

@@ -103,7 +103,6 @@ export class RNDrawerDemo extends Component {
         tapToClose={this.state.tapToClose}
         negotiatePan={this.state.negotiatePan}
         changeVal={this.state.changeVal}
-        negotiatePan={false}
         side={this.state.rightSide ? 'right' : 'left'}
         >
         <MyMainView
