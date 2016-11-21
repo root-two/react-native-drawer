@@ -353,13 +353,17 @@ export default class Drawer extends Component {
     if (this.context.drawer && this.context.drawer._open) return false
     if (this._childDrawer && this._childDrawer._open) return false
 
-    let x0 = e.nativeEvent.pageX
-    let deltaOpen = this.props.side === 'left' ? this.state.viewport.width - x0 : x0
-    let deltaClose = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
+    let x = e.nativeEvent.pageX
 
-    if ( this._open && deltaOpen > this.getOpenMask() ) return false
-    if ( !this._open && deltaClose > this.getClosedMask() ) return false
-    return true
+    // Check if you touched the main offset and not the drawer
+    if (this.props.side === 'left' && x > this.getOpenLeft()) {
+      return true;
+    }
+    else if ( this.props.side !== 'left' && x < this.getOpenRight() ) {
+      return true
+    }
+
+    return false;
   };
 
   terminateActiveTween = () => {
@@ -485,7 +489,9 @@ export default class Drawer extends Component {
 
   /*** DYNAMIC GETTERS ***/
   getOpenLeft = () => this.state.viewport.width - this._offsetOpen;
+  getOpenRight = () => this._offsetOpen;
   getClosedLeft = () => this._offsetClosed;
+  getClosedRight = () => this.state.viewport.width - this._offsetClosed;
   getHeight = () => this.state.viewport.height;
   getMainWidth = () => this.state.viewport.width - this._offsetClosed;
   getDrawerWidth = () => this.state.viewport.width - this._offsetOpen;
