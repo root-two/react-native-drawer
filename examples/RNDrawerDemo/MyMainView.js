@@ -66,6 +66,41 @@ export default class MyMainView extends Component {
               value={this.props.drawerType === 'static'} />
           </View>
 
+          {/*side*/}
+          <Text style={styles.categoryLabel}>Drawer Side (not hot changeable)</Text>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Left</Text>
+            <Switch
+              onValueChange={this.setParentState.bind(this, {side:'left'})}
+              style={styles.rowInput}
+              disabled={true}
+              value={this.props.side === 'left'} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Right</Text>
+            <Switch
+              onValueChange={this.setParentState.bind(this, {side:'right'})}
+              style={styles.rowInput}
+              disabled={true}
+              value={this.props.side === 'right'} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Top</Text>
+            <Switch
+              onValueChange={this.setParentState.bind(this, {side:'top'})}
+              style={styles.rowInput}
+              disabled={true}
+              value={this.props.side === 'top'} />
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.rowLabel}>Bottom</Text>
+            <Switch
+              onValueChange={this.setParentState.bind(this, {side:'bottom'})}
+              style={styles.rowInput}
+              disabled={true}
+              value={this.props.side === 'bottom'} />
+          </View>
+
           {/*trigger options*/}
           <Text style={styles.categoryLabel}>Trigger Options</Text>
           <View style={styles.row}>
@@ -272,14 +307,6 @@ export default class MyMainView extends Component {
               onValueChange={ (value) => { this.setParentState({'negotiatePan': value})} }
               style={styles.rowInput}
               value={this.props.negotiatePan} />
-          </View>
-          <View style={styles.row}>
-            <Text style={styles.rowLabel}>Right Side (not hot changeable)</Text>
-            <Switch
-              onValueChange={ (value) => { this.setParentState({'rightSide': value})} }
-              style={styles.rowInput}
-              disabled={true}
-              value={this.props.rightSide} />
           </View>
         </View>
       </ScrollView>

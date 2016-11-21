@@ -8,3 +8,4 @@ node_modules/
 npm-debug.loga
 
 .reploy
+.idea
