@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
 import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, I18nManager } from 'react-native'
+import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, BackAndroid, Platform } from 'react-native'
 
 import tween from './tweener'
 
