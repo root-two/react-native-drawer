@@ -386,6 +386,11 @@ export default class Drawer extends Component {
     }
   };
 
+  onBackPress = () => {
+    this.close();
+    return true
+  };
+
   open = (type, cb) => {
     let start = this._length
     let end = this.getOpenLength()
@@ -418,6 +423,7 @@ export default class Drawer extends Component {
 
       }
     })
+    if(Platform.OS === 'android') BackAndroid.addEventListener('hardwareBackPress', this.onBackPress)
   };
 
   close = (type, cb) => {
@@ -452,6 +458,7 @@ export default class Drawer extends Component {
 
       }
     })
+    if(Platform.OS === 'android') BackAndroid.removeEventListener('hardwareBackPress', this.onBackPress)
   };
 
   adjustForCaptureGestures() {
