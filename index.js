@@ -30,10 +30,6 @@ export default class Drawer extends Component {
     }
   };
 
-  state = {
-    viewport: deviceScreen
-  };
-
   static propTypes = {
     acceptDoubleTap: PropTypes.bool,
     acceptPan: PropTypes.bool,
@@ -106,6 +102,15 @@ export default class Drawer extends Component {
   static childContextTypes = { drawer: PropTypes.object };
   getChildContext = () => ({ drawer: this });
   /*** END CONTEXT ***/
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      viewport: deviceScreen,
+      disabled: props.disabled,
+    };
+  }
 
   _registerChildDrawer(drawer) {
     // Store child drawer for gesture disambiguation with multi drawer
@@ -234,6 +239,12 @@ export default class Drawer extends Component {
     }
   };
 
+  disableDrawer(disabled) {
+    this.setState({
+      disabled,
+    });
+  }
+
   shouldOpenDrawer(dx) {
     let hasActiveHeading = this._open ^ dx > 0 ^ this.props.side === 'right'
     if (!hasActiveHeading) return this._open
@@ -244,7 +255,7 @@ export default class Drawer extends Component {
     this._panning = false
     this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
   };
-    
+
   onStartShouldSetPanResponderCapture = (e, gestureState) => {
     if (this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
@@ -307,7 +318,7 @@ export default class Drawer extends Component {
     if (!inMask) return false
     if (!this.props.acceptPan) return false
 
-    if (!this.props.negotiatePan || this.props.disabled || !this.props.acceptPan || this._panning) return false
+    if (!this.props.negotiatePan || this.state.disabled || !this.props.acceptPan || this._panning) return false
     let swipeToLeft = (gestureState.dx < 0) ? true : false
     let swipeToRight = (gestureState.dx > 0) ? true : false
     let swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false
@@ -346,7 +357,7 @@ export default class Drawer extends Component {
   }
 
   testPanResponderMask = (e, gestureState) => {
-    if (this.props.disabled) return false
+    if (this.state.disabled) return false
 
     // Disable if parent or child drawer exist and are open
     // @TODO make cleaner, generalize to work with 3+ drawers, prop to disable/configure
@@ -398,7 +409,7 @@ export default class Drawer extends Component {
         if(typeof type === 'function') {
           type() // this is actually a callback
         } else cb && cb()
-        
+
       }
     })
   };
