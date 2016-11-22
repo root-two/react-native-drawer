@@ -115,6 +115,11 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `useInteractionManager` (Boolean) `false` - if true will run InteractionManager for open/close animations.
 - `elevation` (Number) `0` - (Android-only) Sets the elevation of the drawer using Android's underlying [elevation API](https://developer.android.com/training/material/shadows-clipping.html#Elevation)
 
+### External Functions
+- `open()` (Function) - Trigger drawer open.
+- `close()` (Function) - Trigger drawer close.
+- `disableDrawer(disabled: Boolean)` (Function) - Disable or Enable the drawer.
+
 ### Tween Handler
 You can achieve pretty much any animation you want using the tween handler with the transformMatrix property. E.G.
 ```js
@@ -162,6 +167,7 @@ Three options:
     contextTypes = {drawer: React.PropTypes.object}
     // later...
     this.context.drawer.open()
+    this.context.drawer.disableDrawer(true)
     ```
 
 ### Demo
