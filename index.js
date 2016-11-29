@@ -1,7 +1,7 @@
 import React, { PropTypes, Component } from 'react'
-import { PanResponder, View, StyleSheet, Dimensions, InteractionManager } from 'react-native'
+import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, Animated } from 'react-native'
 
-import tween from './tweener'
+// import tween from './tweener'
 
 let deviceScreen = Dimensions.get('window')
 const DOUBLE_TAP_INTERVAL = 500
@@ -31,7 +31,8 @@ export default class Drawer extends Component {
   };
 
   state = {
-    viewport: deviceScreen
+    viewport: deviceScreen,
+    _newLeft: new Animated.Value(0),
   };
 
   static propTypes = {
@@ -190,49 +191,49 @@ export default class Drawer extends Component {
         onMoveShouldSetPanResponderCapture: this.onMoveShouldSetPanResponderCapture,
         onPanResponderMove: this.onPanResponderMove,
         onPanResponderRelease: this.onPanResponderRelease,
-	onPanResponderTerminate: this.onPanResponderTerminate
+	      onPanResponderTerminate: this.onPanResponderTerminate
       })
     }
 
     this.resync(null, props)
   };
 
-  updatePosition = () => {
-    let mainProps = {}
-    let drawerProps = {}
-    let ratio = (this._left - this._offsetClosed) / (this.getOpenLeft() - this._offsetClosed)
-
-    switch (this.props.type) {
-      case 'overlay':
-        drawerProps[this.props.side] = -this.state.viewport.width + this._offsetOpen + this._left
-        mainProps[this.props.side] = this._offsetClosed
-        break
-      case 'static':
-        mainProps[this.props.side] = this._left
-        drawerProps[this.props.side] = 0
-        break
-      case 'displace':
-        mainProps[this.props.side] = this._left
-        drawerProps[this.props.side] = -this.state.viewport.width + this._left + this._offsetOpen
-        break
-    }
-
-    let mainOverlayProps = null
-    let drawerOverlayProps = null
-    if (this.props.tweenHandler) {
-      let propsFrag = this.props.tweenHandler(ratio, this.props.side)
-      mainProps = Object.assign(mainProps, propsFrag.main)
-      drawerProps = Object.assign(drawerProps, propsFrag.drawer)
-      mainOverlayProps = propsFrag.mainOverlay
-      drawerOverlayProps = propsFrag.drawerOverlay
-    }
-    if (this.main && this.drawer && this.mainOverlay && this.drawerOverlay) {
-      this.drawer.setNativeProps({style: drawerProps})
-      this.main.setNativeProps({style: mainProps})
-      if (mainOverlayProps) this.mainOverlay.setNativeProps({style: mainOverlayProps})
-      if (drawerOverlayProps) this.drawerOverlay.setNativeProps({style: drawerOverlayProps})
-    }
-  };
+  // updatePosition = () => {
+    // let mainProps = {}
+    // let drawerProps = {}
+    // let ratio = (this._left - this._offsetClosed) / (this.getOpenLeft() - this._offsetClosed)
+    //
+    // switch (this.props.type) {
+    //   case 'overlay':
+    //     drawerProps[this.props.side] = -this.state.viewport.width + this._offsetOpen + this._left
+    //     mainProps[this.props.side] = this._offsetClosed
+    //     break
+    //   case 'static':
+    //     mainProps[this.props.side] = this._left
+    //     drawerProps[this.props.side] = 0
+    //     break
+    //   case 'displace':
+    //     mainProps[this.props.side] = this._left
+    //     drawerProps[this.props.side] = -this.state.viewport.width + this._left + this._offsetOpen
+    //     break
+    // }
+    //
+    // let mainOverlayProps = null
+    // let drawerOverlayProps = null
+    // if (this.props.tweenHandler) {
+    //   let propsFrag = this.props.tweenHandler(ratio, this.props.side)
+    //   mainProps = Object.assign(mainProps, propsFrag.main)
+    //   drawerProps = Object.assign(drawerProps, propsFrag.drawer)
+    //   mainOverlayProps = propsFrag.mainOverlay
+    //   drawerOverlayProps = propsFrag.drawerOverlay
+    // }
+    // if (this.main && this.drawer && this.mainOverlay && this.drawerOverlay) {
+    //   this.drawer.setNativeProps({style: drawerProps})
+    //   this.main.setNativeProps({style: mainProps})
+    //   if (mainOverlayProps) this.mainOverlay.setNativeProps({style: mainOverlayProps})
+    //   if (drawerOverlayProps) this.drawerOverlay.setNativeProps({style: drawerOverlayProps})
+    // }
+  // };
 
   shouldOpenDrawer(dx) {
     let hasActiveHeading = this._open ^ dx > 0 ^ this.props.side === 'right'
@@ -244,7 +245,7 @@ export default class Drawer extends Component {
     this._panning = false
     this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
   };
-    
+
   onStartShouldSetPanResponderCapture = (e, gestureState) => {
     if (this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
@@ -277,17 +278,19 @@ export default class Drawer extends Component {
     left = Math.max(left, this.getClosedLeft())
     this._left = left
 
-    this.updatePosition()
+    this.state._newLeft.setValue((this._open) ? 1 + gestureState.dx/Dimensions.get('window').width : gestureState.dx/Dimensions.get('window').width)
+
+    // this.updatePosition()
     this._panning = true
   };
 
   onPanResponderRelease = (e, gestureState) => {
     this._panning = false
     if (Date.now() - this._panStartTime < TAP_DURATION) this.processTapGestures()
-    if (Math.abs(gestureState.dx) < 50 && this._activeTween) return
+    if (Math.abs(gestureState.dx) == 0) return
 
     this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
-    this.updatePosition()
+    // this.updatePosition()
     this._prevLeft = this._left
   };
 
@@ -298,7 +301,7 @@ export default class Drawer extends Component {
     if (inMask && this.shouldCaptureGestures()) return true
     if (this.props.negotiatePan) return false
     if (!this.props.acceptPan) return false
-    this.terminateActiveTween()
+    // this.terminateActiveTween()
     return true
   };
 
@@ -316,7 +319,7 @@ export default class Drawer extends Component {
       return false
     }
 
-    this.terminateActiveTween()
+    // this.terminateActiveTween()
     return true
   };
 
@@ -363,78 +366,93 @@ export default class Drawer extends Component {
   };
 
   terminateActiveTween = () => {
-    if (this._activeTween) {
-      this._activeTween.terminate()
-      this._activeTween = null
-    }
+    // if (this._activeTween) {
+    //   this._activeTween.terminate()
+    //   this._activeTween = null
+    // }
   };
 
-  open = (type, cb) => {
+  open = (type) => {
+
+
     let start = this._left
     let end = this.getOpenLeft()
-
-    if (this._activeTween) return
+    // if (this._activeTween) return
     if (type !== 'force' && start - end === 0 && this._open === true) return // do nothing if the delta is 0
 
     this.props.onOpenStart && this.props.onOpenStart()
-    this.setInteractionHandle()
-    this._activeTween = tween({
-      start: this._left,
-      end: this.getOpenLeft(),
+    // this.setInteractionHandle()
+    // this._activeTween = tween({
+    //   start: this._left,
+    //   end: this.getOpenLeft(),
+    //   duration: this.props.tweenDuration,
+    //   easingType: this.props.tweenEasing,
+    //   onFrame: (tweenValue) => {
+    //     this._left = tweenValue
+    //     this.updatePosition()
+    //   },
+    //   onEnd: () => {
+    //     this._activeTween = null
+    //     this._open = true
+    //     this._prevLeft = this._left
+    //     this.adjustForCaptureGestures()
+    //     this.props.onOpen()
+    //     this.clearInteractionHandle()
+    //   }
+    // })
+    // this._activeTween = true
+    Animated.timing(this.state._newLeft, {
       duration: this.props.tweenDuration,
-      easingType: this.props.tweenEasing,
-      onFrame: (tweenValue) => {
-        this._left = tweenValue
-        this.updatePosition()
-      },
-      onEnd: () => {
-        this._activeTween = null
-        this._open = true
-        this._prevLeft = this._left
-        this.adjustForCaptureGestures()
-        this.props.onOpen()
-        this.clearInteractionHandle()
-
-        if(typeof type === 'function') {
-          type() // this is actually a callback
-        } else cb && cb()
-        
-      }
-    })
+      toValue: 1,
+    }).start(() => {
+          this._activeTween = null
+          this._open = true
+          this._prevLeft = this._left
+          this.adjustForCaptureGestures()
+          this.props.onOpen()
+          // this.clearInteractionHandle()
+    });
   };
 
-  close = (type, cb) => {
+  close = (type) => {
     let start = this._left
     let end = this.getClosedLeft()
 
-    if (this._activeTween) return
+    // if (this._activeTween) return
     if (type !== 'force' && start - end === 0 && this._open === false) return // do nothing if the delta is 0
 
     this.props.onCloseStart && this.props.onCloseStart()
-    this.setInteractionHandle()
-    this._activeTween = tween({
-      start,
-      end,
-      easingType: this.props.tweenEasing,
+    // this.setInteractionHandle()
+    // this._activeTween = tween({
+    //   start,
+    //   end,
+    //   easingType: this.props.tweenEasing,
+    //   duration: this.props.tweenDuration,
+    //   onFrame: (tweenValue) => {
+    //     this._left = tweenValue
+    //     this.updatePosition()
+    //   },
+    //   onEnd: () => {
+    //     this._activeTween = null
+    //     this._open = false
+    //     this._prevLeft = this._left
+    //     this.adjustForCaptureGestures()
+    //     this.props.onClose()
+    //     this.clearInteractionHandle()
+    //   }
+    // })
+    // this._activeTween = true
+    Animated.timing(this.state._newLeft, {
       duration: this.props.tweenDuration,
-      onFrame: (tweenValue) => {
-        this._left = tweenValue
-        this.updatePosition()
-      },
-      onEnd: () => {
-        this._activeTween = null
-        this._open = false
-        this._prevLeft = this._left
-        this.adjustForCaptureGestures()
-        this.props.onClose()
-        this.clearInteractionHandle()
-
-        if(typeof type === 'function') {
-          type() // this is actually a callback
-        } else cb && cb()
-
-      }
-    })
+      toValue: 0,
+    }).start(() => {
+          this._activeTween = null
+          this._open = false
+          this._prevLeft = this._left
+          this.adjustForCaptureGestures()
+          this.props.onClose()
+          // this.clearInteractionHandle()
+    });
   };
 
   adjustForCaptureGestures() {
@@ -501,11 +519,11 @@ export default class Drawer extends Component {
   };
   getOpenOffset = (props, viewport) => {
     if (typeof props.openDrawerOffset === 'function') return props.openDrawerOffset(viewport)
-    return props.openDrawerOffset > 1 || props.openDrawerOffset < 0 ? props.openDrawerOffset : props.openDrawerOffset * viewport.width
+    return props.openDrawerOffset % 1 === 0 ? props.openDrawerOffset : props.openDrawerOffset * viewport.width
   };
   getClosedOffset = (props, viewport) => {
     if (typeof props.closedDrawerOffset === 'function') return props.closedDrawerOffset(viewport)
-    return props.closedDrawerOffset > 1 || props.closedDrawerOffset < 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
+    return props.closedDrawerOffset % 1 === 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
   };
   /*** END DYNAMIC GETTERS ***/
 
@@ -526,12 +544,17 @@ export default class Drawer extends Component {
   }
 
   renderMain() {
+    // let ratio = (this._left - this._offsetClosed) / (this.getOpenLeft() - this._offsetClosed)
+    let animatedStyle = {
+      [this.props.side]: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [0, (this.props.type === 'overlay') ? this._offsetClosed : this.getOpenLeft()]})
+    }
+
     return (
-      <View
+      <Animated.View
         {...this.responder.panHandlers}
         key="main"
         ref={c => this.main = c}
-        style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth()}]}
+        style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth(), ...animatedStyle}]}
         >
         {this.props.children}
         <View
@@ -539,18 +562,32 @@ export default class Drawer extends Component {
           ref={c => this.mainOverlay = c}
           style={[styles.overlay, this.props.styles && this.props.styles.mainOverlay]}
           />
-      </View>
+      </Animated.View>
     )
   }
 
   renderDrawer() {
+    // let ratio = (this._left - this._offsetClosed) / (this.getOpenLeft() - this._offsetClosed)
+    // console.log(this._left, this._offsetClosed, this.getOpenLeft(), this._offsetClosed)
+    let animatedStyle = null
+    switch (this.props.type) {
+      case 'static':
+        animatedStyle = { [this.props.side]: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [-150, 0]}) }
+        break
+      case 'overlay':
+        animatedStyle = { [this.props.side]: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [-this.state.viewport.width+this.getOpenOffset(this.props, this.state.viewport), 0]}) }
+        break
+      case 'displace':
+        animatedStyle = { [this.props.side]: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [-this.state.viewport.width+this.getOpenOffset(this.props, this.state.viewport), 0]}) }
+        break
+    }
+
     return (
-      <View
+      <Animated.View
         {...this.responder.panHandlers}
         key="drawer"
         ref={c => this.drawer = c}
-        elevation={this.props.elevation}
-        style={[this.stylesheet.drawer, {height: this.getHeight(), width: this.getDrawerWidth()}]}
+        style={[this.stylesheet.drawer, {height: this.getHeight(), width: this.getDrawerWidth(), elevation: this.props.elevation, ...animatedStyle}]}
         >
         {this.props.content}
         <View
@@ -558,7 +595,7 @@ export default class Drawer extends Component {
           ref={c => this.drawerOverlay = c}
           style={[styles.overlay, this.props.styles && this.props.styles.drawerOverlay]}
           />
-      </View>
+      </Animated.View>
     )
   }
 }
