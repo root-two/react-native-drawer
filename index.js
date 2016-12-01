@@ -62,6 +62,7 @@ export default class Drawer extends Component {
     tweenDuration: PropTypes.number,
     tweenEasing: PropTypes.string,
     tweenHandler: PropTypes.func,
+    useNativeDriver: PropTypes.bool,
     type: PropTypes.oneOf(['overlay', 'static', 'displace']),
     useInteractionManager: PropTypes.bool,
 
@@ -84,6 +85,7 @@ export default class Drawer extends Component {
     tweenHandler: null,
     tweenDuration: 250,
     tweenEasing: 'linear',
+    useNativeDriver: true,
 
     disabled: false,
     negotiatePan: false,
@@ -278,7 +280,7 @@ export default class Drawer extends Component {
     left = Math.max(left, this.getClosedLeft())
     this._left = left
 
-    this.state._newLeft.setValue((this._open) ? 1 + gestureState.dx/Dimensions.get('window').width : gestureState.dx/Dimensions.get('window').width)
+    this.state._newLeft.setValue((this._open) ? Math.max(0, 1 + gestureState.dx/this.getOpenLeft()) : Math.min(1, gestureState.dx/this.getOpenLeft()) )
 
     // this.updatePosition()
     this._panning = true
@@ -404,6 +406,7 @@ export default class Drawer extends Component {
     Animated.timing(this.state._newLeft, {
       duration: this.props.tweenDuration,
       toValue: 1,
+      useNativeDriver: this.props.useNativeDriver,
     }).start(() => {
           this._activeTween = null
           this._open = true
@@ -445,6 +448,7 @@ export default class Drawer extends Component {
     Animated.timing(this.state._newLeft, {
       duration: this.props.tweenDuration,
       toValue: 0,
+      useNativeDriver: this.props.useNativeDriver,
     }).start(() => {
           this._activeTween = null
           this._open = false
@@ -549,12 +553,15 @@ export default class Drawer extends Component {
       [this.props.side]: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [0, (this.props.type === 'overlay') ? this._offsetClosed : this.getOpenLeft()]})
     }
 
+    let transform = []
+    transform.push({ translateX: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [0, (this.props.type === 'overlay') ? this._offsetClosed : this.getOpenLeft()]}) })
+
     return (
       <Animated.View
         {...this.responder.panHandlers}
         key="main"
         ref={c => this.main = c}
-        style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth(), ...animatedStyle}]}
+        style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth(), transform}]}
         >
         {this.props.children}
         <View
@@ -570,15 +577,19 @@ export default class Drawer extends Component {
     // let ratio = (this._left - this._offsetClosed) / (this.getOpenLeft() - this._offsetClosed)
     // console.log(this._left, this._offsetClosed, this.getOpenLeft(), this._offsetClosed)
     let animatedStyle = null
+    let transform = []
     switch (this.props.type) {
       case 'static':
         animatedStyle = { [this.props.side]: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [-150, 0]}) }
+        transform.push({ translateX: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [-150, 0]}) })
         break
       case 'overlay':
         animatedStyle = { [this.props.side]: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [-this.state.viewport.width+this.getOpenOffset(this.props, this.state.viewport), 0]}) }
+        transform.push({ translateX: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [-this.state.viewport.width+this.getOpenOffset(this.props, this.state.viewport), 0]}) })
         break
       case 'displace':
         animatedStyle = { [this.props.side]: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [-this.state.viewport.width+this.getOpenOffset(this.props, this.state.viewport), 0]}) }
+        transform.push({ translateX: this.state._newLeft.interpolate({inputRange: [0, 1], outputRange: [-this.state.viewport.width+this.getOpenOffset(this.props, this.state.viewport), 0]}) })
         break
     }
 
@@ -587,7 +598,7 @@ export default class Drawer extends Component {
         {...this.responder.panHandlers}
         key="drawer"
         ref={c => this.drawer = c}
-        style={[this.stylesheet.drawer, {height: this.getHeight(), width: this.getDrawerWidth(), elevation: this.props.elevation, ...animatedStyle}]}
+        style={[this.stylesheet.drawer, {height: this.getHeight(), width: this.getDrawerWidth(), elevation: this.props.elevation, transform}]}
         >
         {this.props.content}
         <View
