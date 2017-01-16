@@ -244,7 +244,7 @@ export default class Drawer extends Component {
     this._panning = false
     this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
   };
-    
+
   onStartShouldSetPanResponderCapture = (e, gestureState) => {
     if (this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
@@ -294,6 +294,8 @@ export default class Drawer extends Component {
   processShouldSet = (e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
     if (!inMask) return false
+    // skip gesture process if we have mostly vertical swipe
+    if (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) return false
     this._panStartTime = Date.now()
     if (inMask && this.shouldCaptureGestures()) return true
     if (this.props.negotiatePan) return false
@@ -398,7 +400,7 @@ export default class Drawer extends Component {
         if(typeof type === 'function') {
           type() // this is actually a callback
         } else cb && cb()
-        
+
       }
     })
   };
