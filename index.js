@@ -190,7 +190,7 @@ export default class Drawer extends Component {
         onMoveShouldSetPanResponderCapture: this.onMoveShouldSetPanResponderCapture,
         onPanResponderMove: this.onPanResponderMove,
         onPanResponderRelease: this.onPanResponderRelease,
-	onPanResponderTerminate: this.onPanResponderTerminate
+	      onPanResponderTerminate: this.onPanResponderTerminate
       })
     }
 
@@ -244,7 +244,7 @@ export default class Drawer extends Component {
     this._panning = false
     this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
   };
-    
+
   onStartShouldSetPanResponderCapture = (e, gestureState) => {
     if (this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
@@ -354,11 +354,9 @@ export default class Drawer extends Component {
     if (this._childDrawer && this._childDrawer._open) return false
 
     let x0 = e.nativeEvent.pageX
-    let deltaOpen = this.props.side === 'left' ? this.state.viewport.width - x0 : x0
-    let deltaClose = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
-
-    if ( this._open && deltaOpen > this.getOpenMask() ) return false
-    if ( !this._open && deltaClose > this.getClosedMask() ) return false
+    let deltaX0 = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
+    if ( this._open && deltaX0 < this.getOpenLeft()) return false
+    if ( !this._open && deltaX0 > this.getClosedMask() ) return false
     return true
   };
 
@@ -398,7 +396,7 @@ export default class Drawer extends Component {
         if(typeof type === 'function') {
           type() // this is actually a callback
         } else cb && cb()
-        
+
       }
     })
   };
