@@ -38,6 +38,7 @@ export default class Drawer extends Component {
     acceptDoubleTap: PropTypes.bool,
     acceptPan: PropTypes.bool,
     acceptTap: PropTypes.bool,
+    acceptPanOnDrawer: PropTypes.bool,
     captureGestures: PropTypes.oneOf([true, false, 'open', 'closed']),
     children: PropTypes.node,
     closedDrawerOffset: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
@@ -90,6 +91,7 @@ export default class Drawer extends Component {
     acceptDoubleTap: false,
     acceptTap: false,
     acceptPan: true,
+    acceptPanOnDrawer: true,
     tapToClose: false,
 
     styles: {},
@@ -304,7 +306,7 @@ export default class Drawer extends Component {
 
   processMoveShouldSet = (e, gestureState) => {
     let inMask = this.testPanResponderMask(e, gestureState)
-    if (!inMask) return false
+    if (!inMask && !this.props.acceptPanOnDrawer) return false
     if (!this.props.acceptPan) return false
 
     if (!this.props.negotiatePan || this.props.disabled || !this.props.acceptPan || this._panning) return false
