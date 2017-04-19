@@ -51,6 +51,7 @@ export default class Drawer extends Component {
     onCloseStart: PropTypes.func,
     onOpen: PropTypes.func,
     onOpenStart: PropTypes.func,
+    onDragStart: PropTypes.func,
     openDrawerOffset: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
     panThreshold: PropTypes.number,
     panCloseMask: PropTypes.number,
@@ -244,7 +245,7 @@ export default class Drawer extends Component {
     this._panning = false
     this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
   };
-    
+
   onStartShouldSetPanResponderCapture = (e, gestureState) => {
     if (this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
@@ -278,6 +279,9 @@ export default class Drawer extends Component {
     this._left = left
 
     this.updatePosition()
+    if (!this._panning) {
+      this.props.onDragStart && this.props.onDragStart();
+    }
     this._panning = true
   };
 
@@ -398,7 +402,7 @@ export default class Drawer extends Component {
         if(typeof type === 'function') {
           type() // this is actually a callback
         } else cb && cb()
-        
+
       }
     })
   };
