@@ -17,21 +17,21 @@ export default class App extends Component {
     drawerDisabled: false,
   };
   closeDrawer = () => {
-    this._drawer.close()
+    this.setState({drawerOpen: false})
   };
   openDrawer = () => {
-    this._drawer.open()
+    this.setState({drawerOpen: true})
   };
   render() {
     return (
       <Drawer
-        ref={(ref) => this._drawer = ref}
         type="static"
         content={
           <ControlPanel closeDrawer={this.closeDrawer} />
         }
         acceptDoubleTap
         styles={{main: {shadowColor: '#000000', shadowOpacity: 0.3, shadowRadius: 15}}}
+        open={this.state.drawerOpen}
         onOpen={() => {
           console.log('onopen')
           this.setState({drawerOpen: true})
@@ -51,7 +51,7 @@ export default class App extends Component {
         panOpenMask={0.2}
         negotiatePan
         >
-        <Main />
+        <Main openDrawer={this.openDrawer} />
       </Drawer>
     )
   }

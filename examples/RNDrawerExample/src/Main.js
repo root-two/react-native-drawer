@@ -9,16 +9,15 @@ import React, {
 } from 'react-native'
 
 export default class ControlPanel extends Component {
-
-  static contextTypes = {
-    drawer: PropTypes.object.isRequired,
+  static PropTypes = {
+    openDrawer: PropTypes.func.isRequired,
   };
 
   render() {
     return (
       <ScrollView style={styles.container}>
         <Text>MAIN</Text>
-        <TouchableOpacity style={styles.button} onPress={this.context.drawer.open}>
+        <TouchableOpacity style={styles.button} onPress={ this.props.openDrawer }>
           <Text>Open Drawer</Text>
         </TouchableOpacity>
 
