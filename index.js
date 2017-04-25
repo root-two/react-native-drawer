@@ -144,13 +144,13 @@ export default class Drawer extends Component {
     // add function options
     this._prevLeft = this._left
 
-    let styles = {
-      container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-    }
+    let styles = {}
+
+    styles.container = Object.assign({
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center'
+    }, this.props.styles.container)
 
     styles.main = Object.assign({
       position: 'absolute',
