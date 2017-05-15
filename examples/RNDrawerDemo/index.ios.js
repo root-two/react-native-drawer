@@ -47,7 +47,7 @@ export class RNDrawerDemo extends Component {
       acceptPan: true,
       tapToClose: false,
       negotiatePan: false,
-      rightSide: true,
+      side: "top",
     };
   }
 
@@ -103,7 +103,7 @@ export class RNDrawerDemo extends Component {
         tapToClose={this.state.tapToClose}
         negotiatePan={this.state.negotiatePan}
         changeVal={this.state.changeVal}
-        side={this.state.rightSide ? 'right' : 'left'}
+        side={this.state.side}
         >
         <MyMainView
           drawerType={this.state.drawerType}
@@ -127,7 +127,7 @@ export class RNDrawerDemo extends Component {
           acceptPan={this.state.acceptPan}
           tapToClose={this.state.tapToClose}
           negotiatePan={this.state.negotiatePan}
-          rightSide={this.state.rightSide}
+          side={this.state.side}
           />
       </Drawer>
     );

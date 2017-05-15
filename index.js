@@ -10,8 +10,8 @@ const propsWhomRequireUpdate = ['closedDrawerOffset', 'openDrawerOffset', 'type'
 
 export default class Drawer extends Component {
 
-  _left = 0;
-  _prevLeft = 0;
+  _length = 0;
+  _prevLength = 0;
   _offsetOpen = 0;
   _offsetClosed = 0;
   _open = false;
@@ -55,7 +55,7 @@ export default class Drawer extends Component {
     panThreshold: PropTypes.number,
     panCloseMask: PropTypes.number,
     panOpenMask: PropTypes.number,
-    side: PropTypes.oneOf(['left', 'right']),
+    side: PropTypes.oneOf(['left', 'right', 'top', 'bottom']),
     styles: PropTypes.object,
     tapToClose: PropTypes.bool,
     tweenDuration: PropTypes.number,
@@ -138,11 +138,11 @@ export default class Drawer extends Component {
   }
 
   initialize = (props) => {
-    let fullWidth = this.state.viewport.width
+    let fullLength = this.getDeviceLength();
     this._offsetClosed = this.getClosedOffset(props, this.state.viewport)
     this._offsetOpen = this.getOpenOffset(props, this.state.viewport)
     // add function options
-    this._prevLeft = this._left
+    this._prevLength = this._length
 
     let styles = {
       container: {
@@ -154,28 +154,28 @@ export default class Drawer extends Component {
 
     styles.main = Object.assign({
       position: 'absolute',
-      top: 0,
-    }, {borderWidth:0}, this.props.styles.main)
+      borderWidth: 0,
+    }, this.isLeftOrRightSide() ? {top: 0} : {left: 0}, this.props.styles.main)
 
     styles.drawer = Object.assign({
       position: 'absolute',
-      top: 0,
-    }, {borderWidth:0}, this.props.styles.drawer)
+      borderWidth:0,
+    }, this.isLeftOrRightSide() ? {top: 0} : {left: 0}, this.props.styles.drawer)
 
     if (props.initializeOpen || props.open) { // open
       this._open = true
-      this._left = fullWidth - this._offsetOpen
+      this._length = fullLength - this._offsetOpen
       styles.main[this.props.side] = 0
       styles.drawer[this.props.side] = 0
-      if (props.type === 'static') styles.main[this.props.side] = fullWidth - this._offsetOpen
-      if (props.type === 'displace') styles.main[this.props.side] = fullWidth - this._offsetOpen
+      if (props.type === 'static') styles.main[this.props.side] = fullLength - this._offsetOpen
+      if (props.type === 'displace') styles.main[this.props.side] = fullLength - this._offsetOpen
     } else { // closed
       this._open = false
-      this._left = this._offsetClosed
+      this._length = this._offsetClosed
       styles.main[this.props.side] = this._offsetClosed
       if (props.type === 'static') styles.drawer[this.props.side] = 0
-      if (props.type === 'overlay') styles.drawer[this.props.side] = this._offsetClosed + this._offsetOpen - fullWidth
-      if (props.type === 'displace') styles.drawer[this.props.side] = - fullWidth + this._offsetClosed + this._offsetOpen
+      if (props.type === 'overlay') styles.drawer[this.props.side] = this._offsetClosed + this._offsetOpen - fullLength
+      if (props.type === 'displace') styles.drawer[this.props.side] = - fullLength + this._offsetClosed + this._offsetOpen
     }
 
     if (this.main) {
@@ -200,20 +200,20 @@ export default class Drawer extends Component {
   updatePosition = () => {
     let mainProps = {}
     let drawerProps = {}
-    let ratio = (this._left - this._offsetClosed) / (this.getOpenLeft() - this._offsetClosed)
+    let ratio = (this._length - this._offsetClosed) / (this.getOpenLength() - this._offsetClosed)
 
     switch (this.props.type) {
       case 'overlay':
-        drawerProps[this.props.side] = -this.state.viewport.width + this._offsetOpen + this._left
+        drawerProps[this.props.side] = -this.getDeviceLength() + this._offsetOpen + this._length
         mainProps[this.props.side] = this._offsetClosed
         break
       case 'static':
-        mainProps[this.props.side] = this._left
+        mainProps[this.props.side] = this._length
         drawerProps[this.props.side] = 0
         break
       case 'displace':
-        mainProps[this.props.side] = this._left
-        drawerProps[this.props.side] = -this.state.viewport.width + this._left + this._offsetOpen
+        mainProps[this.props.side] = this._length
+        drawerProps[this.props.side] = -this.getDeviceLength() + this._length + this._offsetOpen
         break
     }
 
@@ -234,17 +234,17 @@ export default class Drawer extends Component {
     }
   };
 
-  shouldOpenDrawer(dx) {
-    let hasActiveHeading = this._open ^ dx > 0 ^ this.props.side === 'right'
+  shouldOpenDrawer(delta) {
+    let hasActiveHeading = this._open ^ delta > 0 ^ this.isRightOrBottomSide()
     if (!hasActiveHeading) return this._open
-    else return this._open ^ Math.abs(dx) > this.state.viewport.width * this.props.panThreshold
+    else return this._open ^ Math.abs(delta) > this.getDeviceLength() * this.props.panThreshold
   }
 
   onPanResponderTerminate = (e, gestureState) => {
     this._panning = false
-    this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
+    this.shouldOpenDrawer(this.getGestureDelta(gestureState)) ? this.open() : this.close()
   };
-    
+
   onStartShouldSetPanResponderCapture = (e, gestureState) => {
     if (this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
@@ -266,29 +266,31 @@ export default class Drawer extends Component {
   };
 
   onPanResponderMove = (e, gestureState) => {
+    let delta = this.getGestureDelta(gestureState);
     if (!this.props.acceptPan) return false
 
     //Do nothing if we are panning the wrong way
-    if (this._open ^ gestureState.dx < 0 ^ this.props.side === 'right') return false
+    if (this._open ^ delta < 0 ^ this.isRightOrBottomSide()) return false
 
-    let dx = this.props.side === 'right' ? gestureState.dx * -1 : gestureState.dx
-    let left = this._prevLeft + dx
-    left = Math.min(left, this.getOpenLeft())
-    left = Math.max(left, this.getClosedLeft())
-    this._left = left
+    delta = this.isRightOrBottomSide() ? delta * -1 : delta
+    let length = this._prevLength + delta
+    length = Math.min(length, this.getOpenLength())
+    length = Math.max(length, this.getClosedLength())
+    this._length = length
 
     this.updatePosition()
     this._panning = true
   };
 
   onPanResponderRelease = (e, gestureState) => {
+    let delta = this.getGestureDelta(gestureState);
     this._panning = false
     if (Date.now() - this._panStartTime < TAP_DURATION) this.processTapGestures()
-    if (Math.abs(gestureState.dx) < 50 && this._activeTween) return
+    if (Math.abs(delta) < 50 && this._activeTween) return
 
-    this.shouldOpenDrawer(gestureState.dx) ? this.open() : this.close()
+    this.shouldOpenDrawer(delta) ? this.open() : this.close()
     this.updatePosition()
-    this._prevLeft = this._left
+    this._prevLength = this._length
   };
 
   processShouldSet = (e, gestureState) => {
@@ -308,11 +310,13 @@ export default class Drawer extends Component {
     if (!this.props.acceptPan) return false
 
     if (!this.props.negotiatePan || this.props.disabled || !this.props.acceptPan || this._panning) return false
-    let swipeToLeft = (gestureState.dx < 0) ? true : false
-    let swipeToRight = (gestureState.dx > 0) ? true : false
-    let swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false
-    let swipeInCloseDirection = (this.props.side === 'left') ? swipeToLeft : swipeToRight
-    if (swipeUpDown || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) {
+    let delta = this.getGestureDelta(gestureState)
+    let deltaOppositeAxis = this.getGestureDeltaOppositeAxis(gestureState)
+    let swipeToLeftOrTop = (delta < 0) ? true : false
+    let swipeToRightOrBottom = (delta > 0) ? true : false
+    let swipeOppositeAxis = (Math.abs(deltaOppositeAxis) >= Math.abs(delta)) ? true : false
+    let swipeInCloseDirection = (this.isLeftOrTopSide()) ? swipeToLeftOrTop : swipeToRightOrBottom
+    if (swipeOppositeAxis || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) {
       return false
     }
 
@@ -353,9 +357,9 @@ export default class Drawer extends Component {
     if (this.context.drawer && this.context.drawer._open) return false
     if (this._childDrawer && this._childDrawer._open) return false
 
-    let x0 = e.nativeEvent.pageX
-    let deltaOpen = this.props.side === 'left' ? this.state.viewport.width - x0 : x0
-    let deltaClose = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
+    let pos0 = this.isLeftOrRightSide() ? e.nativeEvent.pageX : e.nativeEvent.pageY
+    let deltaOpen = this.isLeftOrTopSide() ? this.getDeviceLength() - pos0 : pos0
+    let deltaClose = this.isLeftOrTopSide() ? pos0 : this.getDeviceLength() - pos0
 
     if ( this._open && deltaOpen > this.getOpenMask() ) return false
     if ( !this._open && deltaClose > this.getClosedMask() ) return false
@@ -370,8 +374,8 @@ export default class Drawer extends Component {
   };
 
   open = (type, cb) => {
-    let start = this._left
-    let end = this.getOpenLeft()
+    let start = this._length
+    let end = this.getOpenLength()
 
     if (this._activeTween) return
     if (type !== 'force' && start - end === 0 && this._open === true) return // do nothing if the delta is 0
@@ -379,18 +383,18 @@ export default class Drawer extends Component {
     this.props.onOpenStart && this.props.onOpenStart()
     this.setInteractionHandle()
     this._activeTween = tween({
-      start: this._left,
-      end: this.getOpenLeft(),
+      start: this._length,
+      end: this.getOpenLength(),
       duration: this.props.tweenDuration,
       easingType: this.props.tweenEasing,
       onFrame: (tweenValue) => {
-        this._left = tweenValue
+        this._length = tweenValue
         this.updatePosition()
       },
       onEnd: () => {
         this._activeTween = null
         this._open = true
-        this._prevLeft = this._left
+        this._prevLength = this._length
         this.adjustForCaptureGestures()
         this.props.onOpen()
         this.clearInteractionHandle()
@@ -398,14 +402,14 @@ export default class Drawer extends Component {
         if(typeof type === 'function') {
           type() // this is actually a callback
         } else cb && cb()
-        
+
       }
     })
   };
 
   close = (type, cb) => {
-    let start = this._left
-    let end = this.getClosedLeft()
+    let start = this._length
+    let end = this.getClosedLength()
 
     if (this._activeTween) return
     if (type !== 'force' && start - end === 0 && this._open === false) return // do nothing if the delta is 0
@@ -418,13 +422,13 @@ export default class Drawer extends Component {
       easingType: this.props.tweenEasing,
       duration: this.props.tweenDuration,
       onFrame: (tweenValue) => {
-        this._left = tweenValue
+        this._length = tweenValue
         this.updatePosition()
       },
       onEnd: () => {
         this._activeTween = null
         this._open = false
-        this._prevLeft = this._left
+        this._prevLength = this._length
         this.adjustForCaptureGestures()
         this.props.onClose()
         this.clearInteractionHandle()
@@ -484,30 +488,47 @@ export default class Drawer extends Component {
   };
 
   /*** DYNAMIC GETTERS ***/
-  getOpenLeft = () => this.state.viewport.width - this._offsetOpen;
-  getClosedLeft = () => this._offsetClosed;
-  getHeight = () => this.state.viewport.height;
-  getMainWidth = () => this.state.viewport.width - this._offsetClosed;
-  getDrawerWidth = () => this.state.viewport.width - this._offsetOpen;
-  getOpenMask = () => {
+  getDeviceLength = (viewport = this.state.viewport) => this.isLeftOrRightSide() ? viewport.width : viewport.height;
+  getOpenLength = () => this.getDeviceLength() - this._offsetOpen;
+  getClosedLength = () => this._offsetClosed;
+  getMainWidth = (viewport = this.state.viewport) => {
+    return this.isLeftOrRightSide() ? viewport.width - this._offsetClosed : viewport.width;
+  };
+  getMainHeight = (viewport = this.state.viewport) => {
+    return this.isTopOrBottomSide() ? viewport.height - this._offsetClosed : viewport.height;
+  };
+  getDrawerWidth = (viewport = this.state.viewport) => {
+    return this.isLeftOrRightSide() ? viewport.width - this._offsetOpen : viewport.width;
+  };
+  getDrawerHeight = (viewport = this.state.viewport) => {
+    return this.isTopOrBottomSide() ? viewport.height - this._offsetOpen : viewport.height;
+  };
+  getOpenMask = (viewport = this.state.viewport) => {
     if (this.props.panCloseMask && this.props.panCloseMask % 1 === 0) return this.props.panCloseMask
-    if (this.props.panCloseMask) return this.state.viewport.width * this.props.panCloseMask
+    if (this.props.panCloseMask) return this.getDeviceLength(viewport) * this.props.panCloseMask
     return Math.max(0.05, this._offsetOpen)
   };
   getClosedMask = () => {
     if (this.props.panOpenMask && this.props.panOpenMask % 1 === 0) return this.props.panOpenMask
-    if (this.props.panOpenMask) return this.state.viewport.width * this.props.panOpenMask
+    if (this.props.panOpenMask) return this.getDeviceLength() * this.props.panOpenMask
     return Math.max(0.05, this._offsetClosed)
   };
   getOpenOffset = (props, viewport) => {
     if (typeof props.openDrawerOffset === 'function') return props.openDrawerOffset(viewport)
-    return props.openDrawerOffset > 1 || props.openDrawerOffset < 0 ? props.openDrawerOffset : props.openDrawerOffset * viewport.width
+    return props.openDrawerOffset > 1 || props.openDrawerOffset < 0 ? props.openDrawerOffset : props.openDrawerOffset * this.getDeviceLength(viewport)
   };
   getClosedOffset = (props, viewport) => {
     if (typeof props.closedDrawerOffset === 'function') return props.closedDrawerOffset(viewport)
-    return props.closedDrawerOffset > 1 || props.closedDrawerOffset < 0 ? props.closedDrawerOffset : props.closedDrawerOffset * viewport.width
+    return props.closedDrawerOffset > 1 || props.closedDrawerOffset < 0 ? props.closedDrawerOffset : props.closedDrawerOffset * this.getDeviceLength(viewport)
   };
+  getGestureDelta = (gestureState) => this.isLeftOrRightSide() ? gestureState.dx : gestureState.dy;
+  getGestureDeltaOppositeAxis = (gestureState) => this.isLeftOrRightSide() ? gestureState.dy : gestureState.dx;
   /*** END DYNAMIC GETTERS ***/
+
+  isLeftOrRightSide = () => ["left", "right"].includes(this.props.side);
+  isTopOrBottomSide = () => ["top", "bottom"].includes(this.props.side);
+  isLeftOrTopSide = () => ["left", "top"].includes(this.props.side);
+  isRightOrBottomSide = () => ["right", "bottom"].includes(this.props.side);
 
   render() {
     let first = this.props.type === 'overlay' ? this.renderMain() : this.renderDrawer()
@@ -531,7 +552,7 @@ export default class Drawer extends Component {
         {...this.responder.panHandlers}
         key="main"
         ref={c => this.main = c}
-        style={[this.stylesheet.main, {height: this.getHeight(), width: this.getMainWidth()}]}
+        style={[this.stylesheet.main, {height: this.getMainHeight(), width: this.getMainWidth()}]}
         >
         {this.props.children}
         <View
@@ -550,7 +571,7 @@ export default class Drawer extends Component {
         key="drawer"
         ref={c => this.drawer = c}
         elevation={this.props.elevation}
-        style={[this.stylesheet.drawer, {height: this.getHeight(), width: this.getDrawerWidth()}]}
+        style={[this.stylesheet.drawer, {height: this.getDrawerHeight(), width: this.getDrawerWidth()}]}
         >
         {this.props.content}
         <View

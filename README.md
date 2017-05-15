@@ -111,7 +111,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `panOpenMask` (Number) `null` - Ratio of screen width that is valid for the start of a pan open action. If null -> defaults to `max(.05, closedDrawerOffset)`.
 - `panCloseMask` (Number) `null` - Ratio of screen width that is valid for the start of a pan close action. If null -> defaults to `max(.05, openDrawerOffset)`.
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
-- `side` (String left|right) `left` - which side the drawer should be on.
+- `side` (String left|right|top|bottom) `left` - which side the drawer should be on.
 - `useInteractionManager` (Boolean) `false` - if true will run InteractionManager for open/close animations.
 - `elevation` (Number) `0` - (Android-only) Sets the elevation of the drawer using Android's underlying [elevation API](https://developer.android.com/training/material/shadows-clipping.html#Elevation)
 
