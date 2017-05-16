@@ -468,7 +468,7 @@ export default class Drawer extends Component {
     let oldViewport = this.state.viewport
     if (viewport.width === oldViewport.width && viewport.height === oldViewport.height) return
     let didRotationChange = viewport.width !== oldViewport.width
-    this.resync(viewport, null, didRotationChange)
+    setTimeout(this.resync.bind(this, viewport, null, didRotationChange));
   };
 
   resync = (viewport, props, didRotationChange) => {
