@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { PanResponder, View, StyleSheet, Dimensions, InteractionManager } from 'react-native'
+import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, I18nManager } from 'react-native'
 
 import tween from './tweener'
 
@@ -234,10 +234,14 @@ export default class Drawer extends Component {
     }
   };
 
-  shouldOpenDrawer(delta) {
-    let hasActiveHeading = this._open ^ delta > 0 ^ this.isRightOrBottomSide()
+  shouldOpenDrawer(dx) {
+    let side = 'right';
+    if (I18nManager.isRTL) { // fix pan direction with rtl
+      side = 'left';
+    }
+    let hasActiveHeading = this._open ^ dx > 0 ^ this.props.side === side
     if (!hasActiveHeading) return this._open
-    else return this._open ^ Math.abs(delta) > this.getDeviceLength() * this.props.panThreshold
+    else return this._open ^ Math.abs(dx) > this.state.viewport.width * this.props.panThreshold
   }
 
   onPanResponderTerminate = (e, gestureState) => {
@@ -266,17 +270,20 @@ export default class Drawer extends Component {
   };
 
   onPanResponderMove = (e, gestureState) => {
-    let delta = this.getGestureDelta(gestureState);
     if (!this.props.acceptPan) return false
 
+    let side = 'right';
+    if (I18nManager.isRTL) { // fix pan direction with rtl
+      side = 'left';
+    }
     //Do nothing if we are panning the wrong way
-    if (this._open ^ delta < 0 ^ this.isRightOrBottomSide()) return false
+    if (this._open ^ gestureState.dx < 0 ^ this.props.side === side) return false
 
-    delta = this.isRightOrBottomSide() ? delta * -1 : delta
-    let length = this._prevLength + delta
-    length = Math.min(length, this.getOpenLength())
-    length = Math.max(length, this.getClosedLength())
-    this._length = length
+    let dx = this.props.side === side ? gestureState.dx * -1 : gestureState.dx
+    let left = this._prevLeft + dx
+    left = Math.min(left, this.getOpenLeft())
+    left = Math.max(left, this.getClosedLeft())
+    this._left = left
 
     this.updatePosition()
     this._panning = true
@@ -310,13 +317,15 @@ export default class Drawer extends Component {
     if (!this.props.acceptPan) return false
 
     if (!this.props.negotiatePan || this.props.disabled || !this.props.acceptPan || this._panning) return false
-    let delta = this.getGestureDelta(gestureState)
-    let deltaOppositeAxis = this.getGestureDeltaOppositeAxis(gestureState)
-    let swipeToLeftOrTop = (delta < 0) ? true : false
-    let swipeToRightOrBottom = (delta > 0) ? true : false
-    let swipeOppositeAxis = (Math.abs(deltaOppositeAxis) >= Math.abs(delta)) ? true : false
-    let swipeInCloseDirection = (this.isLeftOrTopSide()) ? swipeToLeftOrTop : swipeToRightOrBottom
-    if (swipeOppositeAxis || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) {
+    let side = 'left';
+    if (I18nManager.isRTL) { // fix swipe direction with rtl
+      side = 'right';
+    }
+    let swipeToLeft = (gestureState.dx < 0) ? true : false
+    let swipeToRight = (gestureState.dx > 0) ? true : false
+    let swipeUpDown = (Math.abs(gestureState.dy) >= Math.abs(gestureState.dx)) ? true : false
+    let swipeInCloseDirection = (this.props.side === side) ? swipeToLeft : swipeToRight
+    if (swipeUpDown || (this._open && !swipeInCloseDirection) || (!this._open && swipeInCloseDirection)) {
       return false
     }
 
@@ -357,12 +366,20 @@ export default class Drawer extends Component {
     if (this.context.drawer && this.context.drawer._open) return false
     if (this._childDrawer && this._childDrawer._open) return false
 
-    let pos0 = this.isLeftOrRightSide() ? e.nativeEvent.pageX : e.nativeEvent.pageY
-    let deltaOpen = this.isLeftOrTopSide() ? this.getDeviceLength() - pos0 : pos0
-    let deltaClose = this.isLeftOrTopSide() ? pos0 : this.getDeviceLength() - pos0
+    let x0 = e.nativeEvent.pageX
+    let deltaOpen;
+    let deltaClose;
+    if (I18nManager.isRTL) { // fix pan mask with rtl
+      deltaOpen = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
+      deltaClose = this.props.side === 'left' ? this.state.viewport.width - x0 : x0
+    } else {
+      deltaOpen = this.props.side === 'left' ? this.state.viewport.width - x0 : x0
+      deltaClose = this.props.side === 'left' ? x0 : this.state.viewport.width - x0
+    }
 
-    if ( this._open && deltaOpen > this.getOpenMask() ) return false
-    if ( !this._open && deltaClose > this.getClosedMask() ) return false
+
+    if (this._open && deltaOpen > this.getOpenMask()) return false
+    if (!this._open && deltaClose > this.getClosedMask()) return false
     return true
   };
 
