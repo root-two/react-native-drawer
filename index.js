@@ -1,5 +1,5 @@
 import React, { PropTypes, Component } from 'react'
-import { PanResponder, View, StyleSheet, Dimensions, InteractionManager } from 'react-native'
+import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, I18nManager } from 'react-native'
 
 import tween from './tweener'
 
@@ -525,10 +525,28 @@ export default class Drawer extends Component {
   getGestureDeltaOppositeAxis = (gestureState) => this.isLeftOrRightSide() ? gestureState.dy : gestureState.dx;
   /*** END DYNAMIC GETTERS ***/
 
-  isLeftOrRightSide = () => ["left", "right"].includes(this.props.side);
+  isLeftOrRightSide = () => {
+    if (I18nManager.isRTL) {
+      return ["right", "left"].includes(this.props.side)
+    } else {
+      return ["left", "right"].includes(this.props.side)
+    }
+  }
   isTopOrBottomSide = () => ["top", "bottom"].includes(this.props.side);
-  isLeftOrTopSide = () => ["left", "top"].includes(this.props.side);
-  isRightOrBottomSide = () => ["right", "bottom"].includes(this.props.side);
+  isLeftOrTopSide = () => {
+    let side = "left";
+    if (I18nManager.isRTL) {
+      side = "right";
+    }
+    return [side, "top"].includes(this.props.side);
+  }
+  isRightOrBottomSide = () => {
+    let side = "right"
+    if (I18nManager.isRTL) {
+      side = "left"
+    }
+    return [side, "bottom"].includes(this.props.side);
+  }
 
   render() {
     let first = this.props.type === 'overlay' ? this.renderMain() : this.renderDrawer()
