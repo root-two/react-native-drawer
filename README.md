@@ -90,7 +90,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 
 ##### Animation / Tween
 **Note**: In the future animations with use Animated, and the api will change.
-- `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns and object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/}, mainOverlay: {/*native props*/} }
+- `tweenHandler` (Function) `null` - Takes in the pan ratio (decimal 0 to 1) that represents the tween percent. Returns an object of native props to be set on the constituent views { drawer: {/*native props*/}, main: {/*native props*/}, mainOverlay: {/*native props*/} }
 - `tweenDuration` (Integer) `250` - The duration of the open/close animation.
 - `tweenEasing` (String) `linear` - A easing type supported by [tween-functions](https://www.npmjs.com/package/tween-functions)
 
