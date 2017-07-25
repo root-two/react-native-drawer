@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, I18nManager } from 'react-native'
+import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, I18nManager, BackHandler, Platform } from 'react-native'
 
 import tween from './tweener'
 
@@ -247,6 +247,12 @@ export default class Drawer extends Component {
   };
 
   onStartShouldSetPanResponderCapture = (e, gestureState) => {
+    var tabHeight = deviceScreen.height / 10;
+    var tabWidth = deviceScreen.width / 10;
+    // if we press on the top left corner of our screen we don't capture the response and instead allow the MenuCorner to capture - Alberto
+    if(!this._open && e.nativeEvent.pageX < tabWidth && e.nativeEvent.pageY < tabHeight) {
+        return false;
+    }
     if (this.shouldCaptureGestures()) return this.processShouldSet(e, gestureState)
     return false
   };
@@ -257,6 +263,12 @@ export default class Drawer extends Component {
   };
 
   onMoveShouldSetPanResponderCapture = (e, gestureState) => {
+    var tabHeight = deviceScreen.height / 10;
+    var tabWidth = deviceScreen.width / 10;
+    // if we drag on the top left corner of our screen we don't capture the response and instead allow the MenuCorner to capture - Alberto
+    if(!this._open && e.nativeEvent.pageX < tabWidth && e.nativeEvent.pageY < tabHeight) {
+        return false;
+    }
     if (this.shouldCaptureGestures() && this.props.negotiatePan) return this.processMoveShouldSet(e, gestureState)
     return false
   };
@@ -374,6 +386,11 @@ export default class Drawer extends Component {
     }
   };
 
+  onBackPress = () => {
+    this.close();
+    return true
+  };
+
   open = (type, cb) => {
     let start = this._length
     let end = this.getOpenLength()
@@ -406,6 +423,7 @@ export default class Drawer extends Component {
 
       }
     })
+    if(Platform.OS === 'android') BackHandler.addEventListener('hardwareBackPress', this.onBackPress)
   };
 
   close = (type, cb) => {
@@ -440,6 +458,7 @@ export default class Drawer extends Component {
 
       }
     })
+    if(Platform.OS === 'android') BackHandler.removeEventListener('hardwareBackPress', this.onBackPress)
   };
 
   adjustForCaptureGestures() {
