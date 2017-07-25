@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types';
-import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, I18nManager } from 'react-native'
-import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, BackAndroid, Platform } from 'react-native'
+import { PanResponder, View, StyleSheet, Dimensions, InteractionManager, I18nManager, BackHandler, Platform } from 'react-native'
 
 import tween from './tweener'
 
@@ -424,7 +423,7 @@ export default class Drawer extends Component {
 
       }
     })
-    if(Platform.OS === 'android') BackAndroid.addEventListener('hardwareBackPress', this.onBackPress)
+    if(Platform.OS === 'android') BackHandler.addEventListener('hardwareBackPress', this.onBackPress)
   };
 
   close = (type, cb) => {
@@ -459,7 +458,7 @@ export default class Drawer extends Component {
 
       }
     })
-    if(Platform.OS === 'android') BackAndroid.removeEventListener('hardwareBackPress', this.onBackPress)
+    if(Platform.OS === 'android') BackHandler.removeEventListener('hardwareBackPress', this.onBackPress)
   };
 
   adjustForCaptureGestures() {
