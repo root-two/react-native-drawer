@@ -170,7 +170,7 @@ Three options:
 * `git clone https://github.com/rt2zz/react-native-drawer.git`
 * `cd react-native-drawer/examples/RNDrawerDemo && npm install`
 * **iOS**
-	* Open ``./examples/RNDrawerDemo/RNDrawerDemo.xcodeproject` in xcode
+	* Open `./examples/RNDrawerDemo/RNDrawerDemo.xcodeproject` in xcode
 	* `command+r` (in xcode)
 * **Android**
 	* Run android simulator / plug in your android device
