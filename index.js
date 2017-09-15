@@ -110,14 +110,7 @@ export default class Drawer extends Component {
   getChildContext = () => ({ drawer: this });
   /*** END CONTEXT ***/
 
-  _registerChildDrawer(drawer) {
-    // Store child drawer for gesture disambiguation with multi drawer
-    // @TODO make cleaner, generalize to work with 3+ drawers, prop to disable/configure
-    this._childDrawer = drawer
-  }
-
   componentWillMount() {
-    if (this.context.drawer) this.context.drawer._registerChildDrawer(this)
     if (this.props.openDrawerThreshold && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: openDrawerThreshold is obsolete. Use panThreshold instead.')
     if (this.props.panStartCompensation && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: panStartCompensation is deprecated.')
     if (this.props.relativeDrag && process.env.NODE_ENV !== 'production') console.error('react-native-drawer: relativeDrag is deprecated.')
@@ -354,11 +347,6 @@ export default class Drawer extends Component {
 
   testPanResponderMask = (e, gestureState) => {
     if (this.props.disabled) return false
-
-    // Disable if parent or child drawer exist and are open
-    // @TODO make cleaner, generalize to work with 3+ drawers, prop to disable/configure
-    if (this.context.drawer && this.context.drawer._open) return false
-    if (this._childDrawer && this._childDrawer._open) return false
 
     let pos0 = this.isLeftOrRightSide() ? e.nativeEvent.pageX : e.nativeEvent.pageY
     let deltaOpen = this.isLeftOrTopSide() ? this.getDeviceLength() - pos0 : pos0
