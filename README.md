@@ -112,6 +112,7 @@ This module supports a wide range of drawer styles, and hence has *a lot* of pro
 - `panThreshold` (Number) `.25` - Ratio of screen width that must be travelled to trigger a drawer open/close.
 - `panOpenMask` (Number) `null` - Ratio of screen width that is valid for the start of a pan open action. If null -> defaults to `max(.05, closedDrawerOffset)`.
 - `panCloseMask` (Number) `null` - Ratio of screen width that is valid for the start of a pan close action. If null -> defaults to `max(.05, openDrawerOffset)`.
+- `gestureMarginTop` (Number) `0` - Sets the height in dp of top part of the screen where drawer won't capture pan gestures. For example when you have menu button in the top-left corner, you want your gestures to trigger that button, and not the drawer.
 - `initializeOpen` (Boolean) `false` - Initialize with drawer open?
 - `side` (String left|right|top|bottom) `left` - which side the drawer should be on.
 - `useInteractionManager` (Boolean) `false` - if true will run InteractionManager for open/close animations.

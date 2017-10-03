@@ -65,6 +65,7 @@ export default class Drawer extends Component {
     tweenHandler: PropTypes.func,
     type: PropTypes.oneOf(['overlay', 'static', 'displace']),
     useInteractionManager: PropTypes.bool,
+    gestureMarginTop: PropTypes.number,    
 
     // deprecated
     panStartCompensation: PropTypes.bool,
@@ -81,6 +82,7 @@ export default class Drawer extends Component {
     panThreshold: 0.25, // @TODO consider rename to panThreshold
     panOpenMask: null, // defaults to closedDrawerOffset
     panCloseMask: null, // defaults to openDrawerOffset
+    gestureMarginTop: 0,
 
     tweenHandler: null,
     tweenDuration: 250,
@@ -357,6 +359,7 @@ export default class Drawer extends Component {
 
     // Disable if parent or child drawer exist and are open
     // @TODO make cleaner, generalize to work with 3+ drawers, prop to disable/configure
+    if ( e.nativeEvent.pageY < this.props.gestureMarginTop ) return false
     if (this.context.drawer && this.context.drawer._open) return false
     if (this._childDrawer && this._childDrawer._open) return false
 
