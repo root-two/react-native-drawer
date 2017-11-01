@@ -49,6 +49,7 @@ export default class Drawer extends Component {
     initializeOpen: PropTypes.bool,
     open: PropTypes.bool,
     negotiatePan: PropTypes.bool,
+    onMoveStart: PropTypes.func,
     onClose: PropTypes.func,
     onCloseStart: PropTypes.func,
     onOpen: PropTypes.func,
@@ -97,6 +98,7 @@ export default class Drawer extends Component {
 
     styles: {},
     elevation: 0,
+    onMoveStart: () => {},
     onOpen: () => {},
     onClose: () => {},
     side: 'left',
@@ -275,6 +277,7 @@ export default class Drawer extends Component {
     this._length = length
 
     this.updatePosition()
+    this.props.onMoveStart()
     this._panning = true
   };
 
