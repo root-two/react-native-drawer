@@ -48,7 +48,7 @@ export default class Drawer extends Component {
     elevation: PropTypes.number,
     initializeOpen: PropTypes.bool,
     open: PropTypes.bool,
-    negotiatePan: PropTypes.bool,
+    negotiatePan: PropTypes.oneOfType([PropTypes.bool, PropTypes.func]),
     onClose: PropTypes.func,
     onCloseStart: PropTypes.func,
     onOpen: PropTypes.func,
@@ -259,12 +259,18 @@ export default class Drawer extends Component {
   };
 
   onMoveShouldSetPanResponderCapture = (e, gestureState) => {
-    if (this.shouldCaptureGestures() && this.props.negotiatePan) return this.processMoveShouldSet(e, gestureState)
+    if (this.shouldCaptureGestures() && this.negotiatePan(e, gestureState)) {
+      return this.processMoveShouldSet(e, gestureState)
+    }
+
     return false
   };
 
   onMoveShouldSetPanResponder = (e, gestureState) => {
-    if (!this.shouldCaptureGestures() && this.props.negotiatePan) return this.processMoveShouldSet(e, gestureState)
+    if (!this.shouldCaptureGestures() && this.negotiatePan(e, gestureState)) {
+      return this.processMoveShouldSet(e, gestureState)
+    }
+
     return false
   };
 
@@ -301,7 +307,7 @@ export default class Drawer extends Component {
     if (!inMask) return false
     this._panStartTime = Date.now()
     if (inMask && this.shouldCaptureGestures()) return true
-    if (this.props.negotiatePan) return false
+    if (this.negotiatePan(e, gestureState)) return false
     if (!this.props.acceptPan) return false
     this.terminateActiveTween()
     return true
@@ -312,7 +318,7 @@ export default class Drawer extends Component {
     if (!inMask && (!this.props.acceptPanOnDrawer || this._open === false )) return false
     if (!this.props.acceptPan) return false
 
-    if (!this.props.negotiatePan || this.props.disabled || !this.props.acceptPan || this._panning) return false
+    if (!this.negotiatePan(e, gestureState) || this.props.disabled || !this.props.acceptPan || this._panning) return false
     let delta = this.getGestureDelta(gestureState)
     let deltaOppositeAxis = this.getGestureDeltaOppositeAxis(gestureState)
     let swipeToLeftOrTop = (delta < 0) ? true : false
@@ -350,6 +356,12 @@ export default class Drawer extends Component {
     if (this.props.captureGestures === 'closed' && this._open === false) return true
     if (this.props.captureGestures === 'open' && this._open === true) return true
     return false
+  }
+
+  negotiatePan = (e, gestureState) => {
+    return typeof this.props.negotiatePan === 'function'
+      ? this.props.negotiatePan(e, gestureState)
+      : this.props.negotiatePan
   }
 
   testPanResponderMask = (e, gestureState) => {
@@ -615,3 +627,4 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent'
   }
 })
+
