@@ -53,6 +53,7 @@ export default class Drawer extends Component {
     onCloseStart: PropTypes.func,
     onOpen: PropTypes.func,
     onOpenStart: PropTypes.func,
+    onDragStart: PropTypes.func,
     openDrawerOffset: PropTypes.oneOfType([PropTypes.number, PropTypes.func]),
     panThreshold: PropTypes.number,
     panCloseMask: PropTypes.number,
@@ -282,6 +283,9 @@ export default class Drawer extends Component {
     this._length = length
 
     this.updatePosition()
+    if (!this._panning) {
+      this.props.onDragStart && this.props.onDragStart();
+    }
     this._panning = true
   };
 
