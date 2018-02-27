@@ -1,4 +1,7 @@
-React Native Drawer is in need of maintainers. Specifically it requires updating to use Animated lib. There is however an excellent, albeit less configurable option in [React Native Side Menu](https://github.com/react-native-community/react-native-side-menu) which we highly recommend. If you are interested in revamping React Native Drawer please get in touch!
+
+### USAGE WARNING
+This module is not as performant as it should be. For production applications we generally recommend using either [React Native Side Menu](https://github.com/react-native-community/react-native-side-menu) or [React Navigation](https://github.com/react-navigation/react-navigation) as applicable. React Native Drawer will continue to be available and potentially useful for its high customizability but again it is **not** recommended for production appliciations. If you are interested in revamping react native drawer to be more performant (i.e. use Animated) please get in touch!
+
 
 ## React Native Drawer
 <img width="220px" align="right" src="https://raw.githubusercontent.com/rt2zz/react-native-drawer/master/examples/rn-drawer.gif" />
