@@ -594,6 +594,7 @@ export default class Drawer extends Component {
   renderDrawer() {
     return (
       <View
+	accessibilityViewIsModal
         {...this.responder.panHandlers}
         key="drawer"
         ref={c => this.drawer = c}
