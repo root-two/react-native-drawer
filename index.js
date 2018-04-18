@@ -567,6 +567,7 @@ export default class Drawer extends Component {
         key="drawerContainer"
         onLayout={this.handleSetViewport}
         style={this.stylesheet.container}
+        {...this.props.containerProps}
         >
         {first}
         {second}
@@ -581,6 +582,7 @@ export default class Drawer extends Component {
         key="main"
         ref={c => this.main = c}
         style={[this.stylesheet.main, {height: this.getMainHeight(), width: this.getMainWidth()}]}
+        {...this.props.mainProps}
         >
         {this.props.children}
         <View
@@ -600,6 +602,7 @@ export default class Drawer extends Component {
         ref={c => this.drawer = c}
         elevation={this.props.elevation}
         style={[this.stylesheet.drawer, {height: this.getDrawerHeight(), width: this.getDrawerWidth()}]}
+        {...this.props.drawerProps}
         >
         {this.props.content}
         <View
