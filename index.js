@@ -280,6 +280,7 @@ export default class Drawer extends Component {
     let length = this._prevLength + delta
     length = Math.min(length, this.getOpenLength())
     length = Math.max(length, this.getClosedLength())
+    length = Math.round(length*2)/2
     this._length = length
 
     this.updatePosition()
