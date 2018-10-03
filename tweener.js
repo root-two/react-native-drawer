@@ -27,7 +27,7 @@ Tween.prototype._rafLoop = function() {
 	}
 
 	var tweenVal = easingTypes[easingType](elapsed, start, end, duration);
-	this._config.onFrame(tweenVal);
+	this._config.onFrame(Math.round(tweenVal));
 
 	requestAnimationFrame(this._rafLoop);
 };
