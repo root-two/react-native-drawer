@@ -586,7 +586,11 @@ export default class Drawer extends Component {
         <View
           pointerEvents={ this._open && this.shouldCaptureGestures() ? 'auto' : 'none' }
           ref={c => this.mainOverlay = c}
-          style={[styles.overlay, this.props.styles && this.props.styles.mainOverlay]}
+          style={[
+            styles.overlay,
+            this.props.styles && this.props.styles.mainOverlay,
+            this._open && this.props.styles && this.props.styles.mainScrim
+          ]}
           />
       </View>
     )
