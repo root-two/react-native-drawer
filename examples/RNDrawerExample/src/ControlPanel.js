@@ -9,7 +9,7 @@ import React, {
 } from 'react-native'
 
 export default class ControlPanel extends Component {
-  static propTypes = {
+  static PropTypes = {
     closeDrawer: PropTypes.func.isRequired
   };
 
