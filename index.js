@@ -66,6 +66,7 @@ export default class Drawer extends Component {
     tweenHandler: PropTypes.func,
     type: PropTypes.oneOf(['overlay', 'static', 'displace']),
     useInteractionManager: PropTypes.bool,
+    gestureMarginTop: PropTypes.number,
 
     // deprecated
     panStartCompensation: PropTypes.bool,
@@ -82,6 +83,7 @@ export default class Drawer extends Component {
     panThreshold: 0.25, // @TODO consider rename to panThreshold
     panOpenMask: null, // defaults to closedDrawerOffset
     panCloseMask: null, // defaults to openDrawerOffset
+    gestureMarginTop: 0,
 
     tweenHandler: null,
     tweenDuration: 250,
@@ -371,6 +373,7 @@ export default class Drawer extends Component {
     let deltaOpen = this.isLeftOrTopSide() ? this.getDeviceLength() - pos0 : pos0
     let deltaClose = this.isLeftOrTopSide() ? pos0 : this.getDeviceLength() - pos0
 
+    if ( e.nativeEvent.pageY < this.props.gestureMarginTop ) return false
     if ( this._open && deltaOpen > this.getOpenMask() ) return false
     if ( !this._open && deltaClose > this.getClosedMask() ) return false
     return true
