@@ -64,6 +64,7 @@ class Application extends Component {
   content={<ControlPanel />}
   tapToClose={true}
   openDrawerOffset={0.2} // 20% gap on the right side of drawer
+  panOpenMask={0.2}
   panCloseMask={0.2}
   closedDrawerOffset={-3}
   styles={drawerStyles}
@@ -184,3 +185,5 @@ Component was adapted from and inspired by
 [@khanghoang](https://github.com/khanghoang)'s [RNSideMenu](https://github.com/khanghoang/RNSideMenu)
 *AND*
 [@kureevalexey](https://twitter.com/kureevalexey)'s [react-native-side-menu](https://github.com/Kureev/react-native-side-menu)
+
+
