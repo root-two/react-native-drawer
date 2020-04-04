@@ -7,7 +7,7 @@ const deviceScreen = NativeModules.UIManager.Dimensions.window;
 
 export default class CaptureGestures extends Component {
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this._panGesture = PanResponder.create({
       onStartShouldSetPanResponder: (evt, gestureState) => { return false },
       onStartShouldSetPanResponderCapture: (evt, gestureState) => { return false },
