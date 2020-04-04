@@ -6,7 +6,7 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git@github.com:rt2zz/react-native-drawer.git"
+    "url": "git@github.com:snooplyin/react-native-drawer.git"
   },
   "dependencies": {
     "tween-functions": "^1.0.1",
